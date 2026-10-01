@@ -1,192 +1,195 @@
 import Image from "next/image";
-import Logo from "@/components/Logo";
-import ContactForm from "@/components/ContactForm";
-import { caseStudies, properties, services, site, steps } from "@/lib/site";
+import Link from "next/link";
+import HomeHero from "@/components/HomeHero";
+import Icon from "@/components/Icon";
+import Counter from "@/components/motion/Counter";
+import Parallax from "@/components/motion/Parallax";
+import { Reveal, RevealItem, Stagger } from "@/components/motion/Reveal";
+import ProcessStory from "@/components/ProcessStory";
+import PropertyCard from "@/components/PropertyCard";
+import DetailsShowcase from "@/components/DetailsShowcase";
+import Testimonials from "@/components/Testimonials";
+import FaqList from "@/components/FaqList";
+import CtaBand from "@/components/CtaBand";
+import { benefits, faqs, featuredSlugs, properties, proof, proofSourceNote, serviceGroups } from "@/lib/site";
 
 export default function Home() {
+  const featured = featuredSlugs.map((slug) => properties.find((p) => p.slug === slug)!);
+
   return (
     <>
-      <header className="nav">
-        <a href="#top" aria-label="Solace, torna all'inizio">
-          <Logo small />
-        </a>
-        <nav className="nav__links">
-          <a href="#servizi">Servizi</a>
-          <a href="#processo">Come funziona</a>
-          <a href="#casi-studio">Casi studio</a>
-          <a href="#immobili">Immobili</a>
-        </nav>
-        <a className="btn btn--small" href="#contatti">
-          Valutazione gratuita
-        </a>
-      </header>
+      <HomeHero />
 
-      <main id="top">
-        <section className="hero">
-          <Image
-            src="/images/villa-soggiorno.jpg"
-            alt="Soggiorno di una villa vista mare gestita da Solace"
-            fill
-            priority
-            sizes="100vw"
-            className="hero__bg"
-          />
-          <div className="hero__content">
-            <p className="eyebrow">Gestione premium di affitti brevi</p>
-            <h1>
-              Valorizziamo il tuo immobile.
-              <br />
-              <em>Massimizziamo i tuoi guadagni.</em>
-            </h1>
-            <p className="hero__lead">
-              Ci occupiamo di tutto: prezzi, ospiti, pulizie, burocrazia. Tu ricevi report
-              chiari e pagamenti puntuali.
-            </p>
-            <div className="hero__actions">
-              <a className="btn" href="#contatti">
-                Richiedi una valutazione gratuita
-              </a>
-              <a className="btn btn--ghost" href="#casi-studio">
-                Guarda i risultati
-              </a>
+      {/* Prova sociale verificata */}
+      <section className="proof" aria-label="Solace in numeri">
+        <Stagger as="ul" className="container proof__list" gap={0.12}>
+          {proof.map((p) => (
+            <RevealItem as="li" key={p.label} className="proof__item">
+              <span className="proof__value">
+                <Counter value={p.value} suffix={p.suffix} />
+              </span>
+              <span className="proof__label">{p.label}</span>
+              <span className="proof__note">{p.note}</span>
+            </RevealItem>
+          ))}
+        </Stagger>
+        <p className="container proof__source">{proofSourceNote}</p>
+      </section>
+
+      {/* Vantaggi per il proprietario */}
+      <section id="vantaggi" className="section benefits" aria-labelledby="benefits-title">
+        <div className="container benefits__grid">
+          <Reveal className="benefits__media">
+            <Parallax strength={7}>
+              <Image
+                src="/images/immobili/loft-tricolore/01.jpg"
+                alt="Soggiorno del Loft Tricolore con parete arancione e scala verso il soppalco"
+                fill
+                sizes="(max-width: 900px) 100vw, 50vw"
+              />
+            </Parallax>
+            <p className="benefits__caption">Loft Tricolore · Porta Venezia</p>
+          </Reveal>
+          <div className="benefits__text">
+            <Reveal className="section-head">
+              <p className="eyebrow">Per i proprietari</p>
+              <h2 id="benefits-title" className="h2">
+                Il rendimento di un affitto breve, <em>senza viverlo ogni giorno.</em>
+              </h2>
+            </Reveal>
+            <Stagger as="ul" className="benefits__list" gap={0.1}>
+              {benefits.map((b) => (
+                <RevealItem as="li" key={b.title} className="benefit">
+                  <span className="benefit__icon">
+                    <Icon name={b.icon} size={26} />
+                  </span>
+                  <div>
+                    <h3>{b.title}</h3>
+                    <p>{b.text}</p>
+                  </div>
+                </RevealItem>
+              ))}
+            </Stagger>
+          </div>
+        </div>
+      </section>
+
+      {/* Servizi: tre fasi */}
+      <section className="section section--paper phases" aria-labelledby="phases-title">
+        <div className="container">
+          <Reveal className="section-head section-head--split">
+            <div>
+              <p className="eyebrow">Gestione completa</p>
+              <h2 id="phases-title" className="h2">
+                Prima, durante e dopo <em>ogni soggiorno.</em>
+              </h2>
             </div>
-          </div>
-        </section>
-
-        <section className="stats" aria-label="Risultati medi">
-          <div>
-            <strong>+30%</strong>
-            <span>reddito medio rispetto alla locazione tradizionale</span>
-          </div>
-          <div>
-            <strong>85%+</strong>
-            <span>tasso di occupazione medio</span>
-          </div>
-          <div>
-            <strong>4,9/5</strong>
-            <span>valutazione media degli ospiti</span>
-          </div>
-        </section>
-
-        <section id="servizi" className="section">
-          <p className="eyebrow">I nostri servizi</p>
-          <h2>Una gestione completa, curata in ogni dettaglio</h2>
-          <div className="services">
-            {services.map((s, i) => (
-              <article key={s.title} className="service">
-                <span className="service__num">{String(i + 1).padStart(2, "0")}</span>
-                <h3>{s.title}</h3>
-                <p>{s.text}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section id="processo" className="section section--alt">
-          <p className="eyebrow">Come funziona</p>
-          <h2>Dal sopralluogo al primo ospite in cinque passi</h2>
-          <ol className="steps">
-            {steps.map((s) => (
-              <li key={s.title}>
-                <h3>{s.title}</h3>
-                <p>{s.text}</p>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <section id="casi-studio" className="section">
-          <p className="eyebrow">Casi studio</p>
-          <h2>Risultati reali, valore concreto</h2>
-          <p className="section__intro">
-            Risultati medi dopo i primi 12 mesi di gestione completa Solace.
-          </p>
-          <div className="cases">
-            {caseStudies.map((c) => (
-              <article key={c.title} className="case">
-                <div className="case__body">
-                  <p className="case__place">{c.place}</p>
-                  <h3>{c.title}</h3>
-                  <p className="case__detail">{c.detail}</p>
-                  <p className="case__growth">
-                    {c.growth} <span>reddito annuo</span>
-                  </p>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th />
-                        <th>Prima</th>
-                        <th>Con Solace</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Occupazione</td>
-                        <td>{c.before.occupancy}</td>
-                        <td>{c.after.occupancy}</td>
-                      </tr>
-                      <tr>
-                        <td>Tariffa/notte</td>
-                        <td>{c.before.rate}</td>
-                        <td>{c.after.rate}</td>
-                      </tr>
-                      <tr>
-                        <td>Reddito annuo</td>
-                        <td>{c.before.revenue}</td>
-                        <td>{c.after.revenue}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section id="immobili" className="section section--alt">
-          <p className="eyebrow">Immobili in gestione</p>
-          <h2>Ogni soggiorno, un&apos;esperienza</h2>
-          <div className="gallery">
-            {properties.map((p) => (
-              <figure key={p.src}>
-                <Image src={p.src} alt={`${p.title}, ${p.place}`} fill sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 25vw" />
-                <figcaption>
-                  <strong>{p.title}</strong>
-                  <span>{p.place}</span>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </section>
-
-        <section id="contatti" className="section contact">
-          <div className="contact__text">
-            <p className="eyebrow">Contattaci oggi</p>
-            <h2>Il tuo immobile, il nostro impegno</h2>
-            <p>
-              Richiedi una valutazione gratuita e senza impegno: ti diciamo quanto può rendere
-              il tuo immobile con Solace.
+            <p className="section-head__text">
+              Un unico interlocutore per tutto ciò che serve a far rendere la casa: dalla preparazione dell&apos;annuncio
+              al rendiconto di fine mese.
             </p>
-            <ul className="contact__list">
-              <li>
-                <a href={`tel:${site.phone.replace(/\s/g, "")}`}>{site.phone}</a>
-              </li>
-              <li>
-                <a href={`mailto:${site.email}`}>{site.email}</a>
-              </li>
-            </ul>
-          </div>
-          <ContactForm />
-        </section>
-      </main>
+          </Reveal>
+          <Stagger as="ol" className="phases__list" gap={0.14}>
+            {serviceGroups.map((g, i) => (
+              <RevealItem as="li" key={g.id} className="phase">
+                <span className="phase__num" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="phase__name">{g.phase}</h3>
+                <p className="phase__title">{g.title}</p>
+                <ul className="phase__items">
+                  {g.items.slice(0, 4).map((it) => (
+                    <li key={it.title}>
+                      <Icon name={it.icon} size={20} />
+                      {it.title}
+                    </li>
+                  ))}
+                </ul>
+                <Link href={`/servizi#${g.id}`} className="link-arrow">
+                  Approfondisci<span className="sr-only">: {g.phase}</span> <Icon name="arrow" size={16} />
+                </Link>
+              </RevealItem>
+            ))}
+          </Stagger>
+        </div>
+      </section>
 
-      <footer className="footer">
-        <Logo small />
-        <p>{site.cities.join(" · ")}</p>
-        <p>
-          © {new Date().getFullYear()} {site.name} {site.tagline}
-        </p>
-      </footer>
+      {/* Percorso narrativo */}
+      <section className="section process" aria-labelledby="process-title">
+        <div className="container">
+          <Reveal className="section-head">
+            <p className="eyebrow">Come funziona</p>
+            <h2 id="process-title" className="h2">
+              Dalla prima telefonata <em>al primo ospite.</em>
+            </h2>
+          </Reveal>
+          <ProcessStory />
+          <Reveal className="process__cta">
+            <Link href="/come-funziona" className="btn btn--ghost">
+              Scopri il percorso nel dettaglio
+            </Link>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Immobili selezionati */}
+      <section className="section section--deep featured" aria-labelledby="featured-title">
+        <div className="container">
+          <Reveal className="section-head section-head--split">
+            <div>
+              <p className="eyebrow">Immobili selezionati</p>
+              <h2 id="featured-title" className="h2">
+                Case diverse, <em>la stessa cura.</em>
+              </h2>
+            </div>
+            <Link href="/immobili" className="link-arrow">
+              Vedi tutti gli immobili <Icon name="arrow" size={16} />
+            </Link>
+          </Reveal>
+          <Stagger className="featured__grid" gap={0.12}>
+            {featured.map((p, i) => (
+              <RevealItem key={p.slug} className={`featured__cell featured__cell--${i}`}>
+                <PropertyCard property={p} size={i === 0 ? "large" : "default"} />
+              </RevealItem>
+            ))}
+          </Stagger>
+        </div>
+      </section>
+
+      {/* Dettagli */}
+      <section className="section details-section" aria-labelledby="details-title">
+        <div className="container">
+          <Reveal className="section-head">
+            <p className="eyebrow">Ospitalità</p>
+            <h2 id="details-title" className="h2">
+              La cura si vede <em>nei dettagli.</em>
+            </h2>
+          </Reveal>
+          <DetailsShowcase />
+        </div>
+      </section>
+
+      <Testimonials />
+
+      {/* FAQ */}
+      <section className="section faq-section" aria-labelledby="faq-title">
+        <div className="container faq-section__grid">
+          <Reveal className="section-head">
+            <p className="eyebrow">Domande frequenti</p>
+            <h2 id="faq-title" className="h2">
+              Le risposte, <em>prima di chiederle.</em>
+            </h2>
+            <Link href="/faq" className="link-arrow">
+              Tutte le domande <Icon name="arrow" size={16} />
+            </Link>
+          </Reveal>
+          <Reveal>
+            <FaqList items={faqs.slice(0, 5)} />
+          </Reveal>
+        </div>
+      </section>
+
+      <CtaBand />
     </>
   );
 }

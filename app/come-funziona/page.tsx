@@ -1,0 +1,99 @@
+import type { Metadata } from "next";
+import PageHero from "@/components/PageHero";
+import ProcessStory from "@/components/ProcessStory";
+import Icon from "@/components/Icon";
+import { Reveal, RevealItem, Stagger } from "@/components/motion/Reveal";
+import CtaBand from "@/components/CtaBand";
+
+export const metadata: Metadata = {
+  title: "Come funziona la gestione",
+  description:
+    "Il percorso con Solace in cinque passi: ci racconti il tuo immobile, analizziamo il potenziale, ci confrontiamo sulla proposta, prepariamo l'avvio e gestiamo condividendo i risultati.",
+  alternates: { canonical: "/come-funziona" },
+};
+
+const toPrepare = [
+  { icon: "pin", title: "Zona e indirizzo indicativo", text: "Per capire domanda e concorrenza." },
+  { icon: "home", title: "Tipologia e metratura", text: "Quante camere, quanti posti letto, stato degli arredi." },
+  { icon: "calendar", title: "Situazione attuale", text: "Vuoto, già in affitto breve o con un contratto in corso." },
+  { icon: "camera", title: "Qualche foto, se le hai", text: "Non servono professionali: ci aiutano a farci un'idea." },
+];
+
+const promises = [
+  "Ti diciamo con franchezza se l'affitto breve ha senso per il tuo immobile.",
+  "Compenso e servizi inclusi sono scritti nella proposta, prima di qualsiasi firma.",
+  "I tempi di avvio dipendono dalla casa e dalle pratiche: li concordiamo insieme.",
+];
+
+export default function ComeFunzionaPage() {
+  return (
+    <>
+      <PageHero
+        eyebrow="Come funziona"
+        title={
+          <>
+            Un percorso chiaro, <em>dal primo contatto ai risultati.</em>
+          </>
+        }
+        lead="Nessun salto nel buio: prima capiamo insieme il potenziale della casa, poi decidi tu se e come partire."
+        image="/images/immobili/navigli/04.jpg"
+        imageAlt="Cortile interno alberato della Casa sui Navigli"
+      />
+
+      <section className="section process" aria-labelledby="steps-title">
+        <div className="container">
+          <Reveal className="section-head">
+            <p className="eyebrow">Cinque passi</p>
+            <h2 id="steps-title" className="h2">
+              Cosa succede, <em>e quando.</em>
+            </h2>
+          </Reveal>
+          <ProcessStory detailed />
+        </div>
+      </section>
+
+      <section className="section section--paper prepare" aria-labelledby="prepare-title">
+        <div className="container prepare__grid">
+          <Reveal className="section-head">
+            <p className="eyebrow">Per l&apos;analisi</p>
+            <h2 id="prepare-title" className="h2">
+              Cosa ci serve <em>per iniziare.</em>
+            </h2>
+            <p className="section-head__text">
+              Bastano poche informazioni. Il resto lo approfondiamo insieme durante la chiamata o il sopralluogo.
+            </p>
+          </Reveal>
+          <Stagger as="ul" className="prepare__list" gap={0.1}>
+            {toPrepare.map((t) => (
+              <RevealItem as="li" key={t.title} className="prepare__item">
+                <Icon name={t.icon} size={26} />
+                <h3>{t.title}</h3>
+                <p>{t.text}</p>
+              </RevealItem>
+            ))}
+          </Stagger>
+        </div>
+      </section>
+
+      <section className="section promises" aria-labelledby="promises-title">
+        <div className="container promises__inner">
+          <Reveal>
+            <h2 id="promises-title" className="h2">
+              I nostri impegni, <em>fin dall&apos;inizio.</em>
+            </h2>
+          </Reveal>
+          <Stagger as="ul" className="promises__list" gap={0.12}>
+            {promises.map((p) => (
+              <RevealItem as="li" key={p}>
+                <Icon name="check" size={22} />
+                <span>{p}</span>
+              </RevealItem>
+            ))}
+          </Stagger>
+        </div>
+      </section>
+
+      <CtaBand />
+    </>
+  );
+}

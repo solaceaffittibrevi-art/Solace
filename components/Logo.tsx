@@ -1,8 +1,19 @@
-export default function Logo({ small = false }: { small?: boolean }) {
+import Image from "next/image";
+
+// Logo autentico (file vettoriale Solace): monogramma SR + wordmark con payoff.
+export default function Logo({ variant = "light" }: { variant?: "light" | "dark" }) {
   return (
-    <span className={small ? "logo logo--small" : "logo"}>
-      <span className="logo__name">Solace</span>
-      <span className="logo__tag">Real Estate Short Rent</span>
+    <span className="logo">
+      <Image src="/brand/monogram.svg" alt="" width={302} height={287} className="logo__mark" priority unoptimized />
+      <Image
+        src={variant === "light" ? "/brand/wordmark.svg" : "/brand/wordmark-dark.svg"}
+        alt="Solace Real Estate Short Rent"
+        width={912}
+        height={190}
+        className="logo__word"
+        priority
+        unoptimized
+      />
     </span>
   );
 }
