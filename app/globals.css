@@ -689,7 +689,7 @@ p {
   background:
     linear-gradient(180deg, rgba(7, 11, 22, 0.55) 0%, rgba(7, 11, 22, 0) 28%),
     linear-gradient(90deg, rgba(7, 11, 22, 0.92) 0%, rgba(7, 11, 22, 0.72) 42%, rgba(7, 11, 22, 0.15) 75%),
-    linear-gradient(0deg, var(--navy-950) 0%, rgba(7, 11, 22, 0) 50%);
+    linear-gradient(0deg, rgba(7, 11, 22, 0.85) 0%, rgba(7, 11, 22, 0) 45%);
 }
 
 .hero__text {
