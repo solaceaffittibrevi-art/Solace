@@ -35,6 +35,12 @@ export default function ServiziPage() {
             Tutto quello che serve, <em>niente che ti tocchi seguire.</em>
           </>
         }
+        background={{
+          src: "/images/servizi/monogramma-solace-sr.jpg",
+          alt: "",
+          position: "88% 50%",
+          fit: "contain",
+        }}
         lead="Gestione Airbnb e affitti brevi a Milano: ogni attività che svolgiamo ha un obiettivo concreto per te, cioè meno incombenze, ospiti seguiti, una casa curata e risultati che puoi controllare."
       />
 

@@ -20,13 +20,14 @@ export default function PageHero({
   // Inquadratura: object-position su desktop e (facoltativa) su mobile.
   imagePosition?: { desktop: string; mobile?: string };
   // Foto di sfondo a tutta larghezza, oscurata per mantenere leggibili i testi.
-  background?: { src: string; alt: string; position?: string };
+  // "contain": l'immagine resta intera (es. il monogramma), sfumata ai bordi nel colore della pagina.
+  background?: { src: string; alt: string; position?: string; fit?: "cover" | "contain" };
   children?: React.ReactNode;
 }) {
   return (
     <section className={`page-hero${image ? " page-hero--image" : ""}${background ? " page-hero--bg" : ""}`}>
       {background && (
-        <div className="page-hero__bg">
+        <div className={`page-hero__bg${background.fit === "contain" ? " page-hero__bg--contain" : ""}`}>
           <Image
             src={background.src}
             alt={background.alt}
@@ -35,9 +36,9 @@ export default function PageHero({
             sizes="100vw"
             style={{ objectPosition: background.position ?? "50% 50%" }}
           />
-          <div className="page-hero__bg-shade" aria-hidden="true" />
         </div>
       )}
+      {background && <div className="page-hero__bg-shade" aria-hidden="true" />}
       <div className="container page-hero__inner">
         <div className="page-hero__text">
           <h1 className="page-hero__title enter" style={{ "--i": 0 } as React.CSSProperties}>
