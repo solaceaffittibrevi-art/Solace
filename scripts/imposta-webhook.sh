@@ -6,7 +6,7 @@ cd "$(dirname "$0")/.."
 [ -f .env.local ] || { cp .env.example .env.local; chmod 600 .env.local; }
 
 printf "Incolla l'URL dell'app web (termina con /exec, non verrà mostrato) e premi Invio: "
-IFS= read -rs URL
+IFS= read -rs URL || true
 echo
 URL="$(printf %s "$URL" | tr -d '[:space:]')"
 if [[ ! "$URL" =~ ^https://script\.google\.com/macros/s/[A-Za-z0-9_-]+/exec$ ]]; then

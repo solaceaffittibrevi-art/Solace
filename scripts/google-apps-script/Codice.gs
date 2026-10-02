@@ -1,5 +1,5 @@
 /**
- * Solace — ricezione delle richieste del sito e invio a Gmail.
+ * Solace - ricezione delle richieste del sito e invio a Gmail.
  * Da incollare in script.google.com, accedendo con solace.gestione@gmail.com.
  * L'email parte dall'account Gmail che pubblica lo script: nessuna chiave API.
  *
@@ -8,7 +8,8 @@
  */
 const DESTINATARIO = "solace.gestione@gmail.com";
 const CODICE_CONDIVISO = "INCOLLA_QUI_IL_CODICE";
-const OGGETTO = "Solace — Nuova richiesta di analisi immobile";
+// Il trattino lungo e scritto come \u2014 per evitare problemi di codifica durante il copia e incolla.
+const OGGETTO = "Solace \u2014 Nuova richiesta di analisi immobile";
 
 function doPost(e) {
   try {
@@ -39,7 +40,7 @@ function doGet() {
 // Da eseguire una volta dall'editor ("Esegui"): concede l'autorizzazione a inviare email
 // e manda un'email di prova a DESTINATARIO.
 function provaInvio() {
-  MailApp.sendEmail(DESTINATARIO, OGGETTO + " (prova dall'editor)", "Se leggi questa email, lo script può inviare da Gmail.");
+  MailApp.sendEmail(DESTINATARIO, OGGETTO + " (prova dall'editor)", "Se leggi questa email, lo script puo inviare da Gmail.");
 }
 
 function risposta(oggetto) {

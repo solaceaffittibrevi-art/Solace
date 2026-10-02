@@ -6,7 +6,7 @@ cd "$(dirname "$0")/.."
 [ -f .env.local ] || { cp .env.example .env.local; chmod 600 .env.local; }
 
 printf "Incolla la chiave API di Resend (non verrà mostrata) e premi Invio: "
-IFS= read -rs KEY
+IFS= read -rs KEY || true
 echo
 KEY="$(printf %s "$KEY" | tr -d '[:space:]')"
 if [[ ! "$KEY" =~ ^re_[A-Za-z0-9_]{10,}$ ]]; then

@@ -13,6 +13,9 @@ import { getStore, type Store } from "@/lib/kv";
 
 const MAX_BODY_BYTES = 16 * 1024;
 
+// Durata massima della funzione sull'hosting (secondi): copre l'attesa del webhook.
+export const maxDuration = 30;
+
 // Limiti per indirizzo IP (salvato solo come impronta SHA-256) e per tutto il sito, che
 // protegge anche la quota del servizio email da invii distribuiti.
 const LIMITS = [
@@ -242,7 +245,8 @@ export async function POST(request: Request) {
         }),
         cache: "no-store",
         redirect: "follow",
-        signal: AbortSignal.timeout(15_000),
+        // Google Apps Script risponde di norma in 1–5 s, ma al primo avvio può impiegare di più.
+        signal: AbortSignal.timeout(25_000),
       }).then(async (res) => {
         if (!res.ok) throw new Error(`webhook_${res.status}`);
         // Una pagina HTML (errore, login) o una risposta JSON con ok:false non è una consegna riuscita.
