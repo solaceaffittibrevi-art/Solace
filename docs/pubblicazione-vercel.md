@@ -112,20 +112,20 @@ Cestino di Gmail, che li cancella definitivamente dopo 30 giorni. `disattivaPuli
 
 ## Messa online su solaceaffittibrevimilano.it (dominio scelto il 2/10/2026)
 Da eseguire **solo dopo l'acquisto** del dominio, in quest'ordine:
-1. Unire il ramo di lavoro in `main` (pull request su GitHub): Vercel pubblica `main` in produzione.
-2. Vercel → Settings → Domains → **Add**: `solaceaffittibrevimilano.it` (principale) e
-   `www.solaceaffittibrevimilano.it` con **Redirect** (308) verso il principale.
+1. Unire il ramo di lavoro in `main` (pull request #1, unita il 2/10/2026): Vercel pubblica `main` in produzione.
+2. Vercel → Settings → Domains: configurati il 2/10/2026 con `www.solaceaffittibrevimilano.it` come indirizzo
+   principale (Production) e `solaceaffittibrevimilano.it` con **Redirect 308** verso la versione con www.
 3. Presso il registrar del dominio, pannello DNS: inserire **esattamente** i record che Vercel mostra accanto a
    ciascun dominio (di norma un record `A` per `solaceaffittibrevimilano.it` e un `CNAME` per `www`). Non toccare
    eventuali record `MX` della posta. Attendere che Vercel segni entrambi i domini come "Valid Configuration".
 4. Vercel → Settings → Environment Variables, ambiente **Production**:
-   - `NEXT_PUBLIC_SITE_URL` = `https://solaceaffittibrevimilano.it`
+   - `NEXT_PUBLIC_SITE_URL` = `https://www.solaceaffittibrevimilano.it` (l'indirizzo principale, con www)
    - `NEXT_PUBLIC_SITE_ENV` = `production`
    - `NEXT_PUBLIC_GA4_ID` = `G-1RM79G8DR2`, dopo aver aggiornato in GA4 (Amministrazione → Stream di dati →
-     "Sito Solace") l'URL del flusso con `https://solaceaffittibrevimilano.it`.
+     "Sito Solace") l'URL del flusso con `https://www.solaceaffittibrevimilano.it`.
    Poi **Redeploy** dell'ultimo deployment di produzione (le variabili `NEXT_PUBLIC_` entrano nella build).
 5. Deployment Protection resta attiva sulle anteprime; con "Standard Protection" il dominio personalizzato di
    produzione è pubblico.
 6. Controlli del punto 5 sul dominio: robots.txt con `Allow`, sitemap con gli indirizzi
-   `https://solaceaffittibrevimilano.it/…`, intestazioni di sicurezza, video, banner cookie, prova "TEST SOLACE".
-7. Google Search Console: aggiungere la proprietà di dominio e inviare `https://solaceaffittibrevimilano.it/sitemap.xml`.
+   `https://www.solaceaffittibrevimilano.it/…`, intestazioni di sicurezza, video, banner cookie, prova "TEST SOLACE".
+7. Google Search Console: aggiungere la proprietà di dominio e inviare `https://www.solaceaffittibrevimilano.it/sitemap.xml`.
