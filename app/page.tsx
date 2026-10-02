@@ -36,11 +36,11 @@ export default function Home() {
       {/* Cosa fate e come potete aiutarmi */}
       <section id="vantaggi" className="section benefits" aria-labelledby="benefits-title">
         <div className="container benefits__grid">
-          <Reveal className="benefits__media" style={{ "--ratio": "1920 / 1319" } as React.CSSProperties}>
+          <Reveal className="benefits__media" style={{ "--ratio": "1920 / 1296" } as React.CSSProperties}>
             <Parallax strength={6}>
               <Image
-                src="/images/immobili/villa-eze/02.jpg"
-                alt="Villa contemporanea con piscina a sfioro e grandi vetrate a Èze, in Costa Azzurra"
+                src="/images/immobili/villa-eze/01.jpg"
+                alt="Piscina a sfioro della villa affacciata sul mare della Costa Azzurra, a Èze"
                 fill
                 sizes="(max-width: 900px) 100vw, 50vw"
               />

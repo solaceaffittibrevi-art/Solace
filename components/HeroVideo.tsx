@@ -11,7 +11,8 @@ import Icon from "./Icon";
 // con "Riduci movimento" attivo o con il risparmio dati. Il video parte solo dopo il caricamento della
 // pagina, è senza traccia audio e sempre muto, e si ferma quando la testata esce dallo schermo.
 const POSTER = "/images/milano-duomo.webp";
-const SOURCES = { desktop: "/video/milano-aerea-1280.mp4", mobile: "/video/milano-aerea-960.mp4" };
+// Loop di 23 s (piazza del Duomo dal giorno alla notte) ricavato dal filmato originale in media/video-originale.
+const SOURCES = { desktop: "/video/milano-duomo-loop-1280.mp4", mobile: "/video/milano-duomo-loop-960.mp4" };
 
 type Conn = { saveData?: boolean; effectiveType?: string };
 

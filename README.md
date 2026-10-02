@@ -85,9 +85,22 @@ job pianificato sul server (es. Vercel Cron) che registri le osservazioni e facc
 
 ## Video della home
 
-`public/video/milano-aerea-1280.mp4` (desktop) e `milano-aerea-960.mp4` (mobile): H.264 senza traccia audio,
-in loop, con la foto del Duomo come immagine di attesa e alternativa. Filmato acquistato dal titolare con i
-diritti d'uso per il sito Solace (confermato il 2/10/2026).
+`public/video/milano-duomo-loop-1280.mp4` (desktop, 5,3 MB) e `milano-duomo-loop-960.mp4` (mobile, 3,8 MB): loop di
+23 secondi su piazza del Duomo dal giorno alla notte, H.264 a 30 fps senza traccia audio; l'ultimo secondo sfuma
+nel primo, così la ripetizione non ha stacchi. La foto del Duomo resta l'immagine di attesa e alternativa.
+Filmato acquistato dal titolare con i diritti d'uso per il sito Solace (confermato il 2/10/2026).
+
+Il filmato completo (2'25") è conservato in `media/video-originale/` (non pubblicato: fuori da `public/`).
+Per rigenerare il loop (segmento 102,25–126,35 s del filmato):
+
+```bash
+for w in 1280 960; do
+  ffmpeg -ss 102.25 -t 24.1 -i media/video-originale/milano-aerea-1280.mp4 -filter_complex \
+    "[0:v]fps=30,scale=${w}:-2:flags=lanczos,setsar=1,split[a][b];[a]trim=start=1.0,setpts=PTS-STARTPTS[body];[b]trim=end=1.0,setpts=PTS-STARTPTS[head];[body][head]xfade=transition=fade:duration=1:offset=22.05,format=yuv420p[v]" \
+    -map "[v]" -an -c:v libx264 -profile:v high -level 4.0 -preset slow -tune film -crf 27 -g 60 \
+    -movflags +faststart public/video/milano-duomo-loop-$w.mp4
+done
+```
 
 ## Dove modificare
 

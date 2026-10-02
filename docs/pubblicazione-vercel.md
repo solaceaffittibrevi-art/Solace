@@ -3,6 +3,29 @@
 Checklist per mettere online il sito Solace. Nessun valore segreto è scritto qui: i valori stanno solo in
 `.env.local` (sul Mac, escluso da Git) e nelle impostazioni del progetto su Vercel.
 
+## 0. Anteprima protetta (prima della pubblicazione definitiva)
+Serve a provare il sito online, visibile solo a chi ha accesso al progetto Vercel. Dominio e DNS non servono.
+
+1. <https://vercel.com/new> → accedi con GitHub → **Import** del repository `solaceaffittibrevi-art/Solace`.
+   Framework: Next.js (rilevato da solo), nessuna impostazione di build da cambiare.
+2. Prima di **Deploy** apri **Environment Variables** e aggiungi le 4 variabili riservate del punto 2
+   (`LEAD_WEBHOOK_URL`, `LEAD_WEBHOOK_SECRET`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`), ciascuna con
+   **Sensitive** attivo e ambienti **Production** e **Preview**. I valori si copiano da `.env.local` sul Mac
+   (aprilo con `open -a TextEdit "/Users/gabrieldalmolin/Desktop/SOLACE SITO/.env.local"`), uno alla volta, senza
+   incollarli altrove. **Non** aggiungere `NEXT_PUBLIC_SITE_ENV` né `NEXT_PUBLIC_SITE_URL`.
+3. **Deploy**. Il ramo `main` contiene ancora lo scheletro iniziale: l'anteprima del sito completo è quella del ramo
+   di lavoro. Vercel → progetto → **Deployments** → la riga del ramo `claude/trusting-thompson-uzpyam` → **Visit**
+   (se non c'è ancora: **Create Deployment** → ramo `claude/trusting-thompson-uzpyam`).
+4. Protezione: **Settings → Deployment Protection → Vercel Authentication** deve essere **attivo**, livello
+   **Standard Protection** (predefinito: protegge tutti gli indirizzi `*.vercel.app`, compreso quello di produzione,
+   finché non c'è un dominio personalizzato). Lasciare **disattivati** "Protection Bypass for Automation" e i link
+   di condivisione.
+5. Verifica che la protezione funzioni: apri l'indirizzo dell'anteprima in una **finestra privata** del browser.
+   Deve comparire la pagina di accesso di Vercel, non il sito. Nella finestra normale, con l'accesso a Vercel,
+   compare il sito. `robots.txt` deve rispondere `Disallow: /`.
+6. Prova del modulo sull'anteprima: una richiesta con nome "TEST SOLACE 4" deve arrivare a
+   solace.gestione@gmail.com (sarà esclusa dalla pulizia automatica perché è una prova).
+
 ## 1. Progetto
 - Importa il repository `solaceaffittibrevi-art/Solace` (Framework: Next.js, impostazioni di build predefinite).
 - `vercel.json` esegue le funzioni a Francoforte (`fra1`), vicino ai visitatori e in Europa.
@@ -66,6 +89,7 @@ Script Google: incollare il nuovo codice, salvare, poi Esegui il deployment → 
 **Nuova versione** (l'indirizzo resta lo stesso). Aggiornare `LEAD_WEBHOOK_SECRET` su Vercel e in `.env.local`.
 
 ## 7. Conservazione delle richieste (12 mesi)
+Guida passo passo: `docs/apps-script-pulizia.md`.
 Le richieste restano solo nella casella solace.gestione@gmail.com. Pulizia automatica: nel progetto Apps Script
 aggiungere il file `scripts/google-apps-script/Pulizia.gs` (nessun segreto), poi dal menu "Esegui", in ordine:
 1. `verificaSelezione` (dare il consenso Google): solo conteggi su tutte le date. La prova "TEST SOLACE 3" deve
