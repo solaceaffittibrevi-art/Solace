@@ -49,6 +49,16 @@ Vedi `.env.example`. Prima della pubblicazione servono almeno:
 - `NEXT_PUBLIC_SITE_URL` e `NEXT_PUBLIC_SITE_ENV=production` sul dominio definitivo.
 - Recapiti pubblici e URL dell'informativa privacy, se disponibili.
 
+## Configurazione del modulo contatti
+
+1. Account Resend creato con solace.gestione@gmail.com → API Keys → chiave con permesso "Sending access".
+2. In locale: `bash scripts/imposta-chiave-resend.sh` (la chiave viene chiesta senza mostrarla e salvata in
+   `.env.local`, escluso da Git), poi `npm run check:env` per verificare senza vedere i valori.
+3. Online (Vercel → Settings → Environment Variables): `RESEND_API_KEY` (Sensitive), `LEAD_EMAIL_TO`,
+   `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SITE_ENV=production` (solo Production).
+4. Online serve anche Upstash Redis (Vercel → Storage → Upstash for Redis, collegato al progetto): crea
+   `KV_REST_API_URL` e `KV_REST_API_TOKEN`. Senza, sul sito pubblicato il modulo non accetta richieste.
+
 ## Immobili e sostituzioni
 
 Tutto è in `lib/immobili.ts`:
