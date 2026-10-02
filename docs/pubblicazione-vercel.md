@@ -18,7 +18,7 @@ Checklist per mettere online il sito Solace. Nessun valore segreto è scritto qu
 | `NEXT_PUBLIC_SITE_URL` | Production | `https://solaceaffittibrevi.com` (dominio definitivo). |
 | `NEXT_PUBLIC_SITE_ENV` | **solo Production** | `production`. Nelle anteprime lasciarla vuota: restano fuori dai motori di ricerca. |
 | `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Production, Preview | Da Upstash (punto 3). **Sensitive** il token. In alternativa `KV_REST_API_URL`/`KV_REST_API_TOKEN` creati dall'integrazione Vercel. |
-| `NEXT_PUBLIC_GA4_ID` | Production | Facoltativo: identificativo Google Analytics 4 (`G-…`). Caricato solo dopo il consenso. Ricostruire il sito dopo averlo impostato. |
+| `NEXT_PUBLIC_GA4_ID` | Production | `G-1RM79G8DR2` (proprietà GA4 "Solace", flusso "Sito Solace - solaceaffittibrevi.com"). Non è segreto. Caricato solo dopo il consenso. |
 
 Da **non** impostare online: `RESEND_API_URL`, `LEAD_WEBHOOK_TIMEOUT_MS` (servono solo ai test),
 `RESEND_API_KEY` (non usata: l'invio passa da Google Apps Script).

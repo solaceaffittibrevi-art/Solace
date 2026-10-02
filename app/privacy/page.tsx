@@ -107,8 +107,9 @@ export default function PrivacyPage() {
             <strong>Vercel Inc.</strong>: hosting del sito ed esecuzione del modulo.
           </li>
           <li>
-            <strong>Upstash</strong>: archivio temporaneo, su server nell&apos;Unione europea, per il limite di invii e
-            per evitare i doppioni (impronta dell&apos;IP e codice dell&apos;invio).
+            <strong>Upstash, Inc.</strong>: archivio temporaneo su server Amazon Web Services a Francoforte (Germania),
+            nell&apos;Unione europea, per il limite di invii e per evitare i doppioni (impronta dell&apos;IP e codice
+            dell&apos;invio).
           </li>
           {ga && (
             <li>
