@@ -227,6 +227,9 @@ export async function POST(request: Request) {
     replyTo: lead.email || "",
   };
 
+  // Attesa massima del webhook; LEAD_WEBHOOK_TIMEOUT_MS serve solo ai test (1–25 s).
+  const webhookTimeout = Math.min(25_000, Math.max(1_000, Number(process.env.LEAD_WEBHOOK_TIMEOUT_MS) || 25_000));
+
   const deliveries: Promise<void>[] = [];
 
   if (webhook) {
@@ -242,11 +245,14 @@ export async function POST(request: Request) {
           origin: "sito-solace",
           format: "text/plain",
           secret: process.env.LEAD_WEBHOOK_SECRET || undefined,
+          // Identificativo dell'invio: il ricevente lo usa per non inviare due volte la stessa
+          // richiesta (es. dopo un timeout, quando il visitatore riprova).
+          requestId: input.requestId || undefined,
         }),
         cache: "no-store",
         redirect: "follow",
         // Google Apps Script risponde di norma in 1–5 s, ma al primo avvio può impiegare di più.
-        signal: AbortSignal.timeout(25_000),
+        signal: AbortSignal.timeout(webhookTimeout),
       }).then(async (res) => {
         if (!res.ok) throw new Error(`webhook_${res.status}`);
         // Una pagina HTML (errore, login) o una risposta JSON con ok:false non è una consegna riuscita.
@@ -264,7 +270,12 @@ export async function POST(request: Request) {
     deliveries.push(
       fetch(resendUrl, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${resendKey}` },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${resendKey}`,
+          // Resend non invia di nuovo un'email con la stessa chiave entro 24 ore.
+          ...(input.requestId ? { "Idempotency-Key": `solace-${input.requestId}` } : {}),
+        },
         // Solo testo: nessun campo "html", quindi nulla di quanto scritto nel modulo viene interpretato.
         body: JSON.stringify({
           from: emailFrom,
@@ -292,7 +303,10 @@ export async function POST(request: Request) {
 
   if (!results.some((r) => r.status === "fulfilled")) {
     if (dedupeKey) await store.del(dedupeKey);
-    return fail("unavailable", 503);
+    // Timeout: l'email potrebbe essere già partita. Riprovare è sicuro, perché lo stesso requestId
+    // non genera un secondo invio (script Google e Resend riconoscono le richieste già consegnate).
+    const timedOut = results.some((r) => r.status === "rejected" && r.reason instanceof Error && r.reason.name === "TimeoutError");
+    return fail(timedOut ? "retry" : "unavailable", 503);
   }
   if (dedupeKey) await store.set(dedupeKey, "done", DONE_TTL);
   return json({ ok: true });

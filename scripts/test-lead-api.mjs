@@ -14,7 +14,8 @@ const FAKE_KEY = "fake-test-key-not-real"; // valore finto, non è una credenzia
 // ---- Servizi simulati -------------------------------------------------------------------
 const emails = [];
 const hooks = [];
-const mode = { fail: false, delay: 0, resendDown: false, hook: "ok" };
+const mode = { fail: false, delay: 0, resendDown: false, hook: "ok", hookDelay: 0, redis: "ok" };
+const hookIds = new Set(); // come lo script Google: ricorda gli invii già fatti
 const kv = new Map();
 const kvGet = (k) => {
   const e = kv.get(k);
@@ -57,6 +58,8 @@ const mock = http.createServer((req, res) => {
     };
     if (req.url === "/redis/pipeline") {
       if (req.headers.authorization !== `Bearer ${FAKE_KEY}`) return send(401, { error: "unauthorized" });
+      if (mode.redis === "down") return send(503, { error: "simulated outage" });
+      if (mode.redis === "error") return send(200, JSON.parse(data).map(() => ({ error: "ERR simulated" })));
       return send(200, JSON.parse(data).map((c) => ({ result: kvRun(c) })));
     }
     if (mode.delay) await new Promise((r) => setTimeout(r, mode.delay));
@@ -68,11 +71,16 @@ const mock = http.createServer((req, res) => {
       return res.end("<html><body>Errore dello script</body></html>");
     }
     if (req.url === "/resend/emails") {
-      emails.push({ auth: req.headers.authorization, body: JSON.parse(data) });
+      emails.push({ auth: req.headers.authorization, idem: req.headers["idempotency-key"], body: JSON.parse(data) });
       return send(200, { id: "simulated" });
     }
     if (req.url === "/webhook") {
-      hooks.push(JSON.parse(data));
+      const d = JSON.parse(data);
+      if (d.requestId && hookIds.has(d.requestId)) return send(200, { ok: true, duplicate: true });
+      hooks.push(d);
+      if (d.requestId) hookIds.add(d.requestId);
+      // Email già inviata, ma la risposta arriva in ritardo (come un timeout reale)
+      if (mode.hookDelay) await new Promise((r) => setTimeout(r, mode.hookDelay));
       return send(200, { ok: true });
     }
     send(404, {});
@@ -105,6 +113,7 @@ const shared = {
   LEAD_EMAIL_TO: "test@example.invalid",
   LEAD_WEBHOOK_URL: `http://127.0.0.1:${MOCK}/webhook`,
   LEAD_WEBHOOK_SECRET: "codice-condiviso-di-test",
+  LEAD_WEBHOOK_TIMEOUT_MS: "1500",
 };
 start(PORT_A, shared);
 start(PORT_B, shared);
@@ -255,6 +264,30 @@ r = await post(PORT_B, lead());
 check("Solo webhook funzionante: richiesta confermata", r.status === 200 && r.data.ok === true, r.text);
 mode.resendDown = false;
 
+// Timeout dopo un invio riuscito: il nuovo tentativo non deve generare una seconda email
+{
+  mode.resendDown = true;
+  mode.hookDelay = 3000;
+  const late = lead();
+  const hooksBefore = hooks.length;
+  r = await post(PORT_A, late);
+  check("Timeout del webhook: nessuna conferma (503, codice retry)", r.status === 503 && r.data.error === "retry", r.text);
+  mode.hookDelay = 0;
+  r = await post(PORT_B, late);
+  check("Nuovo tentativo dopo il timeout: confermato senza seconda email", r.status === 200 && r.data.ok === true && hooks.length === hooksBefore + 1, `${r.status} invii:${hooks.length - hooksBefore}`);
+  check("Il webhook riceve l'identificativo dell'invio", hooks.at(-1)?.requestId === late.requestId);
+  mode.resendDown = false;
+}
+check("Resend riceve la chiave di idempotenza", emails.at(-1)?.idem?.startsWith("solace-"), emails.at(-1)?.idem);
+
+// Upstash non disponibile o in errore: le richieste non vengono perse (ripiego temporaneo in memoria)
+for (const kind of ["down", "error"]) {
+  mode.redis = kind;
+  r = await post(PORT_A, lead());
+  check(`Upstash ${kind === "down" ? "non raggiungibile" : "con errore sui comandi"}: richiesta comunque gestita (200)`, r.status === 200 && r.data.ok === true, r.text);
+}
+mode.redis = "ok";
+
 // Invio contemporaneo dello stesso requestId su due istanze: uno solo viene inoltrato
 mode.delay = 1500;
 const twin = lead();
@@ -297,6 +330,7 @@ await new Promise((r) => setTimeout(r, 300));
 const allLogs = logs.join("");
 const leaks = [PII.name, PII.email, "203.0.113.7", "198.51.100.", FAKE_KEY, "codice-condiviso-di-test", "127.0.0.1:" + MOCK].filter((s) => allLogs.includes(s));
 check("Log senza nome, email, IP, chiavi o indirizzi dei servizi", leaks.length === 0, leaks.join(", "));
+check("Errori di Upstash registrati nei log (senza dettagli sensibili)", /\[kv\] (incr|claim|set|del) non riuscito/.test(allLogs));
 check("Nessun messaggio d'errore pubblico che riveli la configurazione", !JSON.stringify([r.data, api.data]).includes("configured"));
 
 console.log(`\n${passed} superati, ${failed} falliti. Email simulate ricevute: ${emails.length}.`);

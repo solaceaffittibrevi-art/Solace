@@ -27,6 +27,8 @@ const failureText: Record<string, string> = {
   rate_limited:
     "Sono arrivate troppe richieste da questa connessione in poco tempo. I dati che hai scritto sono ancora qui: riprova tra qualche minuto.",
   in_progress: "La richiesta precedente è ancora in elaborazione. Attendi qualche secondo e riprova.",
+  retry:
+    "Non abbiamo ricevuto conferma in tempo. I dati che hai scritto sono ancora qui: puoi riprovare, se la richiesta era già arrivata non verrà inviata due volte.",
 };
 
 const newRequestId = () =>
