@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import PageHero from "@/components/PageHero";
 import GlassIcon from "@/components/GlassIcon";
@@ -8,12 +9,12 @@ import { Reveal, RevealItem, Stagger } from "@/components/motion/Reveal";
 import CtaBand from "@/components/CtaBand";
 import { site } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Chi siamo",
+export const metadata: Metadata = pageMetadata({
+  title: "Chi Siamo | Il Team Solace",
   description:
-    "Solace è una realtà di gestione affitti brevi a Milano. Conosci il metodo e la persona che segue il rapporto con i proprietari.",
-  alternates: { canonical: "/chi-siamo" },
-};
+    "Solace gestisce affitti brevi e case vacanza a Milano: conosci Gabriel Dal Molin, fondatore, e il team professionale che segue immobili, ospiti e servizi ogni giorno.",
+  path: "/chi-siamo",
+});
 
 const method = [
   {
@@ -48,8 +49,9 @@ export default function ChiSiamoPage() {
           </>
         }
         lead="Solace nasce a Milano per chi possiede una casa e vuole farla rendere in affitto breve senza trasformarlo in un secondo lavoro."
-        image="/images/immobili/suite-royale/01.jpg"
-        imageAlt="Cucina in marmo della Suite Royale, appartamento gestito da Solace vicino al Duomo"
+        image="/images/chi-siamo/villa-eze-piscina-vista-mare.jpg"
+        imageAlt="Villa con piscina a sfioro e grandi vetrate a Èze, in Costa Azzurra, gestita da Solace"
+        imagePosition={{ desktop: "30% 50%", mobile: "30% 50%" }}
       />
 
       <section className="section about" aria-labelledby="about-title">
@@ -59,7 +61,7 @@ export default function ChiSiamoPage() {
               Gestiamo case come <em>vorremmo fosse gestita la nostra.</em>
             </h2>
             <p>
-              Ci occupiamo di affitti brevi a Milano: dalla preparazione dell&apos;annuncio all&apos;accoglienza degli ospiti,
+              Ci occupiamo di gestione di affitti brevi e case vacanza a Milano: dalla preparazione dell&apos;annuncio all&apos;accoglienza degli ospiti,
               dalle pulizie agli adempimenti, fino al rendiconto per il proprietario.
             </p>
             <p>
@@ -67,11 +69,11 @@ export default function ChiSiamoPage() {
               hanno lasciato più di 1.200 recensioni. Numeri che contano perché dietro ognuno c&apos;è un soggiorno curato.
             </p>
           </Reveal>
-          <Reveal className="about__media" delay={0.1}>
+          <Reveal className="about__media" delay={0.1} style={{ "--pos": "62% 55%" } as React.CSSProperties}>
             <Parallax strength={6}>
               <Image
-                src="/images/immobili/navigli/01.jpg"
-                alt="Soggiorno della Casa sui Navigli con travi a vista e camino"
+                src="/images/chi-siamo/soggiorno-con-balcone-milano.jpg"
+                alt="Soggiorno con divano angolare, tavolino in vetro e portafinestra sul balcone"
                 fill
                 sizes="(max-width: 900px) 100vw, 45vw"
               />
@@ -107,14 +109,15 @@ export default function ChiSiamoPage() {
             </Reveal>
             <Stagger className="person__bio" gap={0.08}>
               <RevealItem as="p" className="lead">
-                Ho fondato Solace per aiutare i proprietari a mettere a reddito la propria casa senza ritrovarsi con un
-                secondo lavoro da gestire.
+                Ho creato Solace per offrire ai proprietari una gestione organizzata e attenta, senza che la casa diventi
+                un secondo lavoro da gestire.
               </RevealItem>
               <RevealItem as="p">
-                Il mio lavoro si svolge soprattutto a Milano e comprende molto più delle prenotazioni. Ci sono le
-                telefonate con i proprietari, gli appartamenti da preparare, gli ospiti che hanno bisogno di una mano e gli
-                imprevisti da risolvere. È seguendo questi aspetti in prima persona che ho imparato cosa significa gestire
-                una casa affidata da qualcun altro.
+                Il nostro team professionale si occupa della gestione quotidiana degli immobili, dell&apos;assistenza agli
+                ospiti e del coordinamento dei servizi, con cura e attenzione ai dettagli. Lavoriamo soprattutto a Milano, e
+                il lavoro comprende molto più delle prenotazioni: le telefonate con i proprietari, gli appartamenti da
+                preparare, gli ospiti che hanno bisogno di una mano e gli imprevisti da risolvere. È stando vicino a tutti
+                questi aspetti che ho imparato cosa significa gestire una casa affidata da qualcun altro.
               </RevealItem>
               <RevealItem as="blockquote" className="person__quote">
                 <p>So che dietro un immobile ci sono sacrifici, aspettative e, spesso, un legame personale.</p>
@@ -135,7 +138,7 @@ export default function ChiSiamoPage() {
                 cui poter contare.
               </RevealItem>
               <RevealItem as="p">
-                Se scegli di affidarti a me, voglio che tu sappia chi si sta occupando della tua casa e come sta andando.
+                Se scegli di affidarti a Solace, voglio che tu sappia chi si sta occupando della tua casa e come sta andando.
                 Per me significa parlare chiaro, condividere i risultati e affrontare anche le conversazioni meno comode
                 quando qualcosa va sistemato.
               </RevealItem>

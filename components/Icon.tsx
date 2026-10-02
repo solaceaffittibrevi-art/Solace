@@ -123,6 +123,8 @@ const paths: Record<string, React.ReactNode> = {
   star: <path d="m12 4 2.4 5 5.4.6-4 3.7 1.1 5.3L12 15.9l-4.9 2.7 1.1-5.3-4-3.7 5.4-.6z" />,
   chevronLeft: <path d="m14.5 5.5-6.5 6.5 6.5 6.5" />,
   chevronRight: <path d="m9.5 5.5 6.5 6.5-6.5 6.5" />,
+  pause: <path d="M9 6v12M15 6v12" />,
+  play: <path d="M8 5.5v13l10-6.5z" />,
   expand: <path d="M4.5 9.5v-5h5M19.5 9.5v-5h-5M4.5 14.5v5h5M19.5 14.5v5h-5" />,
   pin: (
     <>

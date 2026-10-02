@@ -14,6 +14,7 @@ export function Reveal({
   variants = fadeUp,
   delay = 0,
   amount,
+  style,
 }: {
   as?: Tag;
   children: React.ReactNode;
@@ -21,11 +22,13 @@ export function Reveal({
   variants?: Variants;
   delay?: number;
   amount?: number;
+  style?: React.CSSProperties;
 }) {
   const Component = motion[as];
   return (
     <Component
       className={["reveal", className].filter(Boolean).join(" ")}
+      style={style}
       variants={variants}
       initial="hidden"
       whileInView="show"

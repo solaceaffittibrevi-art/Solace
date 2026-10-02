@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Icon from "./Icon";
-import type { Property } from "@/lib/site";
+import type { Property } from "@/lib/immobili";
 
 export default function PropertyCard({ property, size = "default", priority = false }: { property: Property; size?: "default" | "large"; priority?: boolean }) {
   return (
@@ -31,6 +31,10 @@ export default function PropertyCard({ property, size = "default", priority = fa
           </span>
         </div>
       </Link>
+      <a href={property.airbnb} target="_blank" rel="noopener noreferrer" className="pcard__airbnb">
+        Visualizza su Airbnb <Icon name="external" size={14} />
+        <span className="sr-only">: {property.name} (si apre in una nuova scheda)</span>
+      </a>
     </article>
   );
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import LeadForm from "@/components/LeadForm";
 import Icon from "@/components/Icon";
@@ -7,12 +8,12 @@ import TrackedLink from "@/components/TrackedLink";
 import { Reveal } from "@/components/motion/Reveal";
 import { site, steps } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Valutazione gratuita del tuo immobile",
+export const metadata: Metadata = pageMetadata({
+  title: "Analisi Gratuita del Tuo Immobile | Solace",
   description:
-    "Richiedi una valutazione gratuita e senza impegno del tuo appartamento a Milano per gli affitti brevi. Ti ricontatta Gabriel Dal Molin, fondatore di Solace.",
-  alternates: { canonical: "/valutazione-gratuita" },
-};
+    "Richiedi l'analisi gratuita del tuo immobile a Milano per gli affitti brevi: una valutazione senza impegno del potenziale, con la risposta del team Solace.",
+  path: "/valutazione-gratuita",
+});
 
 export default function ValutazionePage() {
   const whatsappHref = `https://wa.me/${site.whatsapp}`;
@@ -25,7 +26,7 @@ export default function ValutazionePage() {
             Richiedi una valutazione <em>del tuo immobile.</em>
           </h1>
           <p className="lead enter" style={{ "--i": 1 } as React.CSSProperties}>
-            È gratuita e senza impegno. Ti diciamo con franchezza come può rendere la tua casa in affitto breve e cosa
+            L&apos;analisi dell&apos;immobile è gratuita e senza impegno. Ti diciamo con franchezza come può rendere la tua casa in affitto breve e cosa
             servirebbe per partire.
           </p>
         </div>

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import HomeHero from "@/components/HomeHero";
@@ -12,12 +13,21 @@ import Testimonials from "@/components/Testimonials";
 import FounderBlock from "@/components/FounderBlock";
 import FaqList from "@/components/FaqList";
 import LeadSection from "@/components/LeadSection";
-import { benefits, faqs, featuredSlugs, properties, proof, proofSourceNote, serviceGroups } from "@/lib/site";
+import { benefits, faqs, proof, proofSourceNote, serviceGroups } from "@/lib/site";
+import { properties } from "@/lib/immobili";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Gestione Affitti Brevi Milano | Solace",
+  description:
+    "Gestione affitti brevi e Airbnb a Milano: ospiti, pulizie, prezzi e adempimenti seguiti dal team Solace, con un rendiconto chiaro. Richiedi l'analisi gratuita del tuo immobile.",
+  path: "/",
+});
 
 // Percorso costruito sulle domande del proprietario:
 // cosa fate → perché fidarmi → cosa comprende → come si inizia → chi mi segue → dubbi → richiesta.
 export default function Home() {
-  const featured = featuredSlugs.map((slug) => properties.find((p) => p.slug === slug)!);
+  const featured = properties.slice(0, 4);
 
   return (
     <>
@@ -110,8 +120,8 @@ export default function Home() {
               Cosa comprende la gestione
             </h2>
             <p className="section-head__text">
-              Un solo interlocutore, dalla preparazione dell&apos;annuncio al rendiconto. Il perimetro esatto è scritto
-              nella proposta.
+              Un solo interlocutore per la gestione del tuo appartamento in affitto breve, dalla preparazione
+              dell&apos;annuncio al rendiconto. Il perimetro esatto è scritto nella proposta.
             </p>
           </Reveal>
           <Stagger as="ol" className="phases__list" gap={0.14}>

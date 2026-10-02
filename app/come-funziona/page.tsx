@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import PageHero from "@/components/PageHero";
 import ProcessStory from "@/components/ProcessStory";
 import GlassIcon from "@/components/GlassIcon";
 import { Reveal, RevealItem, Stagger } from "@/components/motion/Reveal";
 import CtaBand from "@/components/CtaBand";
 
-export const metadata: Metadata = {
-  title: "Come funziona la gestione",
+export const metadata: Metadata = pageMetadata({
+  title: "Come Funziona la Gestione Affitti Brevi | Solace",
   description:
-    "Il percorso con Solace in cinque passi: ci racconti il tuo immobile, analizziamo il potenziale, ci confrontiamo sulla proposta, prepariamo l'avvio e gestiamo condividendo i risultati.",
-  alternates: { canonical: "/come-funziona" },
-};
+    "Dal primo contatto ai risultati: come Solace analizza il tuo immobile, prepara l'avvio e gestisce gli affitti brevi a Milano, passo dopo passo e senza impegno iniziale.",
+  path: "/come-funziona",
+});
 
 const toPrepare = [
   { icon: "pin", title: "Zona e indirizzo indicativo", text: "Per capire domanda e concorrenza." },
@@ -34,9 +35,10 @@ export default function ComeFunzionaPage() {
             Un percorso chiaro, <em>dal primo contatto ai risultati.</em>
           </>
         }
-        lead="Nessun salto nel buio: prima capiamo insieme il potenziale della casa, poi decidi tu se e come partire."
-        image="/images/immobili/navigli/04.jpg"
-        imageAlt="Cortile interno alberato della Casa sui Navigli"
+        lead="Nessun salto nel buio nella gestione del tuo affitto breve: prima l'analisi gratuita dell'immobile per capirne il potenziale, poi decidi tu se e come partire."
+        image="/images/come-funziona/soggiorno-cucina-pronto-per-gli-ospiti.jpg"
+        imageAlt="Soggiorno luminoso pronto per gli ospiti, con divano, tavolo apparecchiato e cucina in legno"
+        imagePosition={{ desktop: "52% 60%", mobile: "50% 60%" }}
       />
 
       <section className="section process" aria-labelledby="steps-title">

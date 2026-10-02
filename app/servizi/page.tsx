@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { Fragment } from "react";
 import Image from "next/image";
 import PageHero from "@/components/PageHero";
@@ -10,12 +11,12 @@ import CtaBand from "@/components/CtaBand";
 import TrackedLink from "@/components/TrackedLink";
 import { compliance, serviceGroups } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Servizi di gestione affitti brevi",
+export const metadata: Metadata = pageMetadata({
+  title: "Gestione Airbnb e Affitti Brevi a Milano | Solace",
   description:
-    "Cosa fa Solace per il tuo immobile a Milano: analisi, foto e annunci, prezzi dinamici, ospiti, check-in, pulizie, manutenzione, adempimenti e rendicontazione.",
-  alternates: { canonical: "/servizi" },
-};
+    "Property management a Milano per appartamenti in affitto breve: annunci e foto, prezzi dinamici, ospiti, check-in, pulizie, manutenzione, adempimenti e rendicontazione mensile.",
+  path: "/servizi",
+});
 
 const groupImages: Record<string, { src: string; alt: string }> = {
   prima: { src: "/images/immobili/trilocale-wagner/01.jpg", alt: "Soggiorno luminoso del Trilocale Wagner pronto per gli ospiti" },
@@ -32,7 +33,7 @@ export default function ServiziPage() {
             Tutto quello che serve, <em>niente che ti tocchi seguire.</em>
           </>
         }
-        lead="Ogni attività che svolgiamo ha un obiettivo concreto per te: meno incombenze, ospiti seguiti, una casa curata e risultati che puoi controllare."
+        lead="Gestione Airbnb e affitti brevi a Milano: ogni attività che svolgiamo ha un obiettivo concreto per te, cioè meno incombenze, ospiti seguiti, una casa curata e risultati che puoi controllare."
       />
 
       <nav className="container subnav" aria-label="Fasi del servizio">
@@ -85,6 +86,46 @@ export default function ServiziPage() {
               ))}
             </Stagger>
           </div>
+          {g.id === "prima" && (
+            <div className="container">
+              <Stagger className="service-photos" gap={0.12}>
+                <RevealItem as="figure" className="service-photos__item">
+                  <Image
+                    src="/images/servizi/monolocale-allestito-per-gli-ospiti.jpg"
+                    alt="Monolocale allestito per gli ospiti, con divano letto grigio, mobile TV e tavolo con sedie"
+                    fill
+                    sizes="(max-width: 700px) 100vw, 55vw"
+                  />
+                </RevealItem>
+                <RevealItem as="figure" className="service-photos__item">
+                  <Image
+                    src="/images/servizi/tavola-apparecchiata-e-cucina.jpg"
+                    alt="Tavolo rotondo apparecchiato per quattro accanto alla cucina in legno con tulipani sul piano"
+                    fill
+                    sizes="(max-width: 700px) 100vw, 40vw"
+                  />
+                </RevealItem>
+              </Stagger>
+            </div>
+          )}
+          {g.id === "dopo" && (
+            <div className="container">
+              <Reveal as="figure" className="report-example">
+                <div className="report-example__frame">
+                  <Image
+                    src="/images/servizi/rendicontazione-mensile-esempio-dimostrativo.webp"
+                    alt="Esempio dimostrativo della rendicontazione mensile Solace"
+                    width={1536}
+                    height={1024}
+                    sizes="(max-width: 1020px) 100vw, 980px"
+                  />
+                </div>
+                <figcaption>
+                  <strong>Esempio dimostrativo.</strong> Un esempio di come presentiamo le informazioni della gestione.
+                </figcaption>
+              </Reveal>
+            </div>
+          )}
         </section>
         {g.id === "durante" && (
           <section className="cta-inline" aria-label="Richiedi una valutazione">

@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import PageHero from "@/components/PageHero";
 import FaqList from "@/components/FaqList";
 import { Reveal } from "@/components/motion/Reveal";
 import CtaBand from "@/components/CtaBand";
 import { faqs } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Domande frequenti",
+export const metadata: Metadata = pageMetadata({
+  title: "Domande Frequenti sulla Gestione Affitti Brevi | Solace",
   description:
-    "Le risposte alle domande dei proprietari sulla gestione di affitti brevi a Milano: analisi, servizi, compenso, ospiti, pulizie, rendiconti, adempimenti e contratto.",
-  alternates: { canonical: "/faq" },
-};
+    "Le risposte alle domande dei proprietari sulla gestione di affitti brevi e Airbnb a Milano: analisi, servizi, compenso, ospiti, pulizie, rendiconti, adempimenti e contratto.",
+  path: "/faq",
+});
 
 const faqSchema = {
   "@context": "https://schema.org",

@@ -54,3 +54,6 @@ temp/
 
 # archivio revisioni Impeccable (locale)
 .impeccable/
+
+# Video della home: escluso finché non è confermata la licenza del filmato (vedi README)
+/public/video/

@@ -21,11 +21,12 @@ export default function FounderBlock() {
             Chi seguirà il tuo immobile
           </h2>
           <p className="lead">
-            Sono Gabriel Dal Molin, ho fondato Solace e seguo personalmente il rapporto con i proprietari, dalla prima
-            telefonata alla gestione di ogni giorno.
+            Sono Gabriel Dal Molin e ho creato Solace per offrire ai proprietari una gestione organizzata e attenta.
           </p>
           <p>
-            Lavoro soprattutto a Milano, tra appartamenti da preparare, ospiti da accogliere e imprevisti da risolvere.
+            Il nostro team professionale si occupa della gestione quotidiana degli immobili, dell&apos;assistenza agli
+            ospiti e del coordinamento dei servizi, con cura e attenzione ai dettagli. Lavoriamo soprattutto a Milano,
+            tra appartamenti da preparare, ospiti da accogliere e imprevisti da risolvere.
             Ho anche cofondato Omnia Multiservizi, che si occupa di pulizie per affitti brevi: per questo so quanto conti
             una casa pronta e in ordine a ogni arrivo.
           </p>

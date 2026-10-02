@@ -1,19 +1,20 @@
 "use client";
 
-import Image from "next/image";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import TrackedLink from "./TrackedLink";
 import Icon from "./Icon";
+import HeroVideo from "./HeroVideo";
 import { site } from "@/lib/site";
 import { ease } from "@/lib/motion";
 
 // L'ingresso dei testi è un'animazione CSS (.enter): parte al primo disegno della pagina,
 // senza attendere JavaScript, e i testi non restano mai invisibili.
-// Motion gestisce solo ciò che dipende dallo scroll: parallasse dell'immagine e dissolvenza in uscita.
+// Motion gestisce solo ciò che dipende dallo scroll: parallasse del video (o della foto) e dissolvenza in uscita.
 export default function HomeHero() {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
+  const [controls, setControls] = useState<HTMLDivElement | null>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
   const fadeOut = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
@@ -27,17 +28,11 @@ export default function HomeHero() {
           animate={{ scale: 1 }}
           transition={{ duration: 2.2, ease: ease.out }}
         >
-          <Image
-            src="/images/milano-duomo.webp"
-            alt="Piazza del Duomo a Milano di sera, con il Duomo illuminato e la Galleria Vittorio Emanuele II"
-            fill
-            priority
-            fetchPriority="high"
-            sizes="100vw"
-          />
+          <HeroVideo controls={controls} />
         </motion.div>
       </motion.div>
       <div className="hero__shade" aria-hidden="true" />
+      <div ref={setControls} className="hero__controls" />
 
       <motion.div className="container hero__content" style={reduced ? undefined : { opacity: fadeOut }}>
         <div className="hero__text">

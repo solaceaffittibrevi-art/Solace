@@ -24,23 +24,35 @@ const sans = Montserrat({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "Gestione affitti brevi a Milano | Solace",
-    template: "%s | Solace – Gestione affitti brevi Milano",
+    default: "Gestione Affitti Brevi Milano | Solace",
+    template: "%s | Solace",
   },
   description:
     "Gestione affitti brevi e Airbnb a Milano: ospiti, pulizie, prezzi e adempimenti seguiti da Solace, con un rendiconto chiaro di incassi e costi. Richiedi una valutazione gratuita.",
-  keywords: ["gestione affitti brevi Milano", "gestione Airbnb Milano", "property management Milano", "affitti brevi Milano"],
+  keywords: [
+    "gestione affitti brevi Milano",
+    "gestione Airbnb Milano",
+    "gestione appartamenti per affitti brevi",
+    "property management Milano",
+    "gestione case vacanza Milano",
+    "analisi gratuita dell'immobile",
+  ],
   applicationName: "Solace",
   openGraph: {
     type: "website",
     locale: "it_IT",
     siteName: "Solace",
-    title: "Solace – Gestione affitti brevi a Milano",
-    description: "Gestiamo il tuo appartamento in affitto breve a Milano. Richiedi una valutazione gratuita del tuo immobile.",
+    title: "Gestione Affitti Brevi Milano | Solace",
+    description: "Gestiamo il tuo appartamento in affitto breve a Milano. Richiedi l'analisi gratuita del tuo immobile.",
     images: [{ url: "/images/milano-duomo.webp", width: 1672, height: 941, alt: "Piazza del Duomo a Milano di sera" }],
   },
   twitter: { card: "summary_large_image" },
   alternates: { canonical: "/" },
+  // Indicizzazione solo sul sito pubblicato: anteprime e sviluppo restano fuori dai motori di ricerca.
+  robots:
+    process.env.NEXT_PUBLIC_SITE_ENV === "production"
+      ? { index: true, follow: true }
+      : { index: false, follow: false, googleBot: { index: false, follow: false } },
 };
 
 export const viewport: Viewport = {

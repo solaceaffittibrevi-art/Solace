@@ -23,6 +23,8 @@ Poi apri http://localhost:3000.
 | `npm run build` | build di produzione |
 | `npm run lint` | controllo ESLint |
 | `npm run typecheck` | controllo TypeScript |
+| `npm run test:immobili` | simulazioni di graduatoria, sostituzione e conferma delle rimozioni |
+| `npm run immobili:report` | graduatoria del portafoglio, immobili mostrati e sostituzioni |
 | `npm run test:api` | test del modulo contatti con servizi simulati (dopo `npm run build`; nessuna email reale) |
 
 ## Configurazione (`.env.local`)
@@ -45,9 +47,31 @@ Vedi `.env.example`. Prima della pubblicazione servono almeno:
 - `NEXT_PUBLIC_SITE_URL` e `NEXT_PUBLIC_SITE_ENV=production` sul dominio definitivo.
 - Recapiti pubblici e URL dell'informativa privacy, se disponibili.
 
+## Immobili e sostituzioni
+
+Tutto è in `lib/immobili.ts`:
+
+- `portfolio`: annunci verificati di Solace (dati letti su Airbnb, mai stimati);
+- `selection`: gli annunci mostrati, nell'ordine voluto;
+- `confirmedRemovals`: registro delle rimozioni **definitive**. Aggiungendo una riga, al build successivo
+  l'annuncio viene sostituito nello stesso posto dal miglior candidato del portafoglio.
+
+Criteri e pesi della graduatoria sono in `lib/immobili-ranking.ts`; le regole per confermare una rimozione
+(mai per errori, blocchi, login o calendario pieno) in `lib/immobili-verifica.ts`. Il controllo automatico
+periodico **non è attivo**: serve una fonte attendibile (API del channel manager o API partner di Airbnb) e un
+job pianificato sul server (es. Vercel Cron) che registri le osservazioni e faccia ripubblicare il sito.
+
+## Video della home
+
+`public/video/` è escluso da Git finché non è confermata la licenza del filmato (montaggio aereo con
+crediti di un autore terzo). Senza i file il sito mostra la foto del Duomo. File attesi:
+`milano-aerea-1280.mp4` (desktop) e `milano-aerea-960.mp4` (mobile), H.264 senza audio.
+
 ## Dove modificare
 
-- `lib/site.ts` – contenuti verificati: numeri, servizi, passi, FAQ, recensioni, immobili
+- `lib/site.ts` – contenuti verificati: numeri, servizi, passi, FAQ, recensioni
+- `lib/immobili.ts` – immobili mostrati e portafoglio
+- `lib/seo.ts` – titoli, descrizioni e anteprime social delle pagine
 - `lib/motion.ts` – durate, curve e spring condivise da tutte le animazioni
 - `app/globals.css` – token di colore, tipografia e layout
 - `design-system/solace/MASTER.md` – regole del design system

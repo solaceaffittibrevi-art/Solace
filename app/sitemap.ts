@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
-import { properties, site } from "@/lib/site";
+import { site } from "@/lib/site";
+import { properties } from "@/lib/immobili";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const pages = ["", "/servizi", "/come-funziona", "/immobili", "/chi-siamo", "/faq", "/valutazione-gratuita"];

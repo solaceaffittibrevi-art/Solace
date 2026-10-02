@@ -6,7 +6,8 @@ import PropertyCard from "@/components/PropertyCard";
 import Icon from "@/components/Icon";
 import TrackedLink from "@/components/TrackedLink";
 import { Reveal, RevealItem, Stagger } from "@/components/motion/Reveal";
-import { properties } from "@/lib/site";
+import { formatRating, properties } from "@/lib/immobili";
+import { pageMetadata } from "@/lib/seo";
 
 type Params = { slug: string };
 
@@ -20,19 +21,19 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const { slug } = await params;
   const p = properties.find((x) => x.slug === slug);
   if (!p) return {};
-  return {
-    title: `${p.name} – ${p.zone}`,
-    description: `${p.type} gestito da Solace a ${p.zone}${p.city !== "Milano" ? `, ${p.city}` : ", Milano"}. ${p.summary}`,
-    alternates: { canonical: `/immobili/${p.slug}` },
-    openGraph: { images: [{ url: p.photos[0].src, alt: p.photos[0].alt }] },
-  };
+  return pageMetadata({
+    title: `${p.name} – ${p.zone}, ${p.city} | Solace`,
+    description: `${p.type} in affitto breve gestito da Solace a ${p.zone}, ${p.city}. ${p.summary}`.slice(0, 300),
+    path: `/immobili/${p.slug}`,
+    image: { url: p.photos[0].src, alt: p.photos[0].alt },
+  });
 }
 
 export default async function PropertyPage({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
   const property = properties.find((p) => p.slug === slug);
   if (!property) notFound();
-  const others = properties.filter((p) => p.slug !== slug && p.milano).slice(0, 3);
+  const others = properties.filter((p) => p.slug !== slug).slice(0, 3);
 
   return (
     <>
@@ -46,7 +47,7 @@ export default async function PropertyPage({ params }: { params: Promise<Params>
               {property.name}
             </h1>
             <p className="property-hero__zone enter" style={{ "--i": 1 } as React.CSSProperties}>
-              <Icon name="pin" size={16} /> {property.zone}, {property.city !== "Milano" ? property.city : "Milano"}
+              <Icon name="pin" size={16} /> {property.zone}, {property.city}
             </p>
           </div>
           <PropertyGallery photos={property.photos} name={property.name} />
@@ -79,21 +80,25 @@ export default async function PropertyPage({ params }: { params: Promise<Params>
                 <dt>Spazi</dt>
                 <dd>{property.rooms}</dd>
               </div>
-              {property.rating && (
-                <div>
-                  <dt>Su Airbnb</dt>
-                  <dd>
-                    <Icon name="star" size={15} /> {property.rating.value} su 5 · {property.rating.count} recensioni
-                    <span className="property-facts__note">dato di ottobre 2026</span>
-                  </dd>
-                </div>
-              )}
+              <div>
+                <dt>Su Airbnb</dt>
+                <dd>
+                  {property.rating ? (
+                    <>
+                      <Icon name="star" size={15} /> {formatRating(property.rating.value)} su 5 · {property.rating.count} recensioni
+                    </>
+                  ) : (
+                    "Annuncio nuovo, ancora senza recensioni"
+                  )}
+                  <span className="property-facts__note">dato di ottobre 2026</span>
+                </dd>
+              </div>
             </dl>
             <TrackedLink href="/valutazione-gratuita" event="cta_click" location={`scheda-${property.slug}`} className="btn btn--block">
               Richiedi una valutazione gratuita
             </TrackedLink>
             <a href={property.airbnb} target="_blank" rel="noopener noreferrer" className="link-arrow property-facts__airbnb">
-              Vedi l&apos;annuncio su Airbnb <Icon name="external" size={16} />
+              Visualizza su Airbnb <Icon name="external" size={16} />
               <span className="sr-only">(si apre in una nuova scheda)</span>
             </a>
           </Reveal>
@@ -122,7 +127,7 @@ export default async function PropertyPage({ params }: { params: Promise<Params>
         <div className="container">
           <Reveal className="section-head section-head--split">
             <h2 id="others-title" className="h2">
-              Altre case a Milano
+              Altri appartamenti gestiti
             </h2>
             <Link href="/immobili" className="link-arrow">
               Tutti gli immobili <Icon name="arrow" size={16} />

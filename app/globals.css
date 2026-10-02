@@ -622,6 +622,64 @@ p {
   object-position: 70% 50%;
 }
 
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 45%;
+  opacity: 0;
+  transition: opacity 900ms var(--ease-out);
+}
+
+.hero__video.is-playing {
+  opacity: 1;
+}
+
+.hero__controls {
+  position: absolute;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: 16px;
+  z-index: 2;
+}
+
+.hero__video-toggle {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(7, 11, 22, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #f3eee5;
+  cursor: pointer;
+  transition: background-color var(--dur-base) var(--ease-out), transform 160ms var(--ease-out);
+}
+
+.hero__video-toggle:active {
+  transform: scale(0.96);
+}
+
+.hero__video-toggle:focus-visible {
+  outline: 2px solid var(--gold-soft);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hero__video-toggle:hover {
+    background: rgba(7, 11, 22, 0.7);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__video {
+    display: none;
+  }
+}
+
 .hero__shade {
   position: absolute;
   inset: 0;
@@ -1049,13 +1107,15 @@ p {
 
 /* Card immobile --------------------------------------------------------- */
 .pcard {
+  display: flex;
+  flex-direction: column;
   height: 100%;
 }
 
 .pcard__link {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1;
   text-decoration: none;
   color: inherit;
 }
@@ -1134,6 +1194,27 @@ p {
 @media (hover: hover) and (pointer: fine) {
   .pcard__link:hover .pcard__more svg {
     transform: translateX(5px);
+  }
+}
+
+.pcard__airbnb {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  margin-top: 0.15rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-decoration: underline;
+  text-decoration-color: var(--line-soft);
+  text-underline-offset: 4px;
+  transition: color var(--dur-base) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pcard__airbnb:hover {
+    color: var(--accent);
   }
 }
 
@@ -1518,6 +1599,19 @@ p {
   width: 100%;
 }
 
+.page-hero__media img,
+.about__media img {
+  object-fit: cover;
+  object-position: var(--pos, 50% 50%);
+}
+
+@media (max-width: 900px) {
+  .page-hero__media img,
+  .about__media img {
+    object-position: var(--pos-m, var(--pos, 50% 50%));
+  }
+}
+
 /* Servizi --------------------------------------------------------------- */
 .subnav {
   position: sticky;
@@ -1584,6 +1678,78 @@ p {
 
 .service-list {
   display: grid;
+}
+
+/* Foto sotto "Prima dell'avvio": coppia leggermente asimmetrica su desktop, in colonna su mobile. */
+.service-photos {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(1rem, 2.5vw, 2rem);
+  align-items: start;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.service-photos__item {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  background: var(--navy-800);
+}
+
+.service-photos__item:first-child {
+  aspect-ratio: 3 / 2;
+}
+
+.service-photos__item:last-child {
+  aspect-ratio: 6 / 5;
+  margin-top: clamp(2rem, 6vw, 5rem);
+}
+
+.service-photos__item img {
+  object-fit: cover;
+}
+
+/* Esempio di rendicontazione: immagine intera, mai ritagliata. */
+.report-example {
+  margin: clamp(2.5rem, 5vw, 4rem) auto 0;
+  max-width: 980px;
+  width: 100%;
+}
+
+.report-example__frame {
+  border: 1px solid var(--line-soft);
+  background: var(--navy-900, #070b16);
+  box-shadow: 0 30px 60px -30px rgba(7, 11, 22, 0.55);
+}
+
+.report-example__frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.report-example figcaption {
+  margin-top: 0.9rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.report-example figcaption strong {
+  color: var(--accent);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 700px) {
+  .service-photos {
+    grid-template-columns: 1fr;
+  }
+
+  .service-photos__item:first-child,
+  .service-photos__item:last-child {
+    aspect-ratio: 3 / 2;
+    margin-top: 0;
+  }
 }
 
 .service {

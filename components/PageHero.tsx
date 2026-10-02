@@ -9,12 +9,15 @@ export default function PageHero({
   lead,
   image,
   imageAlt = "",
+  imagePosition,
   children,
 }: {
   title: React.ReactNode;
   lead?: React.ReactNode;
   image?: string;
   imageAlt?: string;
+  // Inquadratura: object-position su desktop e (facoltativa) su mobile.
+  imagePosition?: { desktop: string; mobile?: string };
   children?: React.ReactNode;
 }) {
   return (
@@ -36,7 +39,15 @@ export default function PageHero({
           )}
         </div>
         {image && (
-          <Reveal className="page-hero__media" delay={0.15}>
+          <Reveal
+            className="page-hero__media"
+            delay={0.15}
+            style={
+              imagePosition
+                ? ({ "--pos": imagePosition.desktop, "--pos-m": imagePosition.mobile ?? imagePosition.desktop } as React.CSSProperties)
+                : undefined
+            }
+          >
             <Parallax strength={6}>
               <Image src={image} alt={imageAlt} fill priority sizes="(max-width: 900px) 100vw, 45vw" />
             </Parallax>
