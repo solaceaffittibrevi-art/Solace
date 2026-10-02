@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Logo from "./Logo";
 import Icon from "./Icon";
+import GlassIcon from "./GlassIcon";
 import Skyline from "./Skyline";
 import TrackedLink from "./TrackedLink";
 import { nav, site } from "@/lib/site";
@@ -57,7 +58,7 @@ export default function Footer() {
           </ul>
           <div className="footer__social">
             <a href={site.instagram} target="_blank" rel="noopener noreferrer" aria-label="Solace su Instagram (nuova scheda)">
-              <Icon name="instagram" />
+              <GlassIcon name="instagram" size="md" />
             </a>
             <a href={site.airbnbProfile} target="_blank" rel="noopener noreferrer" className="footer__airbnb">
               Profilo Airbnb <Icon name="external" size={16} />

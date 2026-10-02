@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import HomeHero from "@/components/HomeHero";
 import Icon from "@/components/Icon";
+import GlassIcon from "@/components/GlassIcon";
 import Counter from "@/components/motion/Counter";
 import Parallax from "@/components/motion/Parallax";
 import { Reveal, RevealItem, Stagger } from "@/components/motion/Reveal";
@@ -60,9 +61,7 @@ export default function Home() {
             <Stagger as="ul" className="benefits__list" gap={0.1}>
               {benefits.map((b) => (
                 <RevealItem as="li" key={b.title} className="benefit">
-                  <span className="benefit__icon">
-                    <Icon name={b.icon} size={26} />
-                  </span>
+                  <GlassIcon name={b.icon} />
                   <div>
                     <h3>{b.title}</h3>
                     <p>{b.text}</p>
@@ -100,7 +99,7 @@ export default function Home() {
                 <ul className="phase__items">
                   {g.items.slice(0, 4).map((it) => (
                     <li key={it.title}>
-                      <Icon name={it.icon} size={20} />
+                      <GlassIcon name={it.icon} size="sm" />
                       {it.title}
                     </li>
                   ))}

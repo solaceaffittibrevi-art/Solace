@@ -30,6 +30,15 @@
   --focus: var(--gold-soft);
   --on-gold: var(--ink);
 
+  /* Vetro (icone) */
+  --glass-fill: rgba(255, 255, 255, 0.06);
+  --glass-fill-top: rgba(255, 255, 255, 0.13);
+  --glass-edge: rgba(255, 255, 255, 0.16);
+  --glass-highlight: rgba(255, 255, 255, 0.28);
+  --glass-glow: rgba(226, 200, 143, 0.16);
+  --glass-shadow: 0 10px 24px -14px rgba(0, 0, 0, 0.75), 0 2px 6px -3px rgba(0, 0, 0, 0.45);
+  --glass-symbol: var(--gold-soft);
+
   --font-serif: "Cormorant Garamond", Georgia, serif;
   --font-sans: "Montserrat", system-ui, sans-serif;
 
@@ -55,6 +64,13 @@
   --field-border: #8d8577;
   --error: #a1271b;
   --focus: var(--gold-ink);
+  --glass-fill: rgba(255, 255, 255, 0.5);
+  --glass-fill-top: rgba(255, 255, 255, 0.85);
+  --glass-edge: rgba(122, 90, 31, 0.16);
+  --glass-highlight: rgba(255, 255, 255, 0.95);
+  --glass-glow: rgba(201, 164, 92, 0.14);
+  --glass-shadow: 0 10px 22px -14px rgba(11, 18, 34, 0.35), 0 2px 5px -3px rgba(11, 18, 34, 0.18);
+  --glass-symbol: var(--gold-ink);
 }
 
 /* Base ------------------------------------------------------------------ */
@@ -322,6 +338,87 @@ p {
   opacity: 0.85;
 }
 
+/* Glass icon ------------------------------------------------------------ */
+/* Contenitore squircle in vetro traslucido: riempimento semitrasparente con sfocatura,
+   bordo sottile luminoso, riflesso in alto (::before) e punto luce interno (::after). */
+.glass-icon {
+  --glass-size: 60px;
+  position: relative;
+  isolation: isolate;
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: var(--glass-size);
+  height: var(--glass-size);
+  border-radius: 30%;
+  background: linear-gradient(180deg, var(--glass-fill-top) 0%, var(--glass-fill) 55%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid var(--glass-edge);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-highlight);
+  color: var(--glass-symbol);
+  overflow: hidden;
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    filter var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+
+@supports (corner-shape: squircle) {
+  .glass-icon {
+    border-radius: 42%;
+    corner-shape: squircle;
+  }
+}
+
+.glass-icon::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 52% 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+
+.glass-icon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(70% 55% at 30% 18%, var(--glass-glow), transparent 70%);
+  pointer-events: none;
+}
+
+.glass-icon svg {
+  position: relative;
+}
+
+.glass-icon--md {
+  --glass-size: 44px;
+}
+
+.glass-icon--sm {
+  --glass-size: 32px;
+  border-radius: 32%;
+}
+
+/* Hover discreto per i contenitori interattivi (o dentro un elemento interattivo) */
+.glass-icon--interactive:hover,
+button:hover > .glass-icon--interactive,
+a:hover > .glass-icon,
+.gallery__button:hover .glass-icon {
+  transform: translateY(-2px);
+  filter: brightness(1.12);
+  box-shadow: 0 14px 28px -14px rgba(0, 0, 0, 0.7), 0 3px 8px -4px rgba(0, 0, 0, 0.4), inset 0 1px 0 var(--glass-highlight);
+}
+
+.section--paper .glass-icon--interactive:hover,
+.section--paper button:hover > .glass-icon--interactive,
+.section--paper a:hover > .glass-icon {
+  filter: brightness(1.04);
+}
+
 /* Header ---------------------------------------------------------------- */
 .header {
   position: fixed;
@@ -557,11 +654,7 @@ p {
 .hero__trust li {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-}
-
-.hero__trust svg {
-  color: var(--gold);
+  gap: 12px;
 }
 
 .hero__scroll {
@@ -754,7 +847,7 @@ p {
 
 .benefit {
   display: grid;
-  grid-template-columns: 56px 1fr;
+  grid-template-columns: 60px 1fr;
   gap: 1.25rem;
   padding-bottom: 2rem;
   border-bottom: 1px solid var(--line-soft);
@@ -763,16 +856,6 @@ p {
 .benefit:last-child {
   border-bottom: 0;
   padding-bottom: 0;
-}
-
-.benefit__icon {
-  display: grid;
-  place-items: center;
-  width: 56px;
-  height: 56px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  color: var(--gold);
 }
 
 .benefit h3 {
@@ -834,13 +917,8 @@ p {
 .phase__items li {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   font-weight: 500;
-}
-
-.phase__items svg {
-  flex: none;
-  color: var(--accent);
 }
 
 /* Percorso narrativo ---------------------------------------------------- */
@@ -1260,19 +1338,9 @@ p {
   color: var(--accent);
 }
 
-.faq__icon {
+.faq__icon-glyph {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  color: var(--accent);
-  transition: background var(--dur-base), border-color var(--dur-base);
-}
-
-.faq__q button:hover .faq__icon {
-  border-color: var(--accent-strong);
 }
 
 .faq__panel {
@@ -1390,6 +1458,7 @@ p {
 }
 
 .footer__col a {
+  overflow-wrap: anywhere;
   display: inline-flex;
   align-items: center;
   min-height: 40px;
@@ -1535,7 +1604,7 @@ p {
 
 .service {
   display: grid;
-  grid-template-columns: 52px 1fr;
+  grid-template-columns: 60px 1fr;
   gap: 1.25rem;
   padding: 2rem 0;
   border-bottom: 1px solid var(--line-soft);
@@ -1543,16 +1612,6 @@ p {
 
 .service:first-child {
   padding-top: 0.4rem;
-}
-
-.service__icon {
-  display: grid;
-  place-items: center;
-  width: 52px;
-  height: 52px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  color: var(--accent);
 }
 
 .service h3 {
@@ -1623,12 +1682,8 @@ p {
   gap: 2.5rem 2rem;
 }
 
-.prepare__item svg {
-  color: var(--accent);
-}
-
 .prepare__item h3 {
-  margin: 1rem 0 0.4rem;
+  margin: 1.25rem 0 0.4rem;
   font-size: 1.55rem;
 }
 
@@ -1650,15 +1705,11 @@ p {
 
 .promises__list li {
   display: flex;
+  align-items: center;
   gap: 1rem;
   padding: 1.4rem 0;
   border-bottom: 1px solid var(--line-soft);
   font-size: 1.08rem;
-}
-
-.promises__list svg {
-  flex: none;
-  color: var(--gold);
 }
 
 /* Elenco immobili ------------------------------------------------------- */
@@ -1743,15 +1794,8 @@ p {
   position: absolute;
   right: 12px;
   bottom: 12px;
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  background: rgba(7, 11, 22, 0.7);
-  color: var(--text);
-  border-radius: 50%;
   opacity: 0;
-  transition: opacity var(--dur-base);
+  transition: opacity var(--dur-base), transform var(--dur-base) var(--ease-out);
 }
 
 .gallery__button:hover .gallery__zoom,
@@ -1819,32 +1863,17 @@ p {
 .lightbox__btn,
 .lightbox__close {
   position: absolute;
-  display: grid;
-  place-items: center;
-  width: 52px;
-  height: 52px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  background: rgba(7, 11, 22, 0.6);
-  transition: border-color var(--dur-fast), background var(--dur-fast);
-}
-
-.lightbox__btn:hover,
-.lightbox__close:hover {
-  border-color: var(--gold);
-  background: rgba(201, 164, 92, 0.15);
+  z-index: 2;
 }
 
 .lightbox__btn--prev {
   left: 16px;
-  top: 50%;
-  transform: translateY(-50%);
+  top: calc(50% - 30px);
 }
 
 .lightbox__btn--next {
   right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
+  top: calc(50% - 30px);
 }
 
 .lightbox__close {
@@ -2055,12 +2084,8 @@ p {
   color: var(--muted);
 }
 
-.method__item svg {
-  color: var(--gold);
-}
-
 .method__item h3 {
-  margin: 1.2rem 0 0.6rem;
+  margin: 1.25rem 0 0.6rem;
   font-size: 1.6rem;
 }
 
@@ -2104,20 +2129,13 @@ p {
 
 .next-steps li {
   display: grid;
-  grid-template-columns: 40px 1fr;
+  grid-template-columns: 44px 1fr;
   gap: 1rem;
 }
 
-.next-steps li > span {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  color: var(--gold-soft);
+.next-steps .glass-icon {
   font-family: var(--font-serif);
-  font-size: 1.2rem;
+  font-size: 1.25rem;
 }
 
 .next-steps p,
@@ -2148,10 +2166,6 @@ p {
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-.contact-alt__list svg {
-  color: var(--gold);
 }
 
 .contact-page__form {
@@ -2619,6 +2633,14 @@ p {
   .about__media {
     aspect-ratio: 4 / 3;
   }
+
+  .footer__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .footer__brand {
+    grid-column: 1 / -1;
+  }
 }
 
 @media (max-width: 640px) {
@@ -2733,7 +2755,6 @@ p {
   .lightbox__btn {
     top: auto;
     bottom: 64px;
-    transform: none;
   }
 
   .property-facts dl > div {
@@ -2770,7 +2791,12 @@ p {
   }
 
   .pcard__link:hover .pcard__media img,
-  .gallery__button:hover img {
-    transform: none;
+  .gallery__button:hover img,
+  .glass-icon,
+  .glass-icon:hover,
+  a:hover > .glass-icon,
+  button:hover > .glass-icon--interactive,
+  .gallery__button:hover .glass-icon {
+    transform: none !important;
   }
 }

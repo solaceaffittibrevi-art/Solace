@@ -16,9 +16,9 @@ const paths: Record<string, React.ReactNode> = {
   ),
   home: (
     <>
-      <path d="M3.5 10.5 12 4l8.5 6.5" />
-      <path d="M5.5 9v11h13V9" />
-      <path d="M10 20v-5.5h4V20" />
+      <path d="M3.5 10.5 11 4.8a1.6 1.6 0 0 1 2 0l7.5 5.7" />
+      <path d="M5.5 9v8.5A2.5 2.5 0 0 0 8 20h8a2.5 2.5 0 0 0 2.5-2.5V9" />
+      <path d="M10 20v-4a2 2 0 0 1 4 0v4" />
     </>
   ),
   chart: (
@@ -35,7 +35,7 @@ const paths: Record<string, React.ReactNode> = {
   ),
   camera: (
     <>
-      <path d="M4 8h3.5L9 5.5h6L16.5 8H20v11H4z" />
+      <path d="M7 8.5 8.6 6a1.5 1.5 0 0 1 1.3-.7h4.2a1.5 1.5 0 0 1 1.3.7L17 8.5h1.5A2.5 2.5 0 0 1 21 11v6a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17v-6a2.5 2.5 0 0 1 2.5-2.5z" />
       <circle cx="12" cy="13" r="3.5" />
     </>
   ),
@@ -48,20 +48,20 @@ const paths: Record<string, React.ReactNode> = {
   ),
   doc: (
     <>
-      <path d="M6 3.5h8l4 4V20.5H6z" />
+      <path d="M8.5 3.5H14l4 4v10.5a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 6 18V6a2.5 2.5 0 0 1 2.5-2.5z" />
       <path d="M14 3.5V8h4M9 12h6M9 15.5h6" />
     </>
   ),
   calendar: (
     <>
-      <rect x="4" y="5.5" width="16" height="14.5" rx="1" />
+      <rect x="4" y="5.5" width="16" height="14.5" rx="3.5" />
       <path d="M4 10h16M8.5 3.5v4M15.5 3.5v4" />
       <path d="m9.5 14.5 1.8 1.8 3.4-3.4" />
     </>
   ),
   chat: (
     <>
-      <path d="M4 5.5h16v10H10l-4 3.5v-3.5H4z" />
+      <path d="M6.5 5h11A2.5 2.5 0 0 1 20 7.5v6a2.5 2.5 0 0 1-2.5 2.5H11l-4.5 3.5V16A2.5 2.5 0 0 1 4 13.5v-6A2.5 2.5 0 0 1 6.5 5z" />
       <path d="M8 10h8M8 12.8h5" />
     </>
   ),
@@ -82,7 +82,7 @@ const paths: Record<string, React.ReactNode> = {
   ),
   shield: (
     <>
-      <path d="M12 3.5 19 6v5.5c0 4.3-2.9 7.6-7 9-4.1-1.4-7-4.7-7-9V6z" />
+      <path d="M11.2 3.8a2 2 0 0 1 1.6 0l5 2A1.8 1.8 0 0 1 19 7.5v4c0 4.3-2.9 7.6-7 9-4.1-1.4-7-4.7-7-9v-4a1.8 1.8 0 0 1 1.2-1.7z" />
       <path d="M12 8v4.5l2.5 1.5" />
     </>
   ),
@@ -106,7 +106,7 @@ const paths: Record<string, React.ReactNode> = {
   ),
   mail: (
     <>
-      <rect x="3.5" y="5.5" width="17" height="13" rx="1" />
+      <rect x="3.5" y="5.5" width="17" height="13" rx="3.5" />
       <path d="m4 6.5 8 6.5 8-6.5" />
     </>
   ),
@@ -169,7 +169,7 @@ export default function Icon({
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.3}
+      strokeWidth={1.6}
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}

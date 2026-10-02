@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import PageHero from "@/components/PageHero";
-import Icon from "@/components/Icon";
+import GlassIcon from "@/components/GlassIcon";
 import TrackedLink from "@/components/TrackedLink";
 import Parallax from "@/components/motion/Parallax";
 import { Reveal, RevealItem, Stagger } from "@/components/motion/Reveal";
@@ -179,7 +179,7 @@ export default function ChiSiamoPage() {
                 <span className="method__num" aria-hidden="true">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <Icon name={m.icon} size={28} />
+                <GlassIcon name={m.icon} />
                 <h3>{m.title}</h3>
                 <p>{m.text}</p>
               </RevealItem>

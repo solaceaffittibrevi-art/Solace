@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import TrackedLink from "./TrackedLink";
-import Icon from "./Icon";
+import GlassIcon from "./GlassIcon";
 import Link from "next/link";
 import { duration, ease, stagger } from "@/lib/motion";
 
@@ -68,13 +68,13 @@ export default function HomeHero() {
           </motion.div>
           <motion.ul className="hero__trust reveal" variants={item} aria-label="In breve">
             <li>
-              <Icon name="home" size={18} /> Oltre 30 immobili gestiti
+              <GlassIcon name="home" size="sm" /> Oltre 30 immobili gestiti
             </li>
             <li>
-              <Icon name="star" size={18} /> 1.200+ recensioni su Airbnb
+              <GlassIcon name="star" size="sm" /> 1.200+ recensioni su Airbnb
             </li>
             <li>
-              <Icon name="shield" size={18} /> Assistenza ospiti 24/7
+              <GlassIcon name="shield" size="sm" /> Assistenza ospiti 24/7
             </li>
           </motion.ul>
         </motion.div>

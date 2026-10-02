@@ -58,7 +58,7 @@ export default function PropertyGallery({ photos, name }: { photos: Photo[]; nam
                 sizes={i === 0 ? "(max-width: 900px) 100vw, 66vw" : "(max-width: 900px) 50vw, 33vw"}
                 priority={i === 0}
               />
-              <span className="gallery__zoom" aria-hidden="true">
+              <span className="gallery__zoom glass-icon glass-icon--md" aria-hidden="true">
                 <Icon name="expand" size={18} />
               </span>
               <span className="sr-only">Apri la foto {i + 1} di {photos.length} a schermo intero</span>
@@ -70,7 +70,7 @@ export default function PropertyGallery({ photos, name }: { photos: Photo[]; nam
       <dialog ref={dialogRef} className="lightbox" aria-label={`Foto di ${name}`} onClose={close} onCancel={close}>
         {index !== null && (
           <div className="lightbox__inner">
-            <button type="button" className="lightbox__close" onClick={close} autoFocus>
+            <button type="button" className="lightbox__close glass-icon glass-icon--lg glass-icon--interactive" onClick={close} autoFocus>
               <Icon name="close" size={26} />
               <span className="sr-only">Chiudi la galleria</span>
             </button>
@@ -95,11 +95,11 @@ export default function PropertyGallery({ photos, name }: { photos: Photo[]; nam
               </span>
               {photos[index].alt}
             </p>
-            <button type="button" className="lightbox__btn lightbox__btn--prev" onClick={() => go(-1)}>
+            <button type="button" className="lightbox__btn lightbox__btn--prev glass-icon glass-icon--lg glass-icon--interactive" onClick={() => go(-1)}>
               <Icon name="chevronLeft" size={28} />
               <span className="sr-only">Foto precedente</span>
             </button>
-            <button type="button" className="lightbox__btn lightbox__btn--next" onClick={() => go(1)}>
+            <button type="button" className="lightbox__btn lightbox__btn--next glass-icon glass-icon--lg glass-icon--interactive" onClick={() => go(1)}>
               <Icon name="chevronRight" size={28} />
               <span className="sr-only">Foto successiva</span>
             </button>

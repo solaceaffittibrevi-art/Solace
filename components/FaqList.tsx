@@ -31,9 +31,11 @@ export default function FaqList({ items, initiallyOpen = 0 }: { items: { q: stri
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span className="faq__label">{item.q}</span>
-                <motion.span className="faq__icon" animate={{ rotate: isOpen ? 45 : 0 }} transition={spring.snappy} aria-hidden="true">
-                  <Icon name="plus" size={20} />
-                </motion.span>
+                <span className="faq__icon glass-icon glass-icon--md glass-icon--interactive" aria-hidden="true">
+                  <motion.span className="faq__icon-glyph" animate={{ rotate: isOpen ? 45 : 0 }} transition={spring.snappy}>
+                    <Icon name="plus" size={20} />
+                  </motion.span>
+                </span>
               </button>
             </h3>
             <div id={panelId} role="region" aria-labelledby={buttonId} className="faq__panel">

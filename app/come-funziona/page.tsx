@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import ProcessStory from "@/components/ProcessStory";
-import Icon from "@/components/Icon";
+import GlassIcon from "@/components/GlassIcon";
 import { Reveal, RevealItem, Stagger } from "@/components/motion/Reveal";
 import CtaBand from "@/components/CtaBand";
 
@@ -66,7 +66,7 @@ export default function ComeFunzionaPage() {
           <Stagger as="ul" className="prepare__list" gap={0.1}>
             {toPrepare.map((t) => (
               <RevealItem as="li" key={t.title} className="prepare__item">
-                <Icon name={t.icon} size={26} />
+                <GlassIcon name={t.icon} />
                 <h3>{t.title}</h3>
                 <p>{t.text}</p>
               </RevealItem>
@@ -85,7 +85,7 @@ export default function ComeFunzionaPage() {
           <Stagger as="ul" className="promises__list" gap={0.12}>
             {promises.map((p) => (
               <RevealItem as="li" key={p}>
-                <Icon name="check" size={22} />
+                <GlassIcon name="check" size="sm" />
                 <span>{p}</span>
               </RevealItem>
             ))}

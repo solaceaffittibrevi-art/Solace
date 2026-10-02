@@ -47,6 +47,22 @@ quindi i componenti non contengono colori esadecimali propri.
 Cormorant Garamond (titoli, corsivo per l'enfasi) + Montserrat (testo, etichette), via `next/font`.
 Testo 16px / 1,65; etichette maiuscole spaziate ≥ 12px; H1 hero `clamp(2.9rem, 7.4vw, 6.4rem)`.
 
+## Icone (liquid glass)
+
+Set lineare in `components/Icon.tsx`: griglia 24×24, tratto 1,6 uniforme, estremità e giunture arrotondate,
+forme con raggi morbidi. Contenitore `components/GlassIcon.tsx` (stili `.glass-icon` in `globals.css`):
+
+- **Forma:** squircle (`corner-shape: squircle` dove supportato, altrimenti `border-radius: 30%`).
+- **Taglie:** `lg` 60px / simbolo 24px (icone di sezione), `md` 44px / 20px (FAQ, numeri, social, galleria),
+  `sm` 32px / 16px (elenchi e righe di contatto). Il simbolo occupa circa il 40% del contenitore.
+- **Vetro:** riempimento semitrasparente a gradiente, `backdrop-filter: blur(14px) saturate(140%)`, bordo 1px
+  luminoso, riflesso nella metà superiore, punto luce interno dorato tenue, ombra esterna morbida.
+- **Tema:** token `--glass-*` scuri di default, ridefiniti nelle sezioni carta (vetro chiaro, simbolo `--gold-ink` 5,6:1).
+- **Hover** (solo elementi interattivi): sollevamento di 2px e luminosità +12% in 400ms; con movimento ridotto
+  nessuno spostamento.
+- Restano senza contenitore solo le icone dentro testi e pulsanti (frecce, link esterni, spunte dei vantaggi,
+  stelle, posizione): un contenitore lì appesantirebbe la lettura.
+
 ## Movimento (`lib/motion.ts`)
 
 | Token | Valore | Uso |

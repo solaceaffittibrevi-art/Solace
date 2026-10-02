@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import PageHero from "@/components/PageHero";
 import Icon from "@/components/Icon";
+import GlassIcon from "@/components/GlassIcon";
 import { Reveal, RevealItem, Stagger } from "@/components/motion/Reveal";
 import Parallax from "@/components/motion/Parallax";
 import CtaBand from "@/components/CtaBand";
@@ -77,9 +78,7 @@ export default function ServiziPage() {
             <Stagger as="ul" className="service-list" gap={0.08}>
               {g.items.map((it) => (
                 <RevealItem as="li" key={it.title} className="service">
-                  <span className="service__icon">
-                    <Icon name={it.icon} size={26} />
-                  </span>
+                  <GlassIcon name={it.icon} />
                   <div>
                     <h3>{it.title}</h3>
                     <p>{it.text}</p>

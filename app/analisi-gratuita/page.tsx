@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import LeadForm from "@/components/LeadForm";
 import Icon from "@/components/Icon";
+import GlassIcon from "@/components/GlassIcon";
 import TrackedLink from "@/components/TrackedLink";
 import { Reveal, RevealItem, Stagger } from "@/components/motion/Reveal";
 import { site } from "@/lib/site";
@@ -43,7 +44,9 @@ export default function AnalisiPage() {
             <ol>
               {next.map((n, i) => (
                 <li key={n.title}>
-                  <span aria-hidden="true">{i + 1}</span>
+                  <GlassIcon size="md">
+                    <span aria-hidden="true">{i + 1}</span>
+                  </GlassIcon>
                   <div>
                     <strong>{n.title}</strong>
                     <p>{n.text}</p>
@@ -68,12 +71,12 @@ export default function AnalisiPage() {
               <ul className="contact-alt__list">
                 {site.phone && (
                   <li>
-                    <Icon name="phone" size={18} /> <a href={`tel:${site.phone.replace(/\s/g, "")}`}>{site.phone}</a>
+                    <GlassIcon name="phone" size="sm" /> <a href={`tel:${site.phone.replace(/\s/g, "")}`}>{site.phone}</a>
                   </li>
                 )}
                 {site.email && (
                   <li>
-                    <Icon name="mail" size={18} /> <a href={`mailto:${site.email}`}>{site.email}</a>
+                    <GlassIcon name="mail" size="sm" /> <a href={`mailto:${site.email}`}>{site.email}</a>
                   </li>
                 )}
               </ul>
