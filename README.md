@@ -31,8 +31,10 @@ Poi apri http://localhost:3000.
 
 Vedi `.env.example`. Prima della pubblicazione servono almeno:
 
-- Ricezione delle richieste: `LEAD_WEBHOOK_URL` (webhook di Make, Zapier, n8n o CRM) e/o
-  `RESEND_API_KEY` + `LEAD_EMAIL_TO` (email tramite Resend). Senza almeno un canale il modulo mostra
+- Ricezione delle richieste: `RESEND_API_KEY` (email tramite Resend a `LEAD_EMAIL_TO`, predefinito
+  solace.gestione@gmail.com; oggetto "Solace — Nuova richiesta di analisi immobile", Reply-To sull'email del
+  visitatore) e/o `LEAD_WEBHOOK_URL` (Make, Zapier, n8n o CRM). Senza dominio verificato su Resend il mittente è
+  onboarding@resend.dev, che consegna solo all'email dell'account Resend. Senza almeno un canale il modulo mostra
   un errore e non conferma mai un invio. Con la richiesta arrivano anche pagina d'ingresso, sito di
   provenienza e parametri UTM.
 - Limite alle richieste e doppi invii: `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` (oppure

@@ -208,10 +208,18 @@ check("Invio valido consegnato (200 ok)", r.status === 200 && r.data.ok === true
 check("Email simulata ricevuta con chiave nell'intestazione", emails.length === before + 1 && emails.at(-1).auth === `Bearer ${FAKE_KEY}`);
 check("Email solo testo: nessun campo html", mail && !("html" in mail) && typeof mail.text === "string");
 check("HTML del messaggio conservato come testo letterale", mail?.text.includes("<script>alert('x')</script>"));
-check("Oggetto email su una riga", mail && !/[\r\n]/.test(mail.subject));
+check("Oggetto email richiesto", mail?.subject === "Solace — Nuova richiesta di analisi immobile", mail?.subject);
+check("Reply-To impostato sull'email del visitatore", mail?.reply_to === PII.email, mail?.reply_to);
+check("Email con tutti i campi compilati", ["Nome: " + PII.name, "Email: " + PII.email, "Comune o zona: Milano, Navigli", "Messaggio: ", "Pagina d'ingresso: /", "Ricevuta il: "].every((t) => mail?.text.includes(t)));
 check("Webhook ricevuto con format text/plain", hook?.format === "text/plain" && hook?.message.includes("<img src=x"));
 r = await post(PORT_A, lead({ zone: "Milano\r\nBcc: altro@example.invalid", requestId: crypto.randomUUID() }));
-check("A capo rimossi dai campi su una riga", r.status === 200 && !/[\r\n]/.test(emails.at(-1).body.subject), emails.at(-1)?.body.subject);
+check("A capo rimossi dai campi su una riga", r.status === 200 && emails.at(-1).body.text.includes("Comune o zona: Milano Bcc: altro@example.invalid"), emails.at(-1)?.body.text.split("\n")[1]);
+{
+  const phoneLead = lead({ contact: PII.phone, requestId: crypto.randomUUID() });
+  const pr = await post(PORT_A, phoneLead);
+  const m = emails.at(-1)?.body;
+  check("Con il solo telefono: nessun Reply-To, telefono nel testo", pr.status === 200 && !m?.reply_to && m?.text.includes("Telefono: " + PII.phone));
+}
 
 // Doppi invii tra istanze diverse
 const sentBefore = emails.length;

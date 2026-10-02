@@ -188,7 +188,10 @@ export async function POST(request: Request) {
 
   const webhook = process.env.LEAD_WEBHOOK_URL;
   const resendKey = process.env.RESEND_API_KEY;
-  const emailTo = process.env.LEAD_EMAIL_TO;
+  // Destinatario delle richieste (indicato dal titolare il 2/10/2026); LEAD_EMAIL_TO lo sostituisce.
+  const emailTo = process.env.LEAD_EMAIL_TO || "solace.gestione@gmail.com";
+  // Mittente: deve essere autorizzato da Resend. Senza un dominio verificato si usa l'indirizzo di prova
+  // di Resend, che consegna solo all'email con cui è stato creato l'account Resend.
   const emailFrom = process.env.LEAD_EMAIL_FROM || "Sito Solace <onboarding@resend.dev>";
   // Indirizzo dell'API Resend: si cambia solo per i test con un servizio simulato.
   const resendUrl = process.env.RESEND_API_URL || "https://api.resend.com/emails";
@@ -210,19 +213,25 @@ export async function POST(request: Request) {
     );
   }
 
-  if (resendKey && emailTo) {
+  if (resendKey) {
+    const s = lead.source;
     const rows = [
       ["Nome", lead.name],
       ["Telefono", lead.phone],
       ["Email", lead.email],
-      ["Zona", lead.zone],
+      ["Comune o zona", lead.zone],
       ["Tipologia", lead.type],
       ["Numero di immobili", lead.count],
       ["Situazione attuale", lead.status],
       ["Messaggio", lead.message],
-      ["Pagina d'ingresso", lead.source.landingPage],
-      ["Provenienza", lead.source.referrer],
-      ["Campagna (utm)", [lead.source.utmSource, lead.source.utmMedium, lead.source.utmCampaign].filter(Boolean).join(" / ")],
+      ["Pagina d'ingresso", s.landingPage],
+      ["Provenienza", s.referrer],
+      ["utm_source", s.utmSource],
+      ["utm_medium", s.utmMedium],
+      ["utm_campaign", s.utmCampaign],
+      ["utm_content", s.utmContent],
+      ["utm_term", s.utmTerm],
+      ["Ricevuta il", new Date(lead.receivedAt).toLocaleString("it-IT", { timeZone: "Europe/Rome" })],
     ].filter(([, v]) => v);
     deliveries.push(
       fetch(resendUrl, {
@@ -232,8 +241,9 @@ export async function POST(request: Request) {
         body: JSON.stringify({
           from: emailFrom,
           to: emailTo.split(",").map((x) => x.trim()),
+          // Rispondendo all'email si scrive direttamente al visitatore, se ha lasciato un'email valida.
           reply_to: lead.email || undefined,
-          subject: `Nuova richiesta di valutazione: ${lead.zone}`.slice(0, 150),
+          subject: "Solace — Nuova richiesta di analisi immobile",
           text: rows.map(([k, v]) => `${k}: ${v}`).join("\n"),
         }),
         cache: "no-store",
