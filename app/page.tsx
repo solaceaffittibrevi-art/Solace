@@ -36,16 +36,21 @@ export default function Home() {
       {/* Cosa fate e come potete aiutarmi */}
       <section id="vantaggi" className="section benefits" aria-labelledby="benefits-title">
         <div className="container benefits__grid">
-          <Reveal className="benefits__media">
+          <Reveal className="benefits__media" style={{ "--ratio": "1920 / 1319" } as React.CSSProperties}>
             <Parallax strength={6}>
               <Image
-                src="/images/immobili/loft-tricolore/01.jpg"
-                alt="Soggiorno del Loft Tricolore con parete arancione e scala verso il soppalco"
+                src="/images/immobili/villa-eze/02.jpg"
+                alt="Villa contemporanea con piscina a sfioro e grandi vetrate a Èze, in Costa Azzurra"
                 fill
                 sizes="(max-width: 900px) 100vw, 50vw"
               />
             </Parallax>
-            <p className="benefits__caption">Loft Tricolore, Porta Venezia</p>
+            <p className="benefits__caption">
+              <a href="https://www.airbnb.it/rooms/1438690511711738798" target="_blank" rel="noopener noreferrer">
+                Villa vista mare, Èze – Costa Azzurra
+                <span className="sr-only"> (annuncio su Airbnb, si apre in una nuova scheda)</span>
+              </a>
+            </p>
           </Reveal>
           <div className="benefits__text">
             <Reveal className="section-head">

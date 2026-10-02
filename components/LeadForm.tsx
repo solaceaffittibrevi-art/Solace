@@ -354,13 +354,9 @@ export default function LeadForm({ location = "valutazione" }: { location?: stri
       </motion.button>
 
       <p className="form__privacy">
-        Usiamo questi dati solo per rispondere alla tua richiesta, senza iscriverti a newsletter o liste promozionali.
-        {site.privacyUrl && (
-          <>
-            {" "}
-            Dettagli nell&apos;<a href={site.privacyUrl}>informativa privacy</a>.
-          </>
-        )}
+        Usiamo questi dati solo per rispondere alla tua richiesta e li conserviamo per 12 mesi, senza iscriverti a
+        newsletter o liste promozionali. Titolare: {site.business}. Dettagli nell&apos;
+        <a href={site.privacyUrl}>informativa privacy</a>.
       </p>
     </form>
   );

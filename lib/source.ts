@@ -1,5 +1,8 @@
 // Provenienza della richiesta: si salva alla prima pagina visitata nella sessione e viaggia
 // solo con la richiesta inviata al sistema di ricezione (mai agli strumenti di analytics).
+// Solo con il consenso "statistiche": senza consenso non si salva nulla e la richiesta parte
+// senza provenienza.
+import { hasStatisticsConsent } from "./consent";
 export type LeadSource = {
   landingPage?: string;
   referrer?: string;
@@ -14,7 +17,7 @@ const KEY = "solace-source";
 
 export function captureSource() {
   try {
-    if (sessionStorage.getItem(KEY)) return;
+    if (!hasStatisticsConsent() || sessionStorage.getItem(KEY)) return;
     const params = new URLSearchParams(window.location.search);
     const referrer = document.referrer && !document.referrer.startsWith(window.location.origin) ? document.referrer : "";
     const source: LeadSource = {
@@ -32,8 +35,15 @@ export function captureSource() {
   }
 }
 
+export function clearSource() {
+  try {
+    sessionStorage.removeItem(KEY);
+  } catch {}
+}
+
 export function readSource(): LeadSource {
   try {
+    if (!hasStatisticsConsent()) return {};
     return JSON.parse(sessionStorage.getItem(KEY) ?? "{}") as LeadSource;
   } catch {
     return {};

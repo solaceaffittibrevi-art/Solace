@@ -18,12 +18,14 @@ export const metadata: Metadata = pageMetadata({
   path: "/servizi",
 });
 
-const groupImages: Record<string, { src: string; alt: string }> = {
+// Ogni foto è mostrata intera: il contenitore prende le sue proporzioni reali (ratio).
+const groupImages: Record<string, { src: string; alt: string; ratio: string }> = {
   prima: {
-    src: "/images/servizi/tavola-apparecchiata-e-cucina.jpg",
-    alt: "Tavolo rotondo apparecchiato per quattro accanto alla cucina in legno con tulipani sul piano",
+    src: "/images/servizi/soggiorno-cucina-pronto-per-gli-ospiti.jpg",
+    alt: "Soggiorno pronto per gli ospiti con divano, tavolo rotondo apparecchiato per quattro e cucina in legno",
+    ratio: "2000 / 1333",
   },
-  durante: { src: "/images/dettagli/biancheria.jpg", alt: "Asciugamani bianchi piegati sul letto" },
+  durante: { src: "/images/dettagli/biancheria.jpg", alt: "Asciugamani bianchi piegati sul letto", ratio: "1600 / 1066" },
 };
 
 export default function ServiziPage() {
@@ -89,7 +91,11 @@ export default function ServiziPage() {
                   </figcaption>
                 </Reveal>
               ) : (
-                <Reveal className="service-group__media" delay={0.1}>
+                <Reveal
+                  className="service-group__media"
+                  delay={0.1}
+                  style={{ "--ratio": groupImages[g.id].ratio } as React.CSSProperties}
+                >
                   <Parallax strength={6}>
                     <Image src={groupImages[g.id].src} alt={groupImages[g.id].alt} fill sizes="(max-width: 900px) 100vw, 40vw" />
                   </Parallax>

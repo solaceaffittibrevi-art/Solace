@@ -89,7 +89,7 @@ export const portfolio: Property[] = [
     photos: photos("duomo-royal-loft", [
       "Open space con soppalco, camino e divano grigio",
       "Scala in metallo verso il soppalco e portefinestre alla francese",
-      "Vista dalla finestra su una via pedonale del centro",
+      "Letto matrimoniale sul soppalco, sotto le travi in legno a vista",
       "Camera da letto con vetrata decorata in stile liberty",
       "Cucina bianca con piano cottura a gas",
       "Bagno con lucernario e box doccia",

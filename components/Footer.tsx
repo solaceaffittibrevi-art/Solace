@@ -4,6 +4,7 @@ import Icon from "./Icon";
 import GlassIcon from "./GlassIcon";
 import Skyline from "./Skyline";
 import TrackedLink from "./TrackedLink";
+import CookiePreferencesButton from "./CookiePreferencesButton";
 import { nav, site } from "@/lib/site";
 
 export default function Footer() {
@@ -74,10 +75,21 @@ export default function Footer() {
 
       <div className="footer__legal container">
         <p className="footer__business">
-          {site.business} — P. IVA {site.vat}
+          {site.business} — P. IVA {site.vat} — {site.address.street}, {site.address.postalCode} {site.address.city} (
+          {site.address.province})
         </p>
         <p>© {new Date().getFullYear()} Solace Real Estate Short Rent</p>
-        {site.privacyUrl && <a href={site.privacyUrl}>Privacy e cookie</a>}
+        <ul className="footer__policies">
+          <li>
+            <Link href={site.privacyUrl}>Privacy policy</Link>
+          </li>
+          <li>
+            <Link href={site.cookieUrl}>Cookie policy</Link>
+          </li>
+          <li>
+            <CookiePreferencesButton className="footer__prefs" />
+          </li>
+        </ul>
       </div>
     </footer>
   );

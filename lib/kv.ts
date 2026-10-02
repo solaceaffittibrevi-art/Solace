@@ -96,13 +96,19 @@ const memory: Store = {
   },
 };
 
+// Ultimo guasto di Upstash: per i 5 minuti successivi il sito applica limiti più severi.
+let lastFailure = 0;
+export const isDegraded = () => Date.now() - lastFailure < 5 * 60 * 1000;
+
 // Con Upstash configurato usa Redis; se una chiamata fallisce ripiega sulla memoria per quella
-// operazione (protezione ridotta ma non assente) e lo segnala nei log senza dati personali.
+// operazione (protezione per singola istanza, con limiti dimezzati: vedi isDegraded) e lo
+// segnala nei log senza dati personali.
 function withFallback(primary: Store): Store {
   const run = async <T>(op: keyof Omit<Store, "kind">, call: (s: Store) => Promise<T>) => {
     try {
       return await call(primary);
     } catch (err) {
+      lastFailure = Date.now();
       console.error(`[kv] ${op} non riuscito (${err instanceof Error ? err.message : "errore"}): uso la memoria locale.`);
       return call(memory);
     }

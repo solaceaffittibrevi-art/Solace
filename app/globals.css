@@ -3241,3 +3241,379 @@ p {
     transform: none !important;
   }
 }
+
+/* Proporzioni delle foto -------------------------------------------------
+   I contenitori seguono le proporzioni reali delle immagini (--ratio), così gli ambienti non vengono
+   tagliati. Le foto non sono mai deformate (object-fit: cover su riquadri con le stesse proporzioni). */
+.page-hero__media,
+.about__media,
+.benefits__media,
+.service-group__media {
+  aspect-ratio: var(--ratio, 4 / 5);
+  max-height: none;
+}
+
+.benefits__grid {
+  align-items: center;
+}
+
+.benefits__caption a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 4px;
+}
+
+/* Immobili in evidenza: griglia alternata 7/5 – 5/7, foto 3:2 intere */
+.featured__grid {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: none;
+  align-items: start;
+}
+
+.featured__cell--0,
+.featured__cell--3 {
+  grid-column: span 7;
+  grid-row: auto;
+}
+
+.featured__cell--1,
+.featured__cell--2 {
+  grid-column: span 5;
+}
+
+.pcard--large .pcard__media,
+.featured__cell--3 .pcard__media {
+  flex: none;
+  min-height: 0;
+  aspect-ratio: 3 / 2;
+}
+
+.featured__cell--3 .pcard__link {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.pcard__media {
+  aspect-ratio: 3 / 2;
+}
+
+/* Galleria della scheda immobile: riquadri 3:2, la prima foto su 2×2 */
+.gallery {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: none;
+  grid-auto-rows: auto;
+  max-height: none;
+}
+
+.gallery__item {
+  aspect-ratio: 3 / 2;
+}
+
+.gallery__item--0 {
+  grid-column: span 2;
+  grid-row: span 2;
+  aspect-ratio: auto;
+}
+
+@media (max-width: 900px) {
+  .page-hero__media,
+  .about__media,
+  .benefits__media,
+  .service-group__media {
+    aspect-ratio: var(--ratio, 16 / 10);
+  }
+
+  .featured__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .featured__cell--0,
+  .featured__cell--1,
+  .featured__cell--2,
+  .featured__cell--3 {
+    grid-column: 1 / -1;
+  }
+
+  .gallery {
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: auto;
+  }
+
+  .gallery__item--0 {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    aspect-ratio: 3 / 2;
+  }
+}
+
+/* Footer: link legali ------------------------------------------------------ */
+.footer__policies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer__policies a,
+.footer__prefs {
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 4px;
+  background: none;
+  border: 0;
+  padding: 0;
+  min-height: 24px;
+  cursor: pointer;
+}
+
+/* Banner dei cookie ------------------------------------------------------- */
+.consent {
+  position: fixed;
+  z-index: 60;
+  left: max(16px, env(safe-area-inset-left));
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  max-width: 560px;
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  padding: 1.4rem 1.4rem 1.2rem;
+  background: rgba(11, 18, 34, 0.985);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--line-soft);
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.6);
+  color: #ece6dc;
+}
+
+.consent:focus {
+  outline: none;
+}
+
+.consent__close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.consent__close:focus-visible,
+.consent__btn:focus-visible,
+.consent__switch:focus-visible {
+  outline: 2px solid var(--gold-soft);
+  outline-offset: 2px;
+}
+
+.consent__title {
+  font-size: 1.45rem;
+  padding-right: 2.5rem;
+}
+
+.consent__text {
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: #cfc8bc;
+}
+
+.consent__text a {
+  color: var(--gold-soft);
+}
+
+.consent__options {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.consent__option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid var(--line-soft);
+  font-size: 0.85rem;
+}
+
+.consent .consent__option {
+  display: flex;
+}
+
+.consent__option > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.consent__option strong {
+  display: block;
+  font-weight: 600;
+}
+
+.consent__option > div span {
+  display: block;
+  margin-top: 0.15rem;
+  color: #b9b2a6;
+}
+
+.consent__always {
+  flex: none;
+  font-size: 0.75rem;
+  color: #b9b2a6;
+}
+
+.consent__switch {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  accent-color: var(--gold, #c9a45c);
+  cursor: pointer;
+}
+
+.consent__actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+  margin-top: 1.1rem;
+}
+
+.consent__btn {
+  min-height: 44px;
+  padding-inline: 0.6rem;
+  white-space: normal;
+}
+
+@media (max-width: 480px) {
+  .consent {
+    padding: 1.2rem 1rem 1rem;
+  }
+
+  .consent__text {
+    font-size: 0.85rem;
+  }
+
+  .consent__actions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .consent__actions .consent__btn:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Pagine legali (privacy e cookie) ---------------------------------------- */
+.legal {
+  padding-top: calc(var(--header-h) + clamp(3rem, 7vw, 5.5rem));
+}
+
+.legal__inner {
+  max-width: 820px;
+}
+
+.legal__updated {
+  margin-top: 0.8rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.legal h2 {
+  margin-top: 2.6rem;
+  font-size: clamp(1.6rem, 2.6vw, 2rem);
+}
+
+.legal h3 {
+  margin-top: 1.6rem;
+  font-size: 1.25rem;
+}
+
+.legal p,
+.legal li {
+  color: #d6cfc3;
+  line-height: 1.7;
+}
+
+.legal p {
+  margin-top: 0.9rem;
+}
+
+.legal ul {
+  margin-top: 0.8rem;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.legal a,
+.legal__link {
+  color: var(--gold-soft);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.legal__link {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.legal__table-wrap {
+  margin-top: 1rem;
+  overflow-x: auto;
+}
+
+.legal__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.legal__table th,
+.legal__table td {
+  padding: 0.75rem 0.8rem;
+  border: 1px solid var(--line-soft);
+  text-align: left;
+  vertical-align: top;
+  color: #d6cfc3;
+}
+
+.legal__table th {
+  color: #f3eee5;
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .legal__table thead {
+    display: none;
+  }
+
+  .legal__table,
+  .legal__table tbody,
+  .legal__table tr,
+  .legal__table td {
+    display: block;
+  }
+
+  .legal__table tr {
+    border: 1px solid var(--line-soft);
+    margin-bottom: 0.8rem;
+  }
+
+  .legal__table td {
+    border: 0;
+    padding: 0.4rem 0.8rem;
+  }
+}

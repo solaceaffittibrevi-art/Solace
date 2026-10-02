@@ -38,7 +38,7 @@ export default function ComeFunzionaPage() {
         lead="Nessun salto nel buio nella gestione del tuo affitto breve: prima l'analisi gratuita dell'immobile per capirne il potenziale, poi decidi tu se e come partire."
         image="/images/come-funziona/monolocale-allestito-per-gli-ospiti.jpg"
         imageAlt="Monolocale allestito per gli ospiti, con divano grigio, mobile TV, specchio tondo e tavolo con sedie"
-        imagePosition={{ desktop: "52% 60%", mobile: "45% 60%" }}
+        imageRatio="2000 / 1333"
       />
 
       <section className="section process" aria-labelledby="steps-title">

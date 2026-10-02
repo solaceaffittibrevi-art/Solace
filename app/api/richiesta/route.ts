@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
 import { contactKind, validateLead, type LeadInput } from "@/lib/lead";
 import type { LeadSource } from "@/lib/source";
-import { getStore, type Store } from "@/lib/kv";
+import { getStore, isDegraded, type Store } from "@/lib/kv";
 
 // Riceve la richiesta di valutazione e la consegna a uno o entrambi i canali configurati:
 //  - LEAD_WEBHOOK_URL: webhook (Make, Zapier, n8n, CRM)
@@ -100,7 +100,9 @@ async function rateLimited(store: Store, request: Request) {
     ttl: l.window,
   }));
   const counts = await store.incr(entries);
-  const hit = LIMITS.findIndex((l, i) => counts[i] > l.max);
+  // Con Upstash non raggiungibile i contatori valgono per singola istanza: limiti dimezzati.
+  const strict = isDegraded();
+  const hit = LIMITS.findIndex((l, i) => counts[i] > (strict ? Math.max(1, Math.floor(l.max / 2)) : l.max));
   if (hit === -1) return null;
   const { name, window } = LIMITS[hit];
   return { name, retryAfter: window - (now % window) };

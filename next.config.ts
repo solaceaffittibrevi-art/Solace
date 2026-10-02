@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV === "development";
+// Google Analytics 4: i suoi domini sono autorizzati solo se l'identificativo è configurato.
+// Lo script viene comunque caricato solo dopo il consenso (components/Analytics.tsx).
+const ga = Boolean(process.env.NEXT_PUBLIC_GA4_ID);
+const gaScript = ga ? " https://www.googletagmanager.com" : "";
+const gaConnect = ga ? " https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com" : "";
+const gaImg = ga ? " https://*.google-analytics.com https://www.googletagmanager.com" : "";
 
 // Content Security Policy compatibile con il sito attuale: tutte le risorse (script, stili, font,
 // immagini) sono servite dal sito stesso. 'unsafe-inline' serve per i piccoli script che Next.js
@@ -9,11 +15,11 @@ const isDev = process.env.NODE_ENV === "development";
 // aggiunti qui i relativi domini.
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline'${gaScript}${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  `img-src 'self' data: blob:${gaImg}`,
   "font-src 'self'",
-  `connect-src 'self'${isDev ? " ws: wss:" : ""}`,
+  `connect-src 'self'${gaConnect}${isDev ? " ws: wss:" : ""}`,
   "media-src 'self'",
   "worker-src 'self' blob:",
   "manifest-src 'self'",

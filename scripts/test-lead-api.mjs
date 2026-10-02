@@ -280,14 +280,6 @@ mode.resendDown = false;
 }
 check("Resend riceve la chiave di idempotenza", emails.at(-1)?.idem?.startsWith("solace-"), emails.at(-1)?.idem);
 
-// Upstash non disponibile o in errore: le richieste non vengono perse (ripiego temporaneo in memoria)
-for (const kind of ["down", "error"]) {
-  mode.redis = kind;
-  r = await post(PORT_A, lead());
-  check(`Upstash ${kind === "down" ? "non raggiungibile" : "con errore sui comandi"}: richiesta comunque gestita (200)`, r.status === 200 && r.data.ok === true, r.text);
-}
-mode.redis = "ok";
-
 // Invio contemporaneo dello stesso requestId su due istanze: uno solo viene inoltrato
 mode.delay = 1500;
 const twin = lead();
@@ -324,6 +316,22 @@ const api = await post(PORT_A, lead({ name: "" }));
 check("API con Cache-Control no-store", api.headers.get("cache-control")?.includes("no-store"));
 const get = await fetch(`http://localhost:${PORT_A}/api/richiesta`);
 check("GET sull'API non consentito (405)", get.status === 405, get.status);
+
+// Upstash non disponibile o in errore: le richieste non vengono perse (ripiego temporaneo in memoria)
+for (const kind of ["down", "error"]) {
+  mode.redis = kind;
+  r = await post(PORT_A, lead());
+  check(`Upstash ${kind === "down" ? "non raggiungibile" : "con errore sui comandi"}: richiesta comunque gestita (200)`, r.status === 200 && r.data.ok === true, r.text);
+}
+// Durante il guasto i contatori sono per singola istanza: limiti dimezzati (5 → 2 ogni 10 minuti)
+mode.redis = "down";
+{
+  const seqD = [];
+  for (let i = 0; i < 3; i++) seqD.push((await post(PORT_A, lead(), { ip: "203.0.113.99" })).status);
+  check("Upstash non disponibile: limite più severo (2 accettate, la 3ª bloccata)", seqD.join(",") === "200,200,429", seqD.join(","));
+}
+mode.redis = "ok";
+
 
 // Log: nessun dato del contatto, IP o credenziale
 await new Promise((r) => setTimeout(r, 300));

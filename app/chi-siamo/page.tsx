@@ -51,7 +51,7 @@ export default function ChiSiamoPage() {
         lead="Solace nasce a Milano per chi possiede una casa e vuole farla rendere in affitto breve senza trasformarlo in un secondo lavoro."
         image="/images/chi-siamo/villa-eze-piscina-vista-mare.jpg"
         imageAlt="Villa con piscina a sfioro e grandi vetrate a Èze, in Costa Azzurra, gestita da Solace"
-        imagePosition={{ desktop: "30% 50%", mobile: "30% 50%" }}
+        imageRatio="1747 / 1200"
       />
 
       <section className="section about" aria-labelledby="about-title">
@@ -69,7 +69,7 @@ export default function ChiSiamoPage() {
               hanno lasciato più di 1.200 recensioni. Numeri che contano perché dietro ognuno c&apos;è un soggiorno curato.
             </p>
           </Reveal>
-          <Reveal className="about__media" delay={0.1} style={{ "--pos": "62% 55%" } as React.CSSProperties}>
+          <Reveal className="about__media" delay={0.1} style={{ "--ratio": "1600 / 1066" } as React.CSSProperties}>
             <Parallax strength={6}>
               <Image
                 src="/images/chi-siamo/soggiorno-con-balcone-milano.jpg"

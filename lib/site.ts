@@ -7,8 +7,18 @@ export const site = {
   // Dati dell'attività forniti dal titolare il 2/10/2026: usare sempre questa forma, identica in tutto il sito.
   business: "Solace di Dal Molin Gabriel",
   vat: "03963440122",
+  // Sede legale e contatto privacy forniti dal titolare il 2/10/2026.
+  address: {
+    street: "Via XXV Aprile 18",
+    postalCode: "21022",
+    city: "Azzate",
+    province: "VA",
+    country: "Italia",
+  },
+  privacyEmail: "solace.gestione@gmail.com",
   tagline: "Gestione affitti brevi a Milano",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  // Dominio definitivo; in sviluppo NEXT_PUBLIC_SITE_URL (in .env.local) lo sostituisce.
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://solaceaffittibrevi.com",
   // Verificato il 1/10/2026: evento "Chiamata conoscitiva", 30 min, telefonica, con Gabriel Dal Molin.
   calendly: "https://calendly.com/solace-gestione/new-meeting",
   instagram: "https://www.instagram.com/solaceaffittibrevi/",
@@ -19,7 +29,8 @@ export const site = {
   // Numero fornito dal titolare il 2/10/2026 (telefono e WhatsApp).
   phone: process.env.NEXT_PUBLIC_CONTACT_PHONE || "+39 351 402 1923",
   whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "393514021923",
-  privacyUrl: process.env.NEXT_PUBLIC_PRIVACY_URL ?? "",
+  privacyUrl: "/privacy",
+  cookieUrl: "/cookie",
 };
 
 export const nav = [

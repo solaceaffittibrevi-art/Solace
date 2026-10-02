@@ -10,6 +10,7 @@ export default function PageHero({
   image,
   imageAlt = "",
   imagePosition,
+  imageRatio,
   background,
   children,
 }: {
@@ -19,6 +20,8 @@ export default function PageHero({
   imageAlt?: string;
   // Inquadratura: object-position su desktop e (facoltativa) su mobile.
   imagePosition?: { desktop: string; mobile?: string };
+  // Proporzioni reali della foto (es. "3 / 2"): il riquadro non la ritaglia. Predefinito 4 / 5.
+  imageRatio?: string;
   // Foto di sfondo a tutta larghezza, oscurata per mantenere leggibili i testi.
   // "contain": l'immagine resta intera (es. il monogramma), sfumata ai bordi nel colore della pagina.
   background?: { src: string; alt: string; position?: string; fit?: "cover" | "contain" };
@@ -60,9 +63,10 @@ export default function PageHero({
             className="page-hero__media"
             delay={0.15}
             style={
-              imagePosition
-                ? ({ "--pos": imagePosition.desktop, "--pos-m": imagePosition.mobile ?? imagePosition.desktop } as React.CSSProperties)
-                : undefined
+              {
+                ...(imagePosition && { "--pos": imagePosition.desktop, "--pos-m": imagePosition.mobile ?? imagePosition.desktop }),
+                ...(imageRatio && { "--ratio": imageRatio }),
+              } as React.CSSProperties
             }
           >
             <Parallax strength={6}>

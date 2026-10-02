@@ -85,9 +85,9 @@ job pianificato sul server (es. Vercel Cron) che registri le osservazioni e facc
 
 ## Video della home
 
-`public/video/` è escluso da Git finché non è confermata la licenza del filmato (montaggio aereo con
-crediti di un autore terzo). Senza i file il sito mostra la foto del Duomo. File attesi:
-`milano-aerea-1280.mp4` (desktop) e `milano-aerea-960.mp4` (mobile), H.264 senza audio.
+`public/video/milano-aerea-1280.mp4` (desktop) e `milano-aerea-960.mp4` (mobile): H.264 senza traccia audio,
+in loop, con la foto del Duomo come immagine di attesa e alternativa. Filmato acquistato dal titolare con i
+diritti d'uso per il sito Solace (confermato il 2/10/2026).
 
 ## Dove modificare
 
