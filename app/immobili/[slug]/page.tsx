@@ -89,8 +89,8 @@ export default async function PropertyPage({ params }: { params: Promise<Params>
                 </div>
               )}
             </dl>
-            <TrackedLink href="/analisi-gratuita" event="cta_analisi_click" location={`scheda-${property.slug}`} className="btn btn--block">
-              Richiedi un&apos;analisi gratuita
+            <TrackedLink href="/valutazione-gratuita" event="cta_click" location={`scheda-${property.slug}`} className="btn btn--block">
+              Richiedi una valutazione gratuita
             </TrackedLink>
             <a href={property.airbnb} target="_blank" rel="noopener noreferrer" className="link-arrow property-facts__airbnb">
               Vedi l&apos;annuncio su Airbnb <Icon name="external" size={16} />
@@ -111,8 +111,8 @@ export default async function PropertyPage({ params }: { params: Promise<Params>
             </p>
           </Reveal>
           <Reveal delay={0.1}>
-            <TrackedLink href="/analisi-gratuita" event="cta_analisi_click" location={`immobile-${property.slug}`} className="btn btn--lg" arrow>
-              Richiedi un&apos;analisi gratuita
+            <TrackedLink href="/valutazione-gratuita" event="cta_click" location={`immobile-${property.slug}`} className="btn btn--lg" arrow>
+              Richiedi una valutazione gratuita
             </TrackedLink>
           </Reveal>
         </div>

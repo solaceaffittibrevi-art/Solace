@@ -28,8 +28,13 @@ Poi apri http://localhost:3000.
 
 Vedi `.env.example`. Prima della pubblicazione servono almeno:
 
-- `LEAD_WEBHOOK_URL`: dove arrivano le richieste del modulo (webhook di Make, Zapier, n8n o CRM).
-  Senza questo valore il modulo mostra un errore e non conferma mai un invio.
+- Ricezione delle richieste: `LEAD_WEBHOOK_URL` (webhook di Make, Zapier, n8n o CRM) e/o
+  `RESEND_API_KEY` + `LEAD_EMAIL_TO` (email tramite Resend). Senza almeno un canale il modulo mostra
+  un errore e non conferma mai un invio. Con la richiesta arrivano anche pagina d'ingresso, sito di
+  provenienza e parametri UTM.
+- Misurazione: gli eventi (`cta_click`, `form_start`, `form_error`, `lead_submit_success`,
+  `whatsapp_click`, `phone_click`, `email_click`, `calendly_click`) vengono scritti in `window.dataLayer`
+  solo quando Tag Manager / GA4 saranno installati, nel rispetto dei consensi. Nessun dato personale.
 - `NEXT_PUBLIC_SITE_URL` e `NEXT_PUBLIC_SITE_ENV=production` sul dominio definitivo.
 - Recapiti pubblici e URL dell'informativa privacy, se disponibili.
 

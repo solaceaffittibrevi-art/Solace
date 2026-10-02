@@ -362,6 +362,8 @@ p {
 
 .btn--block {
   width: 100%;
+  white-space: normal;
+  text-align: center;
 }
 
 .btn:disabled {
@@ -383,8 +385,6 @@ p {
   height: var(--glass-size);
   border-radius: 30%;
   background: linear-gradient(180deg, var(--glass-fill-top) 0%, var(--glass-fill) 55%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  backdrop-filter: blur(14px) saturate(140%);
   border: 1px solid var(--glass-edge);
   box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-highlight);
   color: var(--glass-symbol);
@@ -2095,23 +2095,27 @@ p {
   margin-bottom: 1.2rem;
 }
 
-.next-steps ol {
+.next-steps ol,
+.next-steps__list {
   display: grid;
   gap: 1.2rem;
 }
 
-.next-steps li {
+.next-steps li,
+.next-steps__list li {
   display: grid;
   grid-template-columns: 44px 1fr;
   gap: 1rem;
 }
 
-.next-steps .glass-icon {
+.next-steps .glass-icon,
+.next-steps__list .glass-icon {
   font-family: var(--font-serif);
   font-size: 1.25rem;
 }
 
 .next-steps p,
+.next-steps__list p,
 .contact-alt p {
   color: var(--muted);
   font-size: 0.95rem;
@@ -2561,6 +2565,137 @@ p {
   box-shadow: 0 0 0 1px var(--line), 0 6px 14px -8px rgba(11, 18, 34, 0.4);
 }
 
+
+/* Hero: alternativa secondaria (WhatsApp) -------------------------------- */
+.hero__alt {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 0.25rem;
+  color: #e8e2d6;
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: rgba(226, 200, 143, 0.5);
+}
+
+.hero__alt svg {
+  color: var(--gold-soft);
+}
+
+/* Modulo: dettagli facoltativi, suggerimenti, privacy -------------------- */
+.field__hint {
+  margin-top: -0.2rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.form__more {
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.form__more summary {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 52px;
+  padding: 0 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.form__more summary::-webkit-details-marker {
+  display: none;
+}
+
+.form__more summary span {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 0.85rem;
+}
+
+.form__more summary svg {
+  margin-left: auto;
+  color: var(--accent);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.form__more[open] summary svg {
+  transform: rotate(45deg);
+}
+
+.form__more-body {
+  display: grid;
+  gap: 1.1rem;
+  padding: 0.25rem 1rem 1.1rem;
+}
+
+.form__privacy {
+  margin-top: -0.75rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+/* Chi seguirà il tuo immobile -------------------------------------------- */
+.founder__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+  gap: clamp(2rem, 7vw, 6rem);
+  align-items: center;
+}
+
+.founder__photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  max-width: 380px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.founder__photo img {
+  object-fit: cover;
+  object-position: 50% 20%;
+}
+
+.founder__text .lead {
+  margin-top: 1.2rem;
+  color: var(--text);
+}
+
+.founder__text p:not(.lead) {
+  margin-top: 1rem;
+  color: var(--muted);
+  max-width: 60ch;
+}
+
+.founder__text .link-arrow {
+  margin-top: 1.5rem;
+}
+
+/* Richiesta di valutazione in pagina ------------------------------------ */
+.lead-section__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.lead-section .contact-page__form {
+  grid-area: auto;
+}
+
+.lead-section__intro .next-steps__title {
+  margin-top: 2.5rem;
+}
+
+.footer__business {
+  color: var(--text);
+}
+
 /* 404 ------------------------------------------------------------------- */
 .not-found {
   padding-top: calc(var(--header-h) + 6rem);
@@ -2671,6 +2806,15 @@ p {
       "form"
       "more";
     grid-template-rows: none;
+  }
+
+  .founder__grid,
+  .lead-section__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .founder__photo {
+    max-width: 280px;
   }
 
   .featured__grid {
@@ -2881,7 +3025,7 @@ p {
   opacity: 1;
 }
 
-@media (max-width: 380px) {
+@media (max-width: 480px) {
   .header__logo .logo__word {
     display: none;
   }

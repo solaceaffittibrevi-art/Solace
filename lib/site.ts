@@ -4,6 +4,9 @@
 export const site = {
   name: "Solace",
   legalName: "Solace Real Estate Short Rent",
+  // Dati dell'attività forniti dal titolare il 2/10/2026: usare sempre questa forma, identica in tutto il sito.
+  business: "Solace di Dal Molin Gabriel",
+  vat: "03963440122",
   tagline: "Gestione affitti brevi a Milano",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   // Verificato il 1/10/2026: evento "Chiamata conoscitiva", 30 min, telefonica, con Gabriel Dal Molin.
@@ -38,26 +41,27 @@ export const proof = [
 export const proofSourceNote =
   "Dati dal profilo host Airbnb di Solace e dalle comunicazioni ufficiali, aggiornati a ottobre 2026.";
 
+// Ogni servizio collegato al beneficio pratico per il proprietario.
 export const benefits = [
   {
-    icon: "calm",
-    title: "Meno incombenze",
-    text: "Messaggi, check-in, pulizie, tecnici e adempimenti passano da noi. A te resta una sola persona di riferimento.",
+    icon: "chat",
+    title: "Meno messaggi e telefonate da seguire",
+    text: "Rispondiamo noi agli ospiti, prima e durante il soggiorno, anche in inglese. Per le emergenze c'è un contatto attivo 24 ore su 24.",
   },
   {
-    icon: "guest",
-    title: "Ospiti seguiti",
-    text: "Rispondiamo agli ospiti prima e durante il soggiorno, anche in inglese, con assistenza per le emergenze 24/7.",
+    icon: "sparkle",
+    title: "Un appartamento pronto a ogni arrivo",
+    text: "Coordiniamo pulizie e biancheria dopo ogni partenza e organizziamo gli interventi di manutenzione quando servono.",
   },
   {
-    icon: "home",
-    title: "Casa curata",
-    text: "Pulizie professionali, biancheria di qualità e controlli dopo ogni partenza. Se serve un intervento, lo coordiniamo noi.",
+    icon: "calendar",
+    title: "Tariffe adeguate alla domanda",
+    text: "Aggiorniamo i prezzi in base a stagione, eventi, fiere e caratteristiche della casa, invece di lasciare una tariffa fissa.",
   },
   {
     icon: "chart",
-    title: "Risultati sotto controllo",
-    text: "Accesso alle piattaforme per vedere calendario, prezzi e messaggi, più un report aggiornato a ogni prenotazione.",
+    title: "Incassi e costi sempre visibili",
+    text: "Un report aggiornato a ogni prenotazione e, se vuoi, l'accesso alle piattaforme per vedere calendario, prezzi e messaggi.",
   },
 ];
 
@@ -206,26 +210,19 @@ export const compliance = [
   },
 ];
 
+// Il percorso per iniziare, in tre passaggi. Nessun impegno fino alla firma del contratto.
 export const steps = [
   {
-    title: "Ci racconti il tuo immobile",
-    text: "Compili il modulo o prenoti una chiamata. Bastano poche informazioni: zona, tipologia e situazione attuale.",
+    title: "Ci mandi le informazioni sull'immobile",
+    text: "Nome, un recapito e la zona: bastano pochi secondi. Se vuoi, aggiungi tipologia e situazione attuale.",
   },
   {
-    title: "Analizziamo il potenziale",
-    text: "Studiamo la casa, la zona e la domanda, e prepariamo una valutazione personalizzata.",
+    title: "Ci confrontiamo e valutiamo",
+    text: "Ti chiamiamo per conoscere la casa e le tue aspettative, poi valutiamo il suo potenziale in affitto breve.",
   },
   {
-    title: "Ci confrontiamo sulla proposta",
-    text: "Ne parliamo al telefono o con un sopralluogo: servizi inclusi, compenso e condizioni, nero su bianco.",
-  },
-  {
-    title: "Prepariamo l'avvio",
-    text: "Foto, annunci, pratiche, accessi e dotazioni: mettiamo la casa nelle condizioni di accogliere i primi ospiti.",
-  },
-  {
-    title: "Gestiamo e condividiamo i risultati",
-    text: "Seguiamo l'operatività ogni giorno e ti aggiorniamo a ogni prenotazione.",
+    title: "Ricevi la proposta di gestione",
+    text: "Servizi inclusi, compenso e condizioni, nero su bianco. Se ha senso, organizziamo un sopralluogo prima di decidere.",
   },
 ];
 
@@ -498,11 +495,11 @@ export const details = [
 export const faqs = [
   {
     q: "Il mio immobile è adatto agli affitti brevi?",
-    a: "Dipende da zona, tipologia, stato e regole del condominio. Per questo partiamo sempre da un'analisi: valutiamo con te se e come ha senso affittarlo a breve termine, e te lo diciamo con franchezza anche quando la risposta è no.",
+    a: "Dipende da zona, tipologia, stato e regole del condominio. Per questo partiamo sempre da una valutazione: valutiamo con te se e come ha senso affittarlo a breve termine, e te lo diciamo con franchezza anche quando la risposta è no.",
   },
   {
-    q: "Come viene preparata l'analisi?",
-    a: "Partiamo dalle informazioni che ci dai nel modulo o durante la chiamata, poi consideriamo la domanda nella zona, la stagionalità, gli eventi in città e le caratteristiche della casa. Se serve, organizziamo un sopralluogo. L'analisi è gratuita e non ti impegna.",
+    q: "Come viene preparata la valutazione?",
+    a: "Partiamo dalle informazioni che ci dai nel modulo o durante la chiamata, poi consideriamo la domanda nella zona, la stagionalità, gli eventi in città e le caratteristiche della casa. Se serve, organizziamo un sopralluogo. La valutazione è gratuita e non ti impegna.",
   },
   {
     q: "Cosa comprende la gestione?",
@@ -510,7 +507,7 @@ export const faqs = [
   },
   {
     q: "Come si definisce il compenso?",
-    a: "Il compenso è una percentuale sugli incassi delle prenotazioni che gestiamo, definita in base all'immobile dopo l'analisi. La trovi indicata con chiarezza nella proposta, insieme a cosa è incluso.",
+    a: "Il compenso è una percentuale sugli incassi delle prenotazioni che gestiamo, definita in base all'immobile dopo la valutazione. La trovi indicata con chiarezza nella proposta, insieme a cosa è incluso.",
   },
   {
     q: "Chi segue gli ospiti?",

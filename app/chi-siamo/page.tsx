@@ -19,7 +19,7 @@ const method = [
   {
     icon: "search",
     title: "Prima capire, poi proporre",
-    text: "Ogni collaborazione parte da un'analisi della casa e degli obiettivi del proprietario. Se l'affitto breve non è la scelta giusta, lo diciamo.",
+    text: "Ogni collaborazione parte da una valutazione della casa e degli obiettivi del proprietario. Se l'affitto breve non è la scelta giusta, lo diciamo.",
   },
   {
     icon: "eye",

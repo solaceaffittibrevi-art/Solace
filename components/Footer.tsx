@@ -25,7 +25,7 @@ export default function Footer() {
               </li>
             ))}
             <li>
-              <Link href="/analisi-gratuita">Analisi gratuita</Link>
+              <Link href="/valutazione-gratuita">Valutazione gratuita</Link>
             </li>
           </ul>
         </nav>
@@ -34,18 +34,22 @@ export default function Footer() {
           <h2 className="footer__title">Contatti</h2>
           <ul>
             <li>
-              <a href={site.calendly} target="_blank" rel="noopener noreferrer">
-                Prenota una chiamata <span className="sr-only">(si apre in una nuova scheda)</span>
-              </a>
+              <TrackedLink href={site.calendly} event="calendly_click" location="footer" external>
+                Prenota una chiamata
+              </TrackedLink>
             </li>
             {site.email && (
               <li>
-                <a href={`mailto:${site.email}`}>{site.email}</a>
+                <TrackedLink href={`mailto:${site.email}`} event="email_click" location="footer">
+                  {site.email}
+                </TrackedLink>
               </li>
             )}
             {site.phone && (
               <li>
-                <a href={`tel:${site.phone.replace(/\s/g, "")}`}>{site.phone}</a>
+                <TrackedLink href={`tel:${site.phone.replace(/\s/g, "")}`} event="phone_click" location="footer">
+                  {site.phone}
+                </TrackedLink>
               </li>
             )}
             {site.whatsapp && (
@@ -69,9 +73,10 @@ export default function Footer() {
       </div>
 
       <div className="footer__legal container">
-        <p>
-          © {new Date().getFullYear()} {site.legalName}
+        <p className="footer__business">
+          {site.business} — P. IVA {site.vat}
         </p>
+        <p>© {new Date().getFullYear()} Solace Real Estate Short Rent</p>
         {site.privacyUrl && <a href={site.privacyUrl}>Privacy e cookie</a>}
       </div>
     </footer>

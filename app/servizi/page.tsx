@@ -87,11 +87,11 @@ export default function ServiziPage() {
           </div>
         </section>
         {g.id === "durante" && (
-          <section className="cta-inline" aria-label="Richiedi un'analisi">
+          <section className="cta-inline" aria-label="Richiedi una valutazione">
             <div className="container cta-inline__inner">
               <p className="cta-inline__text">Vuoi sapere quanto può rendere la tua casa con questa gestione?</p>
-              <TrackedLink href="/analisi-gratuita" event="cta_analisi_click" location="servizi-meta" className="btn" arrow>
-                Richiedi un&apos;analisi gratuita
+              <TrackedLink href="/valutazione-gratuita" event="cta_click" location="servizi-meta" className="btn" arrow>
+                Richiedi una valutazione gratuita
               </TrackedLink>
             </div>
           </section>

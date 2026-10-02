@@ -4,7 +4,7 @@ import { site } from "@/lib/site";
 
 export default function CtaBand({
   title = "Raccontaci la tua casa.",
-  text = "L'analisi è gratuita e senza impegno: ti diciamo con franchezza se e come può funzionare in affitto breve.",
+  text = "La valutazione è gratuita e senza impegno: ti diciamo con franchezza se e come può funzionare in affitto breve.",
 }: {
   title?: string;
   text?: string;
@@ -19,8 +19,8 @@ export default function CtaBand({
           <p className="cta-band__text">{text}</p>
         </Reveal>
         <Reveal className="cta-band__actions" delay={0.1}>
-          <TrackedLink href="/analisi-gratuita" event="cta_analisi_click" location="cta-band" className="btn">
-            Richiedi un&apos;analisi gratuita
+          <TrackedLink href="/valutazione-gratuita" event="cta_click" location="cta-band" className="btn">
+            Richiedi una valutazione gratuita
           </TrackedLink>
           <TrackedLink href={site.calendly} event="calendly_click" location="cta-band" className="btn btn--ghost" external>
             Prenota una chiamata

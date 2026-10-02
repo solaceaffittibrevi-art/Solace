@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     template: "%s | Solace – Gestione affitti brevi Milano",
   },
   description:
-    "Solace gestisce il tuo appartamento in affitto breve a Milano: annunci, prezzi, ospiti, pulizie e adempimenti, con rendicontazione trasparente. Richiedi un'analisi gratuita.",
+    "Gestione affitti brevi e Airbnb a Milano: ospiti, pulizie, prezzi e adempimenti seguiti da Solace, con un rendiconto chiaro di incassi e costi. Richiedi una valutazione gratuita.",
   keywords: ["gestione affitti brevi Milano", "gestione Airbnb Milano", "property management Milano", "affitti brevi Milano"],
   applicationName: "Solace",
   openGraph: {
@@ -36,8 +36,8 @@ export const metadata: Metadata = {
     locale: "it_IT",
     siteName: "Solace",
     title: "Solace – Gestione affitti brevi a Milano",
-    description: "La tua casa a Milano, gestita con cura e trasparenza. Richiedi un'analisi gratuita del tuo immobile.",
-    images: [{ url: "/images/immobili/suite-prestige/01.jpg", width: 1920, height: 1280, alt: "Terrazzo sui tetti di Milano" }],
+    description: "Gestiamo il tuo appartamento in affitto breve a Milano. Richiedi una valutazione gratuita del tuo immobile.",
+    images: [{ url: "/images/milano-duomo.webp", width: 1672, height: 941, alt: "Piazza del Duomo a Milano di sera" }],
   },
   twitter: { card: "summary_large_image" },
   alternates: { canonical: "/" },
@@ -48,15 +48,20 @@ export const viewport: Viewport = {
   colorScheme: "dark light",
 };
 
+// Solo dati reali: denominazione e P. IVA forniti dal titolare, recapiti pubblici, profili ufficiali.
 const organization = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: site.legalName,
-  alternateName: "Solace",
+  name: "Solace",
+  legalName: site.business,
+  vatID: site.vat,
   url: site.url,
   logo: `${site.url}/brand/logo-stacked.svg`,
   description: "Gestione di affitti brevi e property management a Milano.",
   areaServed: { "@type": "City", name: "Milano" },
+  email: site.email,
+  telephone: site.phone.replace(/\s/g, ""),
+  founder: { "@type": "Person", name: "Gabriel Dal Molin" },
   sameAs: [site.instagram, site.airbnbProfile],
 };
 

@@ -12,10 +12,10 @@ const walls =
 const doors = "M95 110A30 30 0 0 1 65 140M150 110A40 40 0 0 1 190 150M250 190A30 30 0 0 1 280 220";
 const rooms = [
   { x: 85, y: 65 },
-  { x: 265, y: 75 },
-  { x: 315, y: 205 },
+  { x: 315, y: 75 },
   { x: 200, y: 215 },
   { x: 85, y: 205 },
+  { x: 315, y: 205 },
 ];
 
 export default function ProcessStory({ detailed = false }: { detailed?: boolean }) {
@@ -38,7 +38,7 @@ export default function ProcessStory({ detailed = false }: { detailed?: boolean 
           <svg viewBox="0 0 400 300" className="story__plan" fill="none">
             <motion.path d={walls} className="story__walls" style={{ pathLength: reduced ? 1 : draw }} />
             <motion.path d={doors} className="story__doors" style={{ pathLength: reduced ? 1 : draw }} />
-            {rooms.map((r, i) => (
+            {rooms.slice(0, steps.length).map((r, i) => (
               <g key={i} transform={`translate(${r.x} ${r.y})`}>
                 <motion.circle
                   r={15}
@@ -86,7 +86,7 @@ export default function ProcessStory({ detailed = false }: { detailed?: boolean 
             <h3>{step.title}</h3>
             <p>{step.text}</p>
             {detailed && i === 0 && (
-              <p className="story__note">Nessun impegno: l&apos;analisi serve a capire se ha senso procedere.</p>
+              <p className="story__note">Nessun impegno: la valutazione serve a capire se ha senso procedere.</p>
             )}
           </motion.li>
         ))}

@@ -1,64 +1,66 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Icon from "./Icon";
 import TrackedLink from "./TrackedLink";
 import { propertyCounts, propertyStatuses, propertyTypes, validateLead, type LeadErrors, type LeadInput } from "@/lib/lead";
 import { site } from "@/lib/site";
+import { readSource } from "@/lib/source";
 import { duration, ease, spring } from "@/lib/motion";
 import { track } from "@/lib/analytics";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
-const empty: LeadInput = {
-  name: "",
-  email: "",
-  phone: "",
-  zone: "",
-  type: "",
-  count: "",
-  status: "",
-  message: "",
-  consent: false,
-  website: "",
-};
+const empty: LeadInput = { name: "", contact: "", zone: "", type: "", count: "", status: "", message: "", website: "" };
 
-const errorLabels: Record<string, string> = {
+const errorLabels: Record<keyof LeadErrors, string> = {
   name: "Nome",
-  contact: "Contatto",
-  email: "Email",
-  phone: "Telefono",
+  contact: "Recapito",
   zone: "Zona",
-  type: "Tipologia",
-  consent: "Consenso",
   message: "Messaggio",
 };
 
-const fieldFor = (key: string) => (key === "contact" ? "lead-email" : `lead-${key}`);
+const newRequestId = () =>
+  typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`;
 
-export default function LeadForm() {
+// Modulo di richiesta valutazione. Obbligatori: nome, un recapito, zona. I dettagli sono facoltativi.
+// La conferma compare solo se il server risponde che la richiesta è stata consegnata.
+export default function LeadForm({ location = "valutazione" }: { location?: string }) {
+  const uid = useId();
+  const f = (name: string) => `lead${uid.replace(/[^a-zA-Z0-9]/g, "")}-${name}`;
   const [values, setValues] = useState<LeadInput>(empty);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [submitted, setSubmitted] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
-  const [failure, setFailure] = useState<string>("");
+  const [failure, setFailure] = useState("");
+  const started = useRef(false);
+  const inFlight = useRef(false);
+  const requestId = useRef<string>("");
   const summaryRef = useRef<HTMLDivElement>(null);
   const successRef = useRef<HTMLDivElement>(null);
 
   const errors = validateLead(values);
   const show = (key: keyof LeadErrors) => (submitted || touched[key] ? errors[key] : undefined);
-  const contactError = submitted || (touched.email && touched.phone) ? errors.contact : undefined;
-  const visibleErrors = submitted ? Object.entries(errors) : [];
-
-  const set = <K extends keyof LeadInput>(key: K, value: LeadInput[K]) => setValues((v) => ({ ...v, [key]: value }));
-  const blur = (key: string) => setTouched((t) => ({ ...t, [key]: true }));
+  const visibleErrors = submitted ? (Object.entries(errors) as [keyof LeadErrors, string][]) : [];
   const isValid = (key: keyof LeadErrors, filled: boolean) => filled && !errors[key] && (touched[key] || submitted);
+
+  const set = <K extends keyof LeadInput>(key: K, value: LeadInput[K]) => {
+    if (!started.current) {
+      started.current = true;
+      track("form_start", location);
+    }
+    setValues((v) => ({ ...v, [key]: value }));
+  };
+  const blur = (key: string) => setTouched((t) => ({ ...t, [key]: true }));
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (inFlight.current) return; // doppio clic o invio ripetuto
     setSubmitted(true);
-    if (Object.keys(errors).length) {
+    const currentErrors = Object.keys(errors);
+    if (currentErrors.length) {
+      track("form_error", location, `validazione:${currentErrors.join(",")}`);
       requestAnimationFrame(() => {
         const summary = summaryRef.current;
         if (!summary) return;
@@ -67,22 +69,28 @@ export default function LeadForm() {
       });
       return;
     }
+    inFlight.current = true;
+    if (!requestId.current) requestId.current = newRequestId();
     setStatus("submitting");
     setFailure("");
     try {
       const res = await fetch("/api/richiesta", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: JSON.stringify({ ...values, requestId: requestId.current, source: readSource() }),
       });
       const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
       if (!res.ok || !data.ok) throw new Error(data.error ?? `http_${res.status}`);
       setStatus("success");
-      track("lead_submit_success", "analisi-gratuita");
+      track("lead_submit_success", location);
       requestAnimationFrame(() => successRef.current?.focus());
     } catch (err) {
+      const reason = err instanceof Error ? err.message : "unknown";
       setStatus("error");
-      setFailure(err instanceof Error ? err.message : "unknown");
+      setFailure(reason);
+      track("form_error", location, `invio:${reason}`);
+    } finally {
+      inFlight.current = false;
     }
   }
 
@@ -93,7 +101,7 @@ export default function LeadForm() {
         tabIndex={-1}
         className="form-success"
         role="status"
-        initial={{ opacity: 0, y: 16 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: duration.base, ease: ease.out }}
       >
@@ -105,12 +113,12 @@ export default function LeadForm() {
         >
           <Icon name="check" size={30} />
         </motion.span>
-        <h2>Richiesta ricevuta, grazie {values.name.split(" ")[0]}.</h2>
+        <h2>Richiesta ricevuta, grazie {values.name.trim().split(" ")[0]}.</h2>
         <p>
-          Abbiamo i dati del tuo immobile. Ti ricontattiamo per approfondire e preparare l&apos;analisi. Se preferisci
-          fissare subito un orario, puoi prenotare una chiamata.
+          Ti ricontattiamo al recapito che hai indicato per conoscere meglio la casa e preparare la valutazione. Se
+          preferisci fissare subito un orario, puoi prenotare una chiamata.
         </p>
-        <TrackedLink href={site.calendly} event="calendly_click" location="form-success" className="btn btn--ghost" external>
+        <TrackedLink href={site.calendly} event="calendly_click" location={`${location}-conferma`} className="btn btn--ghost" external>
           Prenota una chiamata
         </TrackedLink>
       </motion.div>
@@ -120,10 +128,9 @@ export default function LeadForm() {
   const submitting = status === "submitting";
 
   return (
-    <form className="form" onSubmit={onSubmit} noValidate aria-describedby="form-intro">
-      <p id="form-intro" className="form__intro">
-        I campi con <span aria-hidden="true">*</span>
-        <span className="sr-only">asterisco</span> sono obbligatori. Bastano un minuto e un contatto.
+    <form className="form" onSubmit={onSubmit} noValidate aria-describedby={f("intro")}>
+      <p id={f("intro")} className="form__intro">
+        Tre informazioni e abbiamo quello che serve per richiamarti.
       </p>
 
       <AnimatePresence>
@@ -133,18 +140,18 @@ export default function LeadForm() {
             tabIndex={-1}
             className="form__summary"
             role="alert"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: duration.fast * 1.5, ease: ease.out }}
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: duration.fast, ease: ease.out }}
           >
             <p>
-              <Icon name="alert" size={18} /> Controlla {visibleErrors.length === 1 ? "questo campo" : "questi campi"}:
+              <Icon name="alert" size={18} /> Manca qualcosa per inviare la richiesta:
             </p>
             <ul>
               {visibleErrors.map(([key, msg]) => (
                 <li key={key}>
-                  <a href={`#${fieldFor(key)}`}>
+                  <a href={`#${f(key)}`}>
                     {errorLabels[key]}: {msg}
                   </a>
                 </li>
@@ -154,110 +161,86 @@ export default function LeadForm() {
         )}
       </AnimatePresence>
 
-      <fieldset className="form__group">
-        <legend>Chi sei</legend>
-        <Field id="lead-name" label="Nome e cognome" required error={show("name")} valid={isValid("name", !!values.name)}>
-          <input
-            id="lead-name"
-            name="name"
-            autoComplete="name"
-            value={values.name}
-            onChange={(e) => set("name", e.target.value)}
-            onBlur={() => blur("name")}
-            aria-invalid={!!show("name")}
-            aria-describedby={show("name") ? "lead-name-error" : undefined}
-            required
-          />
-        </Field>
-        <p className="form__hint" id="lead-contact-hint">
-          Lasciaci almeno un recapito: email o telefono.
-        </p>
-        <div className="form__row">
-          <Field id="lead-email" label="Email" error={show("email") ?? contactError} valid={isValid("email", !!values.email)}>
-            <input
-              id="lead-email"
-              name="email"
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              value={values.email}
-              onChange={(e) => set("email", e.target.value)}
-              onBlur={() => blur("email")}
-              aria-invalid={!!(show("email") ?? contactError)}
-              aria-describedby={`lead-contact-hint${show("email") ?? contactError ? " lead-email-error" : ""}`}
-            />
-          </Field>
-          <Field id="lead-phone" label="Telefono" error={show("phone")} valid={isValid("phone", !!values.phone)}>
-            <input
-              id="lead-phone"
-              name="phone"
-              type="tel"
-              inputMode="tel"
-              autoComplete="tel"
-              value={values.phone}
-              onChange={(e) => set("phone", e.target.value)}
-              onBlur={() => blur("phone")}
-              aria-invalid={!!show("phone")}
-              aria-describedby={`lead-contact-hint${show("phone") ? " lead-phone-error" : ""}`}
-            />
-          </Field>
-        </div>
-      </fieldset>
+      <Field id={f("name")} label="Nome" error={show("name")} valid={isValid("name", !!values.name)}>
+        <input
+          id={f("name")}
+          name="name"
+          autoComplete="name"
+          autoCapitalize="words"
+          enterKeyHint="next"
+          value={values.name}
+          onChange={(e) => set("name", e.target.value)}
+          onBlur={() => blur("name")}
+          aria-invalid={!!show("name")}
+          aria-describedby={show("name") ? `${f("name")}-error` : undefined}
+          required
+        />
+      </Field>
 
-      <fieldset className="form__group">
-        <legend>Il tuo immobile</legend>
-        <div className="form__row">
-          <Field id="lead-zone" label="Zona o quartiere" required error={show("zone")} valid={isValid("zone", !!values.zone)}>
-            <input
-              id="lead-zone"
-              name="zone"
-              placeholder="Es. Navigli"
-              value={values.zone}
-              onChange={(e) => set("zone", e.target.value)}
-              onBlur={() => blur("zone")}
-              aria-invalid={!!show("zone")}
-              aria-describedby={show("zone") ? "lead-zone-error" : undefined}
-              required
-            />
-          </Field>
-          <Field id="lead-type" label="Tipologia" required error={show("type")} valid={isValid("type", !!values.type)}>
-            <select
-              id="lead-type"
-              name="type"
-              value={values.type}
-              onChange={(e) => {
-                set("type", e.target.value);
-                blur("type");
-              }}
-              onBlur={() => blur("type")}
-              aria-invalid={!!show("type")}
-              aria-describedby={show("type") ? "lead-type-error" : undefined}
-              required
-            >
-              <option value="" disabled>
-                Seleziona
-              </option>
-              {propertyTypes.map((t) => (
-                <option key={t}>{t}</option>
-              ))}
-            </select>
-          </Field>
-        </div>
+      <Field
+        id={f("contact")}
+        label="Telefono o email"
+        hint="Ti ricontattiamo solo qui, per questa richiesta."
+        error={show("contact")}
+        valid={isValid("contact", !!values.contact)}
+      >
+        <input
+          id={f("contact")}
+          name="contact"
+          type="text"
+          autoComplete="on"
+          autoCapitalize="off"
+          spellCheck={false}
+          enterKeyHint="next"
+          value={values.contact}
+          onChange={(e) => set("contact", e.target.value)}
+          onBlur={() => blur("contact")}
+          aria-invalid={!!show("contact")}
+          aria-describedby={`${f("contact")}-hint${show("contact") ? ` ${f("contact")}-error` : ""}`}
+          required
+        />
+      </Field>
 
-        <div className="form__row">
-          <Field id="lead-count" label="Quanti immobili?" optional>
-            <select id="lead-count" name="count" value={values.count} onChange={(e) => set("count", e.target.value)}>
-              <option value="">Preferisco non dirlo</option>
-              {propertyCounts.map((c) => (
-                <option key={c}>{c}</option>
-              ))}
-            </select>
-          </Field>
+      <Field id={f("zone")} label="Comune o zona dell'immobile" error={show("zone")} valid={isValid("zone", !!values.zone)}>
+        <input
+          id={f("zone")}
+          name="zone"
+          autoComplete="address-level2"
+          enterKeyHint="done"
+          placeholder="Es. Milano, Navigli"
+          value={values.zone}
+          onChange={(e) => set("zone", e.target.value)}
+          onBlur={() => blur("zone")}
+          aria-invalid={!!show("zone")}
+          aria-describedby={show("zone") ? `${f("zone")}-error` : undefined}
+          required
+        />
+      </Field>
+
+      <details className="form__more">
+        <summary>
+          Aggiungi qualche dettaglio <span>facoltativo</span>
+          <Icon name="plus" size={18} />
+        </summary>
+        <div className="form__more-body">
           <div className="field">
-            <span className="field__label" id="lead-status-label">
-              Stato attuale <span className="field__opt">facoltativo</span>
+            <span className="field__label" id={f("type-label")}>
+              Tipologia
             </span>
-            <div className="chips" role="radiogroup" aria-labelledby="lead-status-label">
+            <div className="chips" role="radiogroup" aria-labelledby={f("type-label")}>
+              {propertyTypes.map((t) => (
+                <label key={t} className={`chip${values.type === t ? " is-checked" : ""}`}>
+                  <input type="radio" name="type" value={t} checked={values.type === t} onChange={() => set("type", t)} />
+                  {t}
+                </label>
+              ))}
+            </div>
+          </div>
+          <div className="field">
+            <span className="field__label" id={f("status-label")}>
+              Situazione attuale
+            </span>
+            <div className="chips" role="radiogroup" aria-labelledby={f("status-label")}>
               {propertyStatuses.map((s) => (
                 <label key={s} className={`chip${values.status === s ? " is-checked" : ""}`}>
                   <input type="radio" name="status" value={s} checked={values.status === s} onChange={() => set("status", s)} />
@@ -266,55 +249,31 @@ export default function LeadForm() {
               ))}
             </div>
           </div>
+          <Field id={f("count")} label="Quanti immobili vorresti affidarci?">
+            <select id={f("count")} name="count" value={values.count} onChange={(e) => set("count", e.target.value)}>
+              <option value="">Preferisco non dirlo</option>
+              {propertyCounts.map((c) => (
+                <option key={c}>{c}</option>
+              ))}
+            </select>
+          </Field>
+          <Field id={f("message")} label="Messaggio" error={show("message")}>
+            <textarea
+              id={f("message")}
+              name="message"
+              rows={3}
+              placeholder="Metratura, quando sarebbe libera, domande…"
+              value={values.message}
+              onChange={(e) => set("message", e.target.value)}
+              onBlur={() => blur("message")}
+            />
+          </Field>
         </div>
-
-        <Field id="lead-message" label="Vuoi aggiungere qualcosa?" optional error={show("message")}>
-          <textarea
-            id="lead-message"
-            name="message"
-            rows={4}
-            placeholder="Metratura, disponibilità per un sopralluogo, domande..."
-            value={values.message}
-            onChange={(e) => set("message", e.target.value)}
-            onBlur={() => blur("message")}
-          />
-        </Field>
-      </fieldset>
+      </details>
 
       <div className="form__hp" aria-hidden="true">
-        <label htmlFor="lead-website">Non compilare questo campo</label>
-        <input id="lead-website" name="website" tabIndex={-1} autoComplete="off" value={values.website} onChange={(e) => set("website", e.target.value)} />
-      </div>
-
-      <div className={`consent${show("consent") ? " has-error" : ""}`}>
-        <label htmlFor="lead-consent">
-          <input
-            id="lead-consent"
-            type="checkbox"
-            checked={values.consent}
-            onChange={(e) => {
-              set("consent", e.target.checked);
-              blur("consent");
-            }}
-            aria-invalid={!!show("consent")}
-            aria-describedby={show("consent") ? "lead-consent-error" : undefined}
-          />
-          <span>
-            Acconsento a essere ricontattato da Solace per questa richiesta.
-            {site.privacyUrl ? (
-              <>
-                {" "}
-                Ho letto l&apos;<a href={site.privacyUrl}>informativa privacy</a>.
-              </>
-            ) : null}{" "}
-            <span aria-hidden="true">*</span>
-          </span>
-        </label>
-        {show("consent") && (
-          <p className="field__error" id="lead-consent-error">
-            {show("consent")}
-          </p>
-        )}
+        <label htmlFor={f("website")}>Non compilare questo campo</label>
+        <input id={f("website")} name="website" tabIndex={-1} autoComplete="off" value={values.website} onChange={(e) => set("website", e.target.value)} />
       </div>
 
       <AnimatePresence>
@@ -325,7 +284,7 @@ export default function LeadForm() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: duration.fast * 1.5 }}
+            transition={{ duration: duration.fast }}
           >
             <Icon name="alert" size={20} />
             <div>
@@ -336,16 +295,19 @@ export default function LeadForm() {
                   : "Si è verificato un problema di connessione. I dati che hai scritto sono ancora qui: puoi riprovare."}
               </p>
               <p>
-                Nel frattempo puoi{" "}
-                <a href={site.calendly} target="_blank" rel="noopener noreferrer" onClick={() => track("calendly_click", "form-error")}>
-                  prenotare una chiamata conoscitiva
+                Puoi anche{" "}
+                <a
+                  href={`https://wa.me/${site.whatsapp}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => track("whatsapp_click", `${location}-errore`)}
+                >
+                  scriverci su WhatsApp
+                </a>{" "}
+                o chiamare il{" "}
+                <a href={`tel:${site.phone.replace(/\s/g, "")}`} onClick={() => track("phone_click", `${location}-errore`)}>
+                  {site.phone}
                 </a>
-                {site.email && (
-                  <>
-                    {" "}
-                    o scriverci a <a href={`mailto:${site.email}`}>{site.email}</a>
-                  </>
-                )}
                 .
               </p>
             </div>
@@ -375,13 +337,22 @@ export default function LeadForm() {
               </>
             ) : (
               <>
-                Richiedi l&apos;analisi gratuita <Icon name="arrow" size={18} />
+                Richiedi la valutazione <Icon name="arrow" size={18} />
               </>
             )}
           </motion.span>
         </AnimatePresence>
       </motion.button>
-      <p className="form__after">Nessun impegno. Ti ricontattiamo per approfondire e, se ha senso, fissare una chiamata o un sopralluogo.</p>
+
+      <p className="form__privacy">
+        Usiamo questi dati solo per rispondere alla tua richiesta, senza iscriverti a newsletter o liste promozionali.
+        {site.privacyUrl && (
+          <>
+            {" "}
+            Dettagli nell&apos;<a href={site.privacyUrl}>informativa privacy</a>.
+          </>
+        )}
+      </p>
     </form>
   );
 }
@@ -389,16 +360,14 @@ export default function LeadForm() {
 function Field({
   id,
   label,
-  required,
-  optional,
+  hint,
   error,
   valid,
   children,
 }: {
   id: string;
   label: string;
-  required?: boolean;
-  optional?: boolean;
+  hint?: string;
   error?: string;
   valid?: boolean;
   children: React.ReactNode;
@@ -407,9 +376,12 @@ function Field({
     <div className={`field${error ? " has-error" : ""}${valid ? " is-valid" : ""}`}>
       <label htmlFor={id} className="field__label">
         {label}
-        {required && <span aria-hidden="true"> *</span>}
-        {optional && <span className="field__opt">facoltativo</span>}
       </label>
+      {hint && (
+        <p className="field__hint" id={`${id}-hint`}>
+          {hint}
+        </p>
+      )}
       <div className="field__control">
         {children}
         <AnimatePresence>

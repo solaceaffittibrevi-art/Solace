@@ -87,8 +87,8 @@ export default function Header() {
           </ul>
         </nav>
 
-        <Link href="/analisi-gratuita" className="btn btn--small header__cta" onClick={() => track("cta_analisi_click", "header")}>
-          Analisi gratuita
+        <Link href="/valutazione-gratuita" className="btn btn--small header__cta" onClick={() => track("cta_click", "header")}>
+          Valutazione gratuita
         </Link>
 
         <button
@@ -120,7 +120,7 @@ export default function Header() {
               animate="show"
               variants={{ hidden: {}, show: { transition: { staggerChildren: stagger.tight, delayChildren: 0.12 } } }}
             >
-              {[...nav, { href: "/analisi-gratuita", label: "Analisi gratuita" }].map((item) => (
+              {[...nav, { href: "/valutazione-gratuita", label: "Valutazione gratuita" }].map((item) => (
                 <motion.li
                   key={item.href}
                   variants={{
