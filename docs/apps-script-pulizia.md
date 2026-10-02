@@ -10,6 +10,17 @@ Il file da incollare è `scripts/google-apps-script/Pulizia.gs` (nessun segreto:
 3. Cancella tutto il contenuto del file, incolla l'intero `Pulizia.gs`, poi **Salva** (icona del dischetto).
    Non toccare `Codice.gs` e non serve una nuova distribuzione: la pulizia non cambia l'app web.
 
+### Permessi del progetto (appsscript.json)
+Il progetto deve dichiarare anche l'accesso a Gmail, oltre all'invio delle email. Impostazioni progetto (ingranaggio)
+→ spunta **Mostra il file manifest "appsscript.json" nell'editor** → nell'editor apri `appsscript.json` e sostituisci
+il contenuto con `scripts/google-apps-script/appsscript.json`, poi Salva. Le impostazioni dell'app web non cambiano.
+
+Se Google non chiede il nuovo consenso ("The script does not have permission…"): myaccount.google.com/connections
+(account solace.gestione@gmail.com) → **Solace richieste** → rimuovi l'accesso, poi esegui subito di nuovo
+`verificaSelezione` e concedi il consenso (finché non lo concedi il modulo del sito non invia email). Con più
+account Google aperti nel browser la finestra del consenso può dare "Impossibile aprire il file": usare una
+finestra privata con il solo account Solace. Dopo il consenso, `provaInvio` conferma che l'invio funziona.
+
 ## 2. Verifica (nessuna modifica alla casella)
 1. In alto, menu a tendina delle funzioni → **verificaSelezione** → **Esegui**.
 2. Alla prima esecuzione Google chiede l'autorizzazione: **Rivedi autorizzazioni** → account
@@ -38,3 +49,8 @@ Per fermarla: **disattivaPuliziaMensile** → **Esegui**.
 - Non tocca mai risposte, inoltri, email di altri mittenti, le prove "TEST SOLACE" e le prove dall'editor.
 - Non elimina conversazioni intere: le risposte scambiate con il proprietario restano.
 - Le richieste di prova "TEST SOLACE" vanno eliminate a mano quando non servono più.
+
+## Stato
+Configurata il 2/10/2026: `verificaSelezione` ha riconosciuto 3 conversazioni, 3 richieste di prova "TEST SOLACE"
+(escluse), 0 richieste reali, 0 altri messaggi, 0 messaggi con formato diverso; simulazione eseguita e pulizia
+mensile attivata dal titolare.
