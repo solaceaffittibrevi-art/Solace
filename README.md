@@ -51,6 +51,8 @@ Vedi `.env.example`. Prima della pubblicazione servono almeno:
 
 ## Configurazione del modulo contatti
 
+Per la messa online vedi `docs/pubblicazione-vercel.md`.
+
 Canale in uso: **Google Apps Script** nell'account solace.gestione@gmail.com (nessuna chiave API).
 
 1. `.env.local` contiene `LEAD_EMAIL_TO` e `LEAD_WEBHOOK_SECRET` (codice casuale generato in locale).

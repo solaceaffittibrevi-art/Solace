@@ -23,7 +23,8 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   if (!p) return {};
   return pageMetadata({
     title: `${p.name} – ${p.zone}, ${p.city} | Solace`,
-    description: `${p.type} in affitto breve gestito da Solace a ${p.zone}, ${p.city}. ${p.summary}`.slice(0, 300),
+    // Descrizione breve (Google mostra circa 155–160 caratteri): tipologia, zona e caratteristiche reali.
+    description: `${p.type} in affitto breve a ${p.zone}, ${p.city}, gestito da Solace: ${p.features.slice(0, 3).map((f) => f.charAt(0).toLowerCase() + f.slice(1)).join(", ")}. Fino a ${p.guests} ospiti.`,
     path: `/immobili/${p.slug}`,
     image: { url: p.photos[0].src, alt: p.photos[0].alt },
   });

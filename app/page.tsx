@@ -20,7 +20,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   title: "Gestione Affitti Brevi Milano | Solace",
   description:
-    "Gestione affitti brevi e Airbnb a Milano: ospiti, pulizie, prezzi e adempimenti seguiti dal team Solace, con un rendiconto chiaro. Richiedi l'analisi gratuita del tuo immobile.",
+    "Gestione affitti brevi e Airbnb a Milano: ospiti, pulizie, prezzi e adempimenti seguiti dal team Solace. Richiedi l'analisi gratuita del tuo immobile.",
   path: "/",
 });
 

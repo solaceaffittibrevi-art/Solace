@@ -9,7 +9,7 @@ import CtaBand from "@/components/CtaBand";
 export const metadata: Metadata = pageMetadata({
   title: "Come Funziona la Gestione Affitti Brevi | Solace",
   description:
-    "Dal primo contatto ai risultati: come Solace analizza il tuo immobile, prepara l'avvio e gestisce gli affitti brevi a Milano, passo dopo passo e senza impegno iniziale.",
+    "Come funziona la gestione affitti brevi con Solace: analisi gratuita dell'immobile, avvio e gestione quotidiana, passo dopo passo e senza impegno.",
   path: "/come-funziona",
 });
 

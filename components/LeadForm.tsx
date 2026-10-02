@@ -28,7 +28,7 @@ const failureText: Record<string, string> = {
     "Sono arrivate troppe richieste da questa connessione in poco tempo. I dati che hai scritto sono ancora qui: riprova tra qualche minuto.",
   in_progress: "La richiesta precedente è ancora in elaborazione. Attendi qualche secondo e riprova.",
   retry:
-    "Non abbiamo ricevuto conferma in tempo. I dati che hai scritto sono ancora qui: puoi riprovare, se la richiesta era già arrivata non verrà inviata due volte.",
+    "Non abbiamo ricevuto la conferma in tempo. I dati che hai scritto sono ancora qui: puoi riprovare, se la richiesta era già arrivata non verrà inviata due volte.",
 };
 
 const newRequestId = () =>
@@ -299,7 +299,7 @@ export default function LeadForm({ location = "valutazione" }: { location?: stri
             <Icon name="alert" size={20} />
             <div>
               <p>
-                <strong>La richiesta non è stata inviata.</strong>{" "}
+                <strong>{failure === "retry" ? "Invio non confermato." : "La richiesta non è stata inviata."}</strong>{" "}
                 {failureText[failure] ??
                   "Si è verificato un problema di connessione. I dati che hai scritto sono ancora qui: puoi riprovare."}
               </p>

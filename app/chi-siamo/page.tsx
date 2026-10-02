@@ -12,7 +12,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = pageMetadata({
   title: "Chi Siamo | Il Team Solace",
   description:
-    "Solace gestisce affitti brevi e case vacanza a Milano: conosci Gabriel Dal Molin, fondatore, e il team professionale che segue immobili, ospiti e servizi ogni giorno.",
+    "Solace gestisce affitti brevi e case vacanza a Milano: conosci il fondatore Gabriel Dal Molin e il team che segue immobili, ospiti e servizi.",
   path: "/chi-siamo",
 });
 

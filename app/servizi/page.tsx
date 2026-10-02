@@ -14,7 +14,7 @@ import { compliance, serviceGroups } from "@/lib/site";
 export const metadata: Metadata = pageMetadata({
   title: "Gestione Airbnb e Affitti Brevi a Milano | Solace",
   description:
-    "Property management a Milano per appartamenti in affitto breve: annunci e foto, prezzi dinamici, ospiti, check-in, pulizie, manutenzione, adempimenti e rendicontazione mensile.",
+    "Property management a Milano per affitti brevi: annunci, prezzi, ospiti, check-in, pulizie, manutenzione, adempimenti e rendicontazione mensile.",
   path: "/servizi",
 });
 

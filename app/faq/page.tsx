@@ -9,7 +9,7 @@ import { faqs } from "@/lib/site";
 export const metadata: Metadata = pageMetadata({
   title: "Domande Frequenti sulla Gestione Affitti Brevi | Solace",
   description:
-    "Le risposte alle domande dei proprietari sulla gestione di affitti brevi e Airbnb a Milano: analisi, servizi, compenso, ospiti, pulizie, rendiconti, adempimenti e contratto.",
+    "Risposte ai proprietari sulla gestione di affitti brevi e Airbnb a Milano: servizi, compenso, ospiti, pulizie, rendiconti, adempimenti e contratto.",
   path: "/faq",
 });
 
