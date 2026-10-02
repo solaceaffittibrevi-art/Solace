@@ -31,7 +31,10 @@ Senza Upstash, sul sito pubblicato il modulo risponde con un errore e non accett
 1. `https://<dominio>/robots.txt` deve permettere l'indicizzazione solo in Production.
 2. Intestazioni di sicurezza presenti (Content-Security-Policy, Strict-Transport-Security, X-Frame-Options).
 3. Un invio reale "TEST SOLACE" dal modulo online: email ricevuta su solace.gestione@gmail.com, conferma a schermo.
-4. Nei log della funzione nessun errore `[kv]` (Upstash raggiungibile).
+4. Nei log della funzione nessun errore `[kv]` (Upstash raggiungibile) e, nel Data Browser di Upstash, chiavi
+   `rl:*` e `lead:*` create dopo l'invio di prova: è la verifica che il limite alle richieste usa davvero Upstash.
+5. Il video della home non è nel repository (licenza da confermare): finché non viene aggiunto, la home
+   mostra la foto del Duomo.
 
 ## 5. Se si cambia il codice condiviso o lo script
 Script Google: incollare il nuovo codice, salvare, poi Esegui il deployment → Gestisci deployment → modifica →
