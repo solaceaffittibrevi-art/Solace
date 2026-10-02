@@ -113,14 +113,14 @@ export default function Header() {
             initial={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
             animate={{ opacity: 1, clipPath: "inset(0 0 0% 0)" }}
             exit={{ opacity: 0, clipPath: "inset(0 0 100% 0)", transition: { duration: duration.fast * 1.5, ease: ease.inOut } }}
-            transition={{ duration: duration.base, ease: ease.out }}
+            transition={{ duration: 0.35, ease: ease.out }}
           >
             <motion.ul
               initial="hidden"
               animate="show"
               variants={{ hidden: {}, show: { transition: { staggerChildren: stagger.tight, delayChildren: 0.12 } } }}
             >
-              {[...nav, { href: "/analisi-gratuita", label: "Analisi gratuita" }].map((item, i) => (
+              {[...nav, { href: "/analisi-gratuita", label: "Analisi gratuita" }].map((item) => (
                 <motion.li
                   key={item.href}
                   variants={{
@@ -129,7 +129,6 @@ export default function Header() {
                   }}
                 >
                   <Link href={item.href} aria-current={isActive(item.href) ? "page" : undefined} onClick={() => setOpen(false)}>
-                    <span className="mobile-menu__num">{String(i + 1).padStart(2, "0")}</span>
                     {item.label}
                   </Link>
                 </motion.li>
@@ -143,7 +142,7 @@ export default function Header() {
                 className="btn btn--block"
                 onClick={() => track("calendly_click", "menu")}
               >
-                Prenota una chiamata conoscitiva
+                Prenota una chiamata
               </a>
             </div>
           </motion.div>

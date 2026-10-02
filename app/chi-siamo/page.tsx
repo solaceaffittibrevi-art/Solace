@@ -42,7 +42,6 @@ export default function ChiSiamoPage() {
   return (
     <>
       <PageHero
-        eyebrow="Chi siamo"
         title={
           <>
             La tranquillità di affidarsi, <em>il piacere di ospitare.</em>
@@ -56,7 +55,6 @@ export default function ChiSiamoPage() {
       <section className="section about" aria-labelledby="about-title">
         <div className="container about__grid">
           <Reveal className="about__text">
-            <p className="eyebrow">Solace Real Estate Short Rent</p>
             <h2 id="about-title" className="h2">
               Gestiamo case come <em>vorremmo fosse gestita la nostra.</em>
             </h2>
@@ -103,7 +101,6 @@ export default function ChiSiamoPage() {
 
           <div className="person__text">
             <Reveal>
-              <p className="eyebrow">Il fondatore</p>
               <h2 id="person-title" className="h2">
                 Ciao, <em>sono Gabriel.</em>
               </h2>
@@ -148,7 +145,7 @@ export default function ChiSiamoPage() {
               </RevealItem>
               <RevealItem className="person__actions">
                 <TrackedLink href={site.calendly} event="calendly_click" location="chi-siamo" className="btn" external>
-                  Prenota una chiamata con Gabriel
+                  Prenota una chiamata
                 </TrackedLink>
                 <TrackedLink
                   href={`https://wa.me/${site.whatsapp}`}
@@ -168,17 +165,13 @@ export default function ChiSiamoPage() {
       <section className="section method" aria-labelledby="method-title">
         <div className="container">
           <Reveal className="section-head">
-            <p className="eyebrow">Il metodo</p>
             <h2 id="method-title" className="h2">
-              Quattro principi <em>che non cambiano.</em>
+              Il nostro metodo, in quattro principi
             </h2>
           </Reveal>
           <Stagger as="ol" className="method__list" gap={0.12}>
-            {method.map((m, i) => (
+            {method.map((m) => (
               <RevealItem as="li" key={m.title} className="method__item">
-                <span className="method__num" aria-hidden="true">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
                 <GlassIcon name={m.icon} />
                 <h3>{m.title}</h3>
                 <p>{m.text}</p>

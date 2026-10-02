@@ -28,7 +28,7 @@ export default function Counter({ value, suffix = "" }: { value: number; suffix?
       return;
     }
     const controls = animate(0, value, {
-      duration: 1.6,
+      duration: 1.2,
       ease: ease.out,
       onUpdate: (latest) => {
         node.textContent = format(latest);

@@ -59,7 +59,12 @@ export default function LeadForm() {
     e.preventDefault();
     setSubmitted(true);
     if (Object.keys(errors).length) {
-      requestAnimationFrame(() => summaryRef.current?.focus());
+      requestAnimationFrame(() => {
+        const summary = summaryRef.current;
+        if (!summary) return;
+        summary.focus({ preventScroll: true });
+        summary.scrollIntoView({ block: "center" });
+      });
       return;
     }
     setStatus("submitting");
@@ -92,7 +97,12 @@ export default function LeadForm() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: duration.base, ease: ease.out }}
       >
-        <motion.span className="form-success__icon" initial={{ scale: 0.6 }} animate={{ scale: 1 }} transition={spring.soft}>
+        <motion.span
+          className="form-success__icon"
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={spring.soft}
+        >
           <Icon name="check" size={30} />
         </motion.span>
         <h2>Richiesta ricevuta, grazie {values.name.split(" ")[0]}.</h2>
@@ -201,7 +211,7 @@ export default function LeadForm() {
             <input
               id="lead-zone"
               name="zone"
-              placeholder="Es. Porta Romana, Navigli"
+              placeholder="Es. Navigli"
               value={values.zone}
               onChange={(e) => set("zone", e.target.value)}
               onBlur={() => blur("zone")}
@@ -322,7 +332,7 @@ export default function LeadForm() {
               <p>
                 <strong>La richiesta non è stata inviata.</strong>{" "}
                 {failure === "not_configured"
-                  ? "Il modulo non è ancora collegato al nostro sistema di ricezione."
+                  ? "In questo momento non riusciamo a ricevere richieste dal sito. I dati che hai scritto sono ancora qui."
                   : "Si è verificato un problema di connessione. I dati che hai scritto sono ancora qui: puoi riprovare."}
               </p>
               <p>
@@ -406,9 +416,9 @@ function Field({
           {valid && (
             <motion.span
               className="field__ok"
-              initial={{ opacity: 0, scale: 0.5 }}
+              initial={{ opacity: 0, scale: 0.85 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.5 }}
+              exit={{ opacity: 0, scale: 0.85 }}
               transition={spring.snappy}
               aria-hidden="true"
             >

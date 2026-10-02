@@ -41,15 +41,14 @@ export default async function PropertyPage({ params }: { params: Promise<Params>
           <Reveal as="p" className="breadcrumb">
             <Link href="/immobili">Immobili</Link> <span aria-hidden="true">/</span> <span aria-current="page">{property.name}</span>
           </Reveal>
-          <Stagger className="property-hero__head" gap={0.1}>
-            <RevealItem as="p" className="eyebrow">
-              <Icon name="pin" size={15} /> {property.zone}
-              {property.city !== "Milano" ? ` · ${property.city}` : " · Milano"}
-            </RevealItem>
-            <RevealItem as="h1" className="property-hero__title">
+          <div className="property-hero__head">
+            <h1 className="property-hero__title enter" style={{ "--i": 0 } as React.CSSProperties}>
               {property.name}
-            </RevealItem>
-          </Stagger>
+            </h1>
+            <p className="property-hero__zone enter" style={{ "--i": 1 } as React.CSSProperties}>
+              <Icon name="pin" size={16} /> {property.zone}, {property.city !== "Milano" ? property.city : "Milano"}
+            </p>
+          </div>
           <PropertyGallery photos={property.photos} name={property.name} />
         </div>
       </section>
@@ -90,7 +89,10 @@ export default async function PropertyPage({ params }: { params: Promise<Params>
                 </div>
               )}
             </dl>
-            <a href={property.airbnb} target="_blank" rel="noopener noreferrer" className="btn btn--ghost btn--block">
+            <TrackedLink href="/analisi-gratuita" event="cta_analisi_click" location={`scheda-${property.slug}`} className="btn btn--block">
+              Richiedi un&apos;analisi gratuita
+            </TrackedLink>
+            <a href={property.airbnb} target="_blank" rel="noopener noreferrer" className="link-arrow property-facts__airbnb">
               Vedi l&apos;annuncio su Airbnb <Icon name="external" size={16} />
               <span className="sr-only">(si apre in una nuova scheda)</span>
             </a>
@@ -101,9 +103,8 @@ export default async function PropertyPage({ params }: { params: Promise<Params>
       <section className="section section--paper owner-cta" aria-labelledby="owner-cta-title">
         <div className="container owner-cta__inner">
           <Reveal>
-            <p className="eyebrow">Sei proprietario?</p>
             <h2 id="owner-cta-title" className="h2">
-              Hai un immobile <em>simile a questo?</em>
+              Hai un immobile simile a questo?
             </h2>
             <p className="section-head__text">
               Raccontaci com&apos;è e dove si trova: valutiamo insieme il suo potenziale in affitto breve, gratuitamente.
@@ -121,7 +122,7 @@ export default async function PropertyPage({ params }: { params: Promise<Params>
         <div className="container">
           <Reveal className="section-head section-head--split">
             <h2 id="others-title" className="h2">
-              Altre case <em>a Milano</em>
+              Altre case a Milano
             </h2>
             <Link href="/immobili" className="link-arrow">
               Tutti gli immobili <Icon name="arrow" size={16} />

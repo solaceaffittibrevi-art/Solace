@@ -26,7 +26,6 @@ export default function FaqPage() {
   return (
     <>
       <PageHero
-        eyebrow="Domande frequenti"
         title={
           <>
             Tutto quello che vorresti sapere <em>prima di affidarci la casa.</em>

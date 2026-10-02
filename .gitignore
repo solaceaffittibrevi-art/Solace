@@ -51,3 +51,6 @@ temp/
 
 # impostazioni locali di Claude Code (hook Impeccable)
 .claude/settings.local.json
+
+# archivio revisioni Impeccable (locale)
+.impeccable/

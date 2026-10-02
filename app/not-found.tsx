@@ -4,7 +4,6 @@ export default function NotFound() {
   return (
     <section className="section not-found">
       <div className="container">
-        <p className="eyebrow">Pagina non trovata</p>
         <h1 className="page-hero__title">
           Questa porta <em>non si apre.</em>
         </h1>

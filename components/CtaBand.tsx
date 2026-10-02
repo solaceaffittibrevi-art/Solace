@@ -13,7 +13,6 @@ export default function CtaBand({
     <section className="cta-band" aria-labelledby="cta-band-title">
       <div className="container cta-band__inner">
         <Reveal>
-          <p className="eyebrow">Analisi gratuita</p>
           <h2 id="cta-band-title" className="cta-band__title">
             {title}
           </h2>

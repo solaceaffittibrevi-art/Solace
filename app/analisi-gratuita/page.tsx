@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import LeadForm from "@/components/LeadForm";
 import Icon from "@/components/Icon";
 import GlassIcon from "@/components/GlassIcon";
 import TrackedLink from "@/components/TrackedLink";
-import { Reveal, RevealItem, Stagger } from "@/components/motion/Reveal";
+import { Reveal } from "@/components/motion/Reveal";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -25,20 +26,33 @@ export default function AnalisiPage() {
   return (
     <section className="section contact-page">
       <div className="container contact-page__grid">
-        <div className="contact-page__aside">
-          <Stagger gap={0.1}>
-            <RevealItem as="p" className="eyebrow">
-              Analisi gratuita
-            </RevealItem>
-            <RevealItem as="h1" className="page-hero__title">
-              Raccontaci <em>la tua casa.</em>
-            </RevealItem>
-            <RevealItem as="p" className="lead">
-              Ti diciamo con franchezza come può rendere in affitto breve e cosa servirebbe per partire. Gratis e senza
-              impegno.
-            </RevealItem>
-          </Stagger>
+        <div className="contact-page__intro">
+          <h1 className="page-hero__title enter" style={{ "--i": 0 } as React.CSSProperties}>
+            Raccontaci <em>la tua casa.</em>
+          </h1>
+          <p className="lead enter" style={{ "--i": 1 } as React.CSSProperties}>
+            Ti diciamo con franchezza come può rendere in affitto breve e cosa servirebbe per partire. Gratis e senza
+            impegno.
+          </p>
+        </div>
 
+        <div className="contact-page__form enter" style={{ "--i": 2 } as React.CSSProperties}>
+          <div className="form-host">
+            <Image
+              src="/images/team/gabriel-avatar.jpg"
+              alt=""
+              width={56}
+              height={56}
+              className="form-host__photo"
+            />
+            <p>
+              <strong>Ti risponde Gabriel Dal Molin,</strong> fondatore di Solace.
+            </p>
+          </div>
+          <LeadForm />
+        </div>
+
+        <div className="contact-page__more">
           <Reveal className="next-steps">
             <h2 className="next-steps__title">Cosa succede dopo</h2>
             <ol>
@@ -58,15 +72,17 @@ export default function AnalisiPage() {
 
           <Reveal className="contact-alt">
             <h2 className="next-steps__title">Preferisci parlarne a voce?</h2>
-            <p>Prenota una chiamata conoscitiva di 30 minuti con Gabriel Dal Molin, nel giorno e all&apos;ora che preferisci.</p>
-            <TrackedLink href={site.calendly} event="calendly_click" location="analisi" className="btn btn--ghost" external>
-              <Icon name="calendar" size={18} /> Prenota su Calendly
-            </TrackedLink>
-            {whatsappHref && (
-              <TrackedLink href={whatsappHref} event="whatsapp_click" location="analisi" className="btn btn--ghost" external>
-                <Icon name="whatsapp" size={18} /> Scrivici su WhatsApp
+            <p>Prenota una chiamata conoscitiva di 30 minuti con Gabriel, nel giorno e all&apos;ora che preferisci.</p>
+            <div className="contact-alt__actions">
+              <TrackedLink href={site.calendly} event="calendly_click" location="analisi" className="btn btn--ghost" external>
+                <Icon name="calendar" size={18} /> Prenota una chiamata
               </TrackedLink>
-            )}
+              {whatsappHref && (
+                <TrackedLink href={whatsappHref} event="whatsapp_click" location="analisi" className="btn btn--ghost" external>
+                  <Icon name="whatsapp" size={18} /> Scrivici su WhatsApp
+                </TrackedLink>
+              )}
+            </div>
             {(site.email || site.phone) && (
               <ul className="contact-alt__list">
                 {site.phone && (
@@ -83,10 +99,6 @@ export default function AnalisiPage() {
             )}
           </Reveal>
         </div>
-
-        <Reveal className="contact-page__form" delay={0.15}>
-          <LeadForm />
-        </Reveal>
       </div>
     </section>
   );

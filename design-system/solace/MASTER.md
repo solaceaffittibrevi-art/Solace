@@ -100,6 +100,18 @@ conferma solo dopo risposta positiva del server; target ≥ 44px; un solo H1 per
 - Immobili: zona indicata nell'annuncio, mai l'indirizzo esatto; link all'annuncio reale.
 - Compenso e condizioni: rimandati alla proposta personalizzata.
 
+## Regole di composizione (revisione del 2/10/2026)
+
+Da Taste Skill, Impeccable ed Emil Kowalski:
+- **Niente etichette sopra i titoli** (eyebrow) e niente numerazioni 01/02, tranne i passi della pianta animata.
+- **Titoli:** al massimo 2 righe su desktop; il finale in corsivo oro al massimo in metà delle sezioni.
+- **Hero:** solo titolo, testo (massimo 20 parole) e due pulsanti. I numeri stanno nella fascia sotto.
+- **Pulsanti e link** in minuscolo con iniziale maiuscola (niente maiuscolo spaziato su testi lunghi); stesso nome per la stessa azione: "Richiedi un'analisi gratuita", "Prenota una chiamata".
+- **Ingresso dei titoli in testata:** animazione CSS `.enter` (parte senza JavaScript, da opacità 0,4). La comparsa allo scroll (`Reveal`) solo per i contenuti sotto la prima schermata.
+- **Interazioni:** pressione `scale(0.97)` in 160 ms; effetti hover solo con `@media (hover: hover) and (pointer: fine)`; hover e transizioni d'interfaccia 250 ms; galleria 250 ms in entrata e 180 ms in uscita; FAQ 300 ms.
+- **Mobile:** pulsante "Analisi gratuita" sempre nell'header; nella pagina di contatto il modulo segue subito il titolo; la pianta animata compare in versione compatta e fissa durante i passi.
+- **Alone dorato** solo nella banda finale; nessun bordo laterale spesso negli avvisi.
+
 ## Checklist prima della consegna
 
 - [x] Nessuna emoji come icona (set SVG lineare in `components/Icon.tsx`)

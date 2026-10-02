@@ -7,9 +7,8 @@ export default function Testimonials() {
     <section className="section section--paper testimonials" aria-labelledby="testimonials-title">
       <div className="container">
         <Reveal className="section-head">
-          <p className="eyebrow">Dicono gli ospiti</p>
           <h2 id="testimonials-title" className="h2">
-            La cura che si nota <em>nelle recensioni.</em>
+            Cosa scrivono gli ospiti, <em>dopo il soggiorno.</em>
           </h2>
           <p className="section-head__text">
             Alcune recensioni lasciate su Airbnb dagli ospiti delle case che gestiamo. Sono loro a dirci se il lavoro è

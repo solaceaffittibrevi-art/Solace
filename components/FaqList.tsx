@@ -27,9 +27,6 @@ export default function FaqList({ items, initiallyOpen = 0 }: { items: { q: stri
                 aria-controls={panelId}
                 onClick={() => setOpen(isOpen ? null : i)}
               >
-                <span className="faq__num" aria-hidden="true">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
                 <span className="faq__label">{item.q}</span>
                 <span className="faq__icon glass-icon glass-icon--md glass-icon--interactive" aria-hidden="true">
                   <motion.span className="faq__icon-glyph" animate={{ rotate: isOpen ? 45 : 0 }} transition={spring.snappy}>

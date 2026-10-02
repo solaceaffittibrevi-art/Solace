@@ -230,18 +230,18 @@ export const steps = [
 ];
 
 // Recensioni autentiche di ospiti pubblicate su Airbnb e riportate sulla landing solaceaffittibrevi.com.
-// Testo come mostrato da Airbnb (traduzione automatica in italiano).
+// Testo come mostrato da Airbnb (traduzione automatica in italiano); "[…]" segna i tagli per brevità.
 export const testimonials = [
   {
     quote:
-      "Ottimo host, molto reattivo anche a mezzanotte per il nostro check-in molto tardi e molto disponibile! Appartamento pulito con tutto il necessario per il tuo soggiorno.",
+      "Ottimo host, molto reattivo anche a mezzanotte per il nostro check-in molto tardi e molto disponibile! […]",
     author: "Vladimir",
     origin: "Burbank, California",
     language: "dall’inglese",
   },
   {
     quote:
-      "Questo è stato il mio primo soggiorno in Italia, e l'appartamento mi ha colpito così tanto che mi sono pentito di essere rimasto a Milano solo una notte invece di qualche giorno in più.",
+      "[…] L'appartamento mi ha colpito così tanto che mi sono pentito di essere rimasto a Milano solo una notte invece di qualche giorno in più.",
     author: "Haulm",
     origin: "Cina",
     language: "dal cinese",
@@ -255,8 +255,8 @@ export const testimonials = [
   },
   {
     quote: "Gabriel è molto attento. L'appartamento è impeccabile. E bello. Torneremo sicuramente!",
-    author: "Soggiorno con bambini",
-    origin: "",
+    author: "Ospite",
+    origin: "Soggiorno con bambini",
     language: "dallo spagnolo",
   },
 ];

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Icon from "./Icon";
-import { duration, ease } from "@/lib/motion";
+import { ease } from "@/lib/motion";
 
 type Photo = { src: string; alt: string };
 
@@ -80,10 +80,9 @@ export default function PropertyGallery({ photos, name }: { photos: Photo[]; nam
                   key={index}
                   className="lightbox__frame"
                   custom={direction}
-                  initial={{ opacity: 0, x: direction * 40 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: direction * -40 }}
-                  transition={{ duration: duration.base, ease: ease.out }}
+                  initial={{ opacity: 0, x: direction * 24 }}
+                  animate={{ opacity: 1, x: 0, transition: { duration: 0.25, ease: ease.out } }}
+                  exit={{ opacity: 0, x: direction * -24, transition: { duration: 0.18, ease: ease.out } }}
                 >
                   <Image src={photos[index].src} alt={photos[index].alt} fill sizes="100vw" className="lightbox__img" />
                 </motion.div>

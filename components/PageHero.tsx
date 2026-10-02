@@ -1,16 +1,16 @@
 import Image from "next/image";
-import { Reveal, RevealItem, Stagger } from "./motion/Reveal";
+import { Reveal } from "./motion/Reveal";
 import Parallax from "./motion/Parallax";
 
+// Testata delle pagine interne. Titolo e testo entrano con l'animazione CSS .enter
+// (nessuna attesa di JavaScript); l'immagine laterale compare allo scroll.
 export default function PageHero({
-  eyebrow,
   title,
   lead,
   image,
   imageAlt = "",
   children,
 }: {
-  eyebrow: string;
   title: React.ReactNode;
   lead?: React.ReactNode;
   image?: string;
@@ -20,20 +20,21 @@ export default function PageHero({
   return (
     <section className={`page-hero${image ? " page-hero--image" : ""}`}>
       <div className="container page-hero__inner">
-        <Stagger className="page-hero__text" gap={0.1}>
-          <RevealItem as="p" className="eyebrow">
-            {eyebrow}
-          </RevealItem>
-          <RevealItem as="h1" className="page-hero__title">
+        <div className="page-hero__text">
+          <h1 className="page-hero__title enter" style={{ "--i": 0 } as React.CSSProperties}>
             {title}
-          </RevealItem>
+          </h1>
           {lead && (
-            <RevealItem as="p" className="lead">
+            <p className="lead enter" style={{ "--i": 1 } as React.CSSProperties}>
               {lead}
-            </RevealItem>
+            </p>
           )}
-          {children && <RevealItem>{children}</RevealItem>}
-        </Stagger>
+          {children && (
+            <div className="enter" style={{ "--i": 2 } as React.CSSProperties}>
+              {children}
+            </div>
+          )}
+        </div>
         {image && (
           <Reveal className="page-hero__media" delay={0.15}>
             <Parallax strength={6}>

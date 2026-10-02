@@ -29,7 +29,6 @@ export default function ComeFunzionaPage() {
   return (
     <>
       <PageHero
-        eyebrow="Come funziona"
         title={
           <>
             Un percorso chiaro, <em>dal primo contatto ai risultati.</em>
@@ -43,7 +42,6 @@ export default function ComeFunzionaPage() {
       <section className="section process" aria-labelledby="steps-title">
         <div className="container">
           <Reveal className="section-head">
-            <p className="eyebrow">Cinque passi</p>
             <h2 id="steps-title" className="h2">
               Cosa succede, <em>e quando.</em>
             </h2>
@@ -55,9 +53,8 @@ export default function ComeFunzionaPage() {
       <section className="section section--paper prepare" aria-labelledby="prepare-title">
         <div className="container prepare__grid">
           <Reveal className="section-head">
-            <p className="eyebrow">Per l&apos;analisi</p>
             <h2 id="prepare-title" className="h2">
-              Cosa ci serve <em>per iniziare.</em>
+              Cosa ci serve per iniziare
             </h2>
             <p className="section-head__text">
               Bastano poche informazioni. Il resto lo approfondiamo insieme durante la chiamata o il sopralluogo.

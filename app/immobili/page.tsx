@@ -19,7 +19,6 @@ export default function ImmobiliPage() {
   return (
     <>
       <PageHero
-        eyebrow="Immobili"
         title={
           <>
             Una selezione delle case <em>che gestiamo.</em>
@@ -30,7 +29,7 @@ export default function ImmobiliPage() {
 
       <section className="section property-list" aria-labelledby="milano-title">
         <div className="container">
-          <Reveal className="section-head section-head--split">
+          <Reveal className="section-head">
             <h2 id="milano-title" className="h2">
               A Milano
             </h2>
@@ -48,9 +47,9 @@ export default function ImmobiliPage() {
 
       <section className="section section--paper property-list" aria-labelledby="altri-title">
         <div className="container">
-          <Reveal className="section-head section-head--split">
+          <Reveal className="section-head">
             <h2 id="altri-title" className="h2">
-              Area metropolitana <em>e oltre</em>
+              Area metropolitana e oltre
             </h2>
             <p className="section-head__text">
               Il cuore del nostro lavoro è Milano, ma seguiamo anche alcuni immobili fuori città.

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Fragment } from "react";
 import Image from "next/image";
 import PageHero from "@/components/PageHero";
 import Icon from "@/components/Icon";
@@ -6,6 +7,7 @@ import GlassIcon from "@/components/GlassIcon";
 import { Reveal, RevealItem, Stagger } from "@/components/motion/Reveal";
 import Parallax from "@/components/motion/Parallax";
 import CtaBand from "@/components/CtaBand";
+import TrackedLink from "@/components/TrackedLink";
 import { compliance, serviceGroups } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -25,7 +27,6 @@ export default function ServiziPage() {
   return (
     <>
       <PageHero
-        eyebrow="Servizi"
         title={
           <>
             Tutto quello che serve, <em>niente che ti tocchi seguire.</em>
@@ -36,24 +37,20 @@ export default function ServiziPage() {
 
       <nav className="container subnav" aria-label="Fasi del servizio">
         <ul>
-          {serviceGroups.map((g, i) => (
+          {serviceGroups.map((g) => (
             <li key={g.id}>
-              <a href={`#${g.id}`}>
-                <span aria-hidden="true">{String(i + 1).padStart(2, "0")}</span> {g.phase}
-              </a>
+              <a href={`#${g.id}`}>{g.phase}</a>
             </li>
           ))}
           <li>
-            <a href="#adempimenti">
-              <span aria-hidden="true">04</span> Adempimenti
-            </a>
+            <a href="#adempimenti">Adempimenti</a>
           </li>
         </ul>
       </nav>
 
       {serviceGroups.map((g, gi) => (
+        <Fragment key={g.id}>
         <section
-          key={g.id}
           id={g.id}
           className={`section service-group${gi % 2 ? " section--paper service-group--reverse" : ""}`}
           aria-labelledby={`${g.id}-title`}
@@ -61,12 +58,10 @@ export default function ServiziPage() {
           <div className="container service-group__grid">
             <div className="service-group__aside">
               <Reveal className="section-head">
-                <p className="eyebrow">
-                  {String(gi + 1).padStart(2, "0")} · {g.phase}
-                </p>
                 <h2 id={`${g.id}-title`} className="h2">
-                  {g.title}
+                  {g.phase}
                 </h2>
+                <p className="section-head__sub">{g.title}</p>
                 <p className="section-head__text">{g.intro}</p>
               </Reveal>
               <Reveal className="service-group__media" delay={0.1}>
@@ -91,17 +86,25 @@ export default function ServiziPage() {
             </Stagger>
           </div>
         </section>
+        {g.id === "durante" && (
+          <section className="cta-inline" aria-label="Richiedi un'analisi">
+            <div className="container cta-inline__inner">
+              <p className="cta-inline__text">Vuoi sapere quanto può rendere la tua casa con questa gestione?</p>
+              <TrackedLink href="/analisi-gratuita" event="cta_analisi_click" location="servizi-meta" className="btn" arrow>
+                Richiedi un&apos;analisi gratuita
+              </TrackedLink>
+            </div>
+          </section>
+        )}
+        </Fragment>
       ))}
 
       <section id="adempimenti" className="section section--deep compliance" aria-labelledby="compliance-title">
         <div className="container">
-          <Reveal className="section-head section-head--split">
-            <div>
-              <p className="eyebrow">04 · Adempimenti</p>
-              <h2 id="compliance-title" className="h2">
-                Le regole degli affitti brevi, <em>spiegate semplici.</em>
-              </h2>
-            </div>
+          <Reveal className="section-head">
+            <h2 id="compliance-title" className="h2">
+              Gli adempimenti, spiegati semplici.
+            </h2>
             <p className="section-head__text">
               Affittare per brevi periodi comporta alcuni obblighi. Ti spieghiamo quali valgono per il tuo immobile e ti
               supportiamo nelle pratiche. Quali attività sono incluse nel servizio è indicato nella proposta.

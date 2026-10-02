@@ -1,18 +1,15 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import TrackedLink from "./TrackedLink";
-import GlassIcon from "./GlassIcon";
-import Link from "next/link";
-import { duration, ease, stagger } from "@/lib/motion";
+import { ease } from "@/lib/motion";
 
-const item = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: duration.hero, ease: ease.out } },
-};
-
+// L'ingresso dei testi è un'animazione CSS (.enter): parte al primo disegno della pagina,
+// senza attendere JavaScript, e i testi non restano mai invisibili.
+// Motion gestisce solo ciò che dipende dallo scroll: parallasse dell'immagine e dissolvenza in uscita.
 export default function HomeHero() {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
@@ -25,7 +22,7 @@ export default function HomeHero() {
       <motion.div className="hero__media" style={reduced ? undefined : { y }}>
         <motion.div
           className="hero__img"
-          initial={reduced ? false : { scale: 1.1 }}
+          initial={reduced ? false : { scale: 1.08 }}
           animate={{ scale: 1 }}
           transition={{ duration: 2.2, ease: ease.out }}
         >
@@ -41,55 +38,23 @@ export default function HomeHero() {
       <div className="hero__shade" aria-hidden="true" />
 
       <motion.div className="container hero__content" style={reduced ? undefined : { opacity: fadeOut }}>
-        <motion.div
-          className="hero__text"
-          initial="hidden"
-          animate="show"
-          variants={{ hidden: {}, show: { transition: { staggerChildren: stagger.loose, delayChildren: 0.25 } } }}
-        >
-          <motion.p className="eyebrow hero__eyebrow reveal" variants={item}>
-            <span className="hero__rule" aria-hidden="true" />
-            Gestione affitti brevi a Milano
-          </motion.p>
-          <motion.h1 id="hero-title" className="hero__title reveal" variants={item}>
+        <div className="hero__text">
+          <h1 id="hero-title" className="hero__title enter" style={{ "--i": 0 } as React.CSSProperties}>
             La tua casa a Milano, <em>in mani che se ne prendono cura.</em>
-          </motion.h1>
-          <motion.p className="hero__lead reveal" variants={item}>
-            Ospiti, prezzi, pulizie e adempimenti: ce ne occupiamo noi, con metodo e trasparenza. Tu segui i risultati,
-            senza l&apos;impegno di ogni giorno.
-          </motion.p>
-          <motion.div className="hero__actions reveal" variants={item}>
+          </h1>
+          <p className="hero__lead enter" style={{ "--i": 1 } as React.CSSProperties}>
+            Gestiamo il tuo affitto breve dall&apos;annuncio al rendiconto: ospiti, prezzi, pulizie e adempimenti.
+          </p>
+          <div className="hero__actions enter" style={{ "--i": 2 } as React.CSSProperties}>
             <TrackedLink href="/analisi-gratuita" event="cta_analisi_click" location="hero" className="btn btn--lg" arrow>
               Richiedi un&apos;analisi gratuita
             </TrackedLink>
             <Link href="/come-funziona" className="btn btn--ghost btn--lg">
-              Scopri come funziona
+              Come funziona
             </Link>
-          </motion.div>
-          <motion.ul className="hero__trust reveal" variants={item} aria-label="In breve">
-            <li>
-              <GlassIcon name="home" size="sm" /> Oltre 30 immobili gestiti
-            </li>
-            <li>
-              <GlassIcon name="star" size="sm" /> 1.200+ recensioni su Airbnb
-            </li>
-            <li>
-              <GlassIcon name="shield" size="sm" /> Assistenza ospiti 24/7
-            </li>
-          </motion.ul>
-        </motion.div>
+          </div>
+        </div>
       </motion.div>
-
-      <motion.a
-        href="#vantaggi"
-        className="hero__scroll"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.6, duration: duration.base }}
-      >
-        <span className="sr-only">Vai ai contenuti</span>
-        <span className="hero__scroll-line" aria-hidden="true" />
-      </motion.a>
     </section>
   );
 }

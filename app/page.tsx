@@ -49,11 +49,10 @@ export default function Home() {
                 sizes="(max-width: 900px) 100vw, 50vw"
               />
             </Parallax>
-            <p className="benefits__caption">Loft Tricolore · Porta Venezia</p>
+            <p className="benefits__caption">Loft Tricolore, Porta Venezia</p>
           </Reveal>
           <div className="benefits__text">
             <Reveal className="section-head">
-              <p className="eyebrow">Per i proprietari</p>
               <h2 id="benefits-title" className="h2">
                 Il rendimento di un affitto breve, <em>senza viverlo ogni giorno.</em>
               </h2>
@@ -76,24 +75,18 @@ export default function Home() {
       {/* Servizi: tre fasi */}
       <section className="section section--paper phases" aria-labelledby="phases-title">
         <div className="container">
-          <Reveal className="section-head section-head--split">
-            <div>
-              <p className="eyebrow">Gestione completa</p>
-              <h2 id="phases-title" className="h2">
-                Prima, durante e dopo <em>ogni soggiorno.</em>
-              </h2>
-            </div>
+          <Reveal className="section-head">
+            <h2 id="phases-title" className="h2">
+              Prima, durante e dopo ogni soggiorno.
+            </h2>
             <p className="section-head__text">
               Un unico interlocutore per tutto ciò che serve a far rendere la casa: dalla preparazione dell&apos;annuncio
               al rendiconto di fine mese.
             </p>
           </Reveal>
           <Stagger as="ol" className="phases__list" gap={0.14}>
-            {serviceGroups.map((g, i) => (
+            {serviceGroups.map((g) => (
               <RevealItem as="li" key={g.id} className="phase">
-                <span className="phase__num" aria-hidden="true">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
                 <h3 className="phase__name">{g.phase}</h3>
                 <p className="phase__title">{g.title}</p>
                 <ul className="phase__items">
@@ -117,7 +110,6 @@ export default function Home() {
       <section className="section process" aria-labelledby="process-title">
         <div className="container">
           <Reveal className="section-head">
-            <p className="eyebrow">Come funziona</p>
             <h2 id="process-title" className="h2">
               Dalla prima telefonata <em>al primo ospite.</em>
             </h2>
@@ -125,7 +117,7 @@ export default function Home() {
           <ProcessStory />
           <Reveal className="process__cta">
             <Link href="/come-funziona" className="btn btn--ghost">
-              Scopri il percorso nel dettaglio
+              Il percorso nel dettaglio
             </Link>
           </Reveal>
         </div>
@@ -135,12 +127,9 @@ export default function Home() {
       <section className="section section--deep featured" aria-labelledby="featured-title">
         <div className="container">
           <Reveal className="section-head section-head--split">
-            <div>
-              <p className="eyebrow">Immobili selezionati</p>
-              <h2 id="featured-title" className="h2">
-                Case diverse, <em>la stessa cura.</em>
-              </h2>
-            </div>
+            <h2 id="featured-title" className="h2">
+              Alcune delle case che gestiamo.
+            </h2>
             <Link href="/immobili" className="link-arrow">
               Vedi tutti gli immobili <Icon name="arrow" size={16} />
             </Link>
@@ -159,9 +148,8 @@ export default function Home() {
       <section className="section details-section" aria-labelledby="details-title">
         <div className="container">
           <Reveal className="section-head">
-            <p className="eyebrow">Ospitalità</p>
             <h2 id="details-title" className="h2">
-              La cura si vede <em>nei dettagli.</em>
+              I dettagli che gli ospiti <em>ricordano.</em>
             </h2>
           </Reveal>
           <DetailsShowcase />
@@ -174,16 +162,15 @@ export default function Home() {
       <section className="section faq-section" aria-labelledby="faq-title">
         <div className="container faq-section__grid">
           <Reveal className="section-head">
-            <p className="eyebrow">Domande frequenti</p>
             <h2 id="faq-title" className="h2">
-              Le risposte, <em>prima di chiederle.</em>
+              Domande frequenti
             </h2>
             <Link href="/faq" className="link-arrow">
               Tutte le domande <Icon name="arrow" size={16} />
             </Link>
           </Reveal>
           <Reveal>
-            <FaqList items={faqs.slice(0, 5)} />
+            <FaqList items={faqs.slice(0, 4)} />
           </Reveal>
         </div>
       </section>
