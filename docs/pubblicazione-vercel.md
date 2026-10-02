@@ -10,18 +10,30 @@ Checklist per mettere online il sito Solace. Nessun valore segreto è scritto qu
 
 ## 2. Variabili d'ambiente (Settings → Environment Variables)
 
+Le variabili **riservate** vanno create con l'opzione **Sensitive** (Vercel non le mostra più dopo il salvataggio)
+e non hanno il prefisso `NEXT_PUBLIC_`, quindi restano sul server e non finiscono mai nel codice inviato al
+browser. Le variabili **pubbliche** (`NEXT_PUBLIC_…`) sono visibili a chiunque apra il sito: non contengono segreti.
+
+### Riservate (Sensitive)
 | Variabile | Ambienti | Note |
 |---|---|---|
-| `LEAD_WEBHOOK_URL` | Production, Preview | Indirizzo dell'app web Google Apps Script "Solace richieste". **Sensitive**. Copiarlo da `.env.local`. |
-| `LEAD_WEBHOOK_SECRET` | Production, Preview | Codice condiviso con lo script. **Sensitive**. Copiarlo da `.env.local`. |
-| `LEAD_EMAIL_TO` | Production, Preview | `solace.gestione@gmail.com` (usato solo con Resend; lo script ha il destinatario nel codice). |
-| `NEXT_PUBLIC_SITE_URL` | Production | `https://solaceaffittibrevi.com` (dominio definitivo). |
-| `NEXT_PUBLIC_SITE_ENV` | **solo Production** | `production`. Nelle anteprime lasciarla vuota: restano fuori dai motori di ricerca. |
-| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Production, Preview | Da Upstash (punto 3). **Sensitive** il token. In alternativa `KV_REST_API_URL`/`KV_REST_API_TOKEN` creati dall'integrazione Vercel. |
-| `NEXT_PUBLIC_GA4_ID` | Production | `G-1RM79G8DR2` (proprietà GA4 "Solace", flusso "Sito Solace - solaceaffittibrevi.com"). Non è segreto. Caricato solo dopo il consenso. |
+| `LEAD_WEBHOOK_URL` | Production, Preview | Indirizzo dell'app web Google Apps Script "Solace richieste" (…/exec). Copiarlo da `.env.local`. |
+| `LEAD_WEBHOOK_SECRET` | Production, Preview | Codice condiviso con lo script (uguale a `CODICE_CONDIVISO`). Copiarlo da `.env.local`. |
+| `UPSTASH_REDIS_REST_URL` | Production, Preview | Database Upstash `solace-sito` (Frankfurt, eu-central-1). In alternativa `KV_REST_API_URL` creato dall'integrazione Vercel. |
+| `UPSTASH_REDIS_REST_TOKEN` | Production, Preview | Token dello stesso database. In alternativa `KV_REST_API_TOKEN`. |
 
-Da **non** impostare online: `RESEND_API_URL`, `LEAD_WEBHOOK_TIMEOUT_MS` (servono solo ai test),
-`RESEND_API_KEY` (non usata: l'invio passa da Google Apps Script).
+### Pubbliche
+| Variabile | Ambienti | Note |
+|---|---|---|
+| `NEXT_PUBLIC_GA4_ID` | Production | `G-1RM79G8DR2` (flusso GA4 già creato). Lo script parte solo dopo il consenso "statistiche". Prima di attivarla, aggiornare in GA4 l'URL del flusso con il dominio confermato. |
+| `NEXT_PUBLIC_SITE_URL` | Production | **Solo dopo la conferma del dominio**, es. `https://<dominio-confermato>`. Senza, il sito usa l'indirizzo `*.vercel.app`. |
+| `NEXT_PUBLIC_SITE_ENV` | **solo Production** | `production` **solo quando il dominio è confermato e collegato**: attiva l'indicizzazione. Finché manca, robots.txt blocca i motori di ricerca. |
+
+### Facoltative / da non impostare
+- `LEAD_EMAIL_TO` serve solo con Resend (non in uso: il destinatario è scritto nello script Google).
+- `NEXT_PUBLIC_CONTACT_EMAIL`, `NEXT_PUBLIC_CONTACT_PHONE`, `NEXT_PUBLIC_WHATSAPP_NUMBER`: solo per cambiare i
+  recapiti predefiniti di `lib/site.ts` (solace.gestione@gmail.com, +39 351 402 1923).
+- **Non** impostare online: `RESEND_API_URL`, `LEAD_WEBHOOK_TIMEOUT_MS` (solo test), `RESEND_API_KEY` (non usata).
 
 ## 3. Upstash Redis (limite alle richieste e doppi invii)
 Creare il database **nella regione europea Frankfurt (eu-central-1)**: l'informativa privacy dichiara server
@@ -33,10 +45,13 @@ nell'Unione europea. Due modi equivalenti:
 Senza Upstash, sul sito pubblicato il modulo risponde con un errore e non accetta richieste.
 Se Upstash smette di rispondere, il modulo continua a funzionare con limiti dimezzati per singola istanza.
 
-## 4. Dominio
-Vercel → Settings → Domains: aggiungere `solaceaffittibrevi.com` (principale) e `www.solaceaffittibrevi.com`
-con reindirizzamento al principale, poi aggiornare i DNS come indicato da Vercel. Il dominio oggi ospita la
-landing attuale: il passaggio la sostituisce.
+## 4. Dominio (da fare solo dopo la conferma)
+Il dominio definitivo **non è ancora confermato**: non aggiungere domini su Vercel e non modificare DNS.
+Finché manca, il sito si prova sugli indirizzi di anteprima `*.vercel.app` (non indicizzati).
+Quando il dominio è confermato: Vercel → Settings → Domains → aggiungere il dominio principale e la variante
+`www` con reindirizzamento al principale; aggiornare i DNS come indicato da Vercel; poi impostare
+`NEXT_PUBLIC_SITE_URL` e `NEXT_PUBLIC_SITE_ENV=production` e ripubblicare (canonical, sitemap e Open Graph
+usano quell'indirizzo).
 
 ## 5. Dopo il primo deploy
 1. `https://<dominio>/robots.txt` deve permettere l'indicizzazione solo in Production.
@@ -52,6 +67,10 @@ Script Google: incollare il nuovo codice, salvare, poi Esegui il deployment → 
 
 ## 7. Conservazione delle richieste (12 mesi)
 Le richieste restano solo nella casella solace.gestione@gmail.com. Pulizia automatica: nel progetto Apps Script
-aggiungere il file `scripts/google-apps-script/Pulizia.gs` (nessun segreto), eseguire una volta
-`installaPuliziaMensile` e dare il consenso Google. In alternativa, ogni mese in Gmail cercare
-`subject:"Nuova richiesta di analisi immobile" older_than:12m` ed eliminare i risultati non più necessari.
+aggiungere il file `scripts/google-apps-script/Pulizia.gs` (nessun segreto), poi dal menu "Esegui", in ordine:
+1. `verificaSelezione` (dare il consenso Google): solo conteggi su tutte le date. La prova "TEST SOLACE 3" deve
+   risultare tra le "richieste di prova" e "oggetto uguale ma formato diverso" deve essere 0.
+2. `simulaPulizia`: numero di messaggi che verrebbero eliminati oggi (nessuna modifica).
+3. `installaPuliziaMensile`: attiva l'esecuzione del giorno 1 di ogni mese (rifiuta se manca la simulazione).
+Elimina solo i singoli messaggi del modulo (mai le conversazioni, le risposte o le prove), spostandoli nel
+Cestino di Gmail, che li cancella definitivamente dopo 30 giorni. `disattivaPuliziaMensile` la ferma.

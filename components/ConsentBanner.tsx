@@ -15,6 +15,8 @@ export default function ConsentBanner({ analyticsEnabled }: { analyticsEnabled: 
   const [stats, setStats] = useState(false);
   const titleId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
+  // Elemento che aveva il focus prima dell'apertura: lo riceve di nuovo alla chiusura (es. "Preferenze cookie").
+  const returnFocus = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const current = readConsent();
@@ -37,7 +39,10 @@ export default function ConsentBanner({ analyticsEnabled }: { analyticsEnabled: 
   }, []);
 
   useEffect(() => {
-    if (open) panelRef.current?.focus({ preventScroll: true });
+    if (!open) return;
+    const active = document.activeElement;
+    if (active instanceof HTMLElement && !panelRef.current?.contains(active)) returnFocus.current = active;
+    panelRef.current?.focus({ preventScroll: true });
   }, [open, details]);
 
   const choose = (statistiche: boolean) => {
@@ -46,6 +51,18 @@ export default function ConsentBanner({ analyticsEnabled }: { analyticsEnabled: 
     else clearSource();
     setOpen(false);
     setDetails(false);
+    // Il banner sparisce con un'animazione: il focus non deve restare sui suoi pulsanti.
+    const target = returnFocus.current;
+    returnFocus.current = null;
+    if (target && target !== document.body && target.isConnected) target.focus({ preventScroll: true });
+    else {
+      // Nessun elemento di partenza (banner aperto al caricamento): il Tab successivo riparte dall'inizio
+      // della pagina, cioè dal link "Vai al contenuto".
+      const body = document.body;
+      body.setAttribute("tabindex", "-1");
+      body.focus({ preventScroll: true });
+      body.addEventListener("blur", () => body.removeAttribute("tabindex"), { once: true });
+    }
   };
 
   useEffect(() => {

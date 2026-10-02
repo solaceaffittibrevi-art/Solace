@@ -130,9 +130,12 @@ export default function PrivacyPage() {
         <h2>5. Per quanto tempo li conserviamo</h2>
         <ul>
           <li>
-            <strong>Richieste inviate con il modulo: 12 mesi</strong> dalla ricezione, poi vengono cancellate. Se nasce
-            un rapporto di collaborazione, i dati necessari sono conservati per la sua durata e per gli obblighi di
-            legge che ne derivano (ad esempio fiscali).
+            <strong>Richieste inviate con il modulo: 12 mesi</strong> dalla ricezione. Una procedura automatica,
+            eseguita ogni mese, le sposta nel cestino della casella email, da cui sono eliminate definitivamente entro
+            30 giorni. Le eventuali risposte che ci scambiamo dopo la richiesta sono conservate per il tempo
+            necessario a gestire il contatto e cancellate quando non servono più. Se nasce un rapporto di
+            collaborazione, i dati necessari sono conservati per la sua durata e per gli obblighi di legge che ne
+            derivano (ad esempio fiscali).
           </li>
           <li>Impronta dell&apos;indirizzo IP: al massimo 24 ore.</li>
           <li>Codice dell&apos;invio: da 1 a 6 ore.</li>

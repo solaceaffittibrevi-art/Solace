@@ -17,15 +17,20 @@ export const site = {
   },
   privacyEmail: "solace.gestione@gmail.com",
   tagline: "Gestione affitti brevi a Milano",
-  // Dominio definitivo; in sviluppo NEXT_PUBLIC_SITE_URL (in .env.local) lo sostituisce.
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://solaceaffittibrevi.com",
+  // Indirizzo pubblico del sito. Il dominio definitivo NON è ancora confermato: va indicato solo in
+  // NEXT_PUBLIC_SITE_URL (Vercel, ambiente Production) dopo l'acquisto e la verifica. Senza variabile si usa
+  // l'indirizzo *.vercel.app del progetto (anteprime) o, in locale, localhost.
+  url: (
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000")
+  ).replace(/\/+$/, ""),
   // Verificato il 1/10/2026: evento "Chiamata conoscitiva", 30 min, telefonica, con Gabriel Dal Molin.
   calendly: "https://calendly.com/solace-gestione/new-meeting",
   instagram: "https://www.instagram.com/solaceaffittibrevi/",
   airbnbProfile: "https://www.airbnb.it/users/profile/1467841528592735054",
   // Recapiti pubblici: i valori in .env.local (vedi .env.example) sostituiscono quelli predefiniti.
-  // Email aziendale fornita dal titolare il 2/10/2026.
-  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "solaceaffittibrevi@gmail.com",
+  // Email per contatti, richieste e privacy indicata dal titolare (passaggio di consegne del 2/10/2026).
+  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "solace.gestione@gmail.com",
   // Numero fornito dal titolare il 2/10/2026 (telefono e WhatsApp).
   phone: process.env.NEXT_PUBLIC_CONTACT_PHONE || "+39 351 402 1923",
   whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "393514021923",
