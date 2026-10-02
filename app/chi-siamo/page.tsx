@@ -84,26 +84,84 @@ export default function ChiSiamoPage() {
 
       <section className="section section--deep person" aria-labelledby="person-title">
         <div className="container person__grid">
-          <Reveal className="person__card">
-            <Image src="/brand/monogram.svg" alt="" width={302} height={287} unoptimized />
-          </Reveal>
-          <Reveal className="person__text" delay={0.1}>
-            <p className="eyebrow">Il tuo referente</p>
-            <h2 id="person-title" className="h2">
-              Gabriel Dal Molin
-            </h2>
-            <p className="lead">
-              È la persona che incontri nella chiamata conoscitiva e che segue il rapporto con i proprietari, dalla prima
-              analisi alla gestione quotidiana.
-            </p>
-            <p>
-              Host su Airbnb da due anni, parla italiano e inglese. Diverse recensioni degli ospiti lo citano per
-              nome, per la disponibilità e la cura delle case.
-            </p>
-            <TrackedLink href={site.calendly} event="calendly_click" location="chi-siamo" className="btn" external>
-              Prenota una chiamata con Gabriel
-            </TrackedLink>
-          </Reveal>
+          <div className="person__aside">
+            <Reveal className="person__photo">
+              <Parallax strength={4}>
+                <Image
+                  src="/images/team/gabriel-dal-molin.jpg"
+                  alt="Ritratto di Gabriel Dal Molin, fondatore di Solace"
+                  fill
+                  sizes="(max-width: 960px) 80vw, 34vw"
+                />
+              </Parallax>
+            </Reveal>
+            <Reveal as="p" className="person__caption" delay={0.1}>
+              <strong>Gabriel Dal Molin</strong>
+              <span>Fondatore di Solace</span>
+            </Reveal>
+          </div>
+
+          <div className="person__text">
+            <Reveal>
+              <p className="eyebrow">Il fondatore</p>
+              <h2 id="person-title" className="h2">
+                Ciao, <em>sono Gabriel.</em>
+              </h2>
+            </Reveal>
+            <Stagger className="person__bio" gap={0.08}>
+              <RevealItem as="p" className="lead">
+                Ho fondato Solace per aiutare i proprietari a mettere a reddito la propria casa senza ritrovarsi con un
+                secondo lavoro da gestire.
+              </RevealItem>
+              <RevealItem as="p">
+                Il mio lavoro si svolge soprattutto a Milano e comprende molto più delle prenotazioni. Ci sono le
+                telefonate con i proprietari, gli appartamenti da preparare, gli ospiti che hanno bisogno di una mano e gli
+                imprevisti da risolvere. È seguendo questi aspetti in prima persona che ho imparato cosa significa gestire
+                una casa affidata da qualcun altro.
+              </RevealItem>
+              <RevealItem as="blockquote" className="person__quote">
+                <p>So che dietro un immobile ci sono sacrifici, aspettative e, spesso, un legame personale.</p>
+              </RevealItem>
+              <RevealItem as="p">
+                Per questo, prima di parlare di rendimenti, mi interessa capire chi ho davanti: cosa si aspetta dalla
+                propria casa, quali preoccupazioni ha e quanto vuole essere coinvolto nella gestione.
+              </RevealItem>
+              <RevealItem as="p">
+                Sono una persona pratica e attenta ai numeri. Mi piace capire dove possiamo migliorare: un prezzo da
+                rivedere, un annuncio da valorizzare, un costo da tenere sotto controllo. Quando valuto un immobile, voglio
+                poterti spiegare il ragionamento dietro una previsione, comprese le incertezze.
+              </RevealItem>
+              <RevealItem as="p">
+                Ho anche cofondato Omnia Multiservizi, che si occupa di pulizie per affitti brevi. Questa esperienza mi ha
+                insegnato quanto contino le cose che un ospite nota appena entra: una casa davvero pulita, la biancheria in
+                ordine, la cura con cui è stato preparato tutto. Sono dettagli che richiedono organizzazione e persone su
+                cui poter contare.
+              </RevealItem>
+              <RevealItem as="p">
+                Se scegli di affidarti a me, voglio che tu sappia chi si sta occupando della tua casa e come sta andando.
+                Per me significa parlare chiaro, condividere i risultati e affrontare anche le conversazioni meno comode
+                quando qualcosa va sistemato.
+              </RevealItem>
+              <RevealItem as="p" className="person__closing">
+                La fiducia, in questo lavoro, si costruisce così: facendo quello che ci si è detti e prendendosi la
+                responsabilità di seguire le cose fino in fondo.
+              </RevealItem>
+              <RevealItem className="person__actions">
+                <TrackedLink href={site.calendly} event="calendly_click" location="chi-siamo" className="btn" external>
+                  Prenota una chiamata con Gabriel
+                </TrackedLink>
+                <TrackedLink
+                  href={`https://wa.me/${site.whatsapp}`}
+                  event="whatsapp_click"
+                  location="chi-siamo"
+                  className="btn btn--ghost"
+                  external
+                >
+                  Scrivimi su WhatsApp
+                </TrackedLink>
+              </RevealItem>
+            </Stagger>
+          </div>
         </div>
       </section>
 

@@ -10,8 +10,9 @@ export const site = {
   calendly: "https://calendly.com/solace-gestione/new-meeting",
   instagram: "https://www.instagram.com/solaceaffittibrevi/",
   airbnbProfile: "https://www.airbnb.it/users/profile/1467841528592735054",
-  // Recapiti: si mostrano solo se configurati in .env.local (vedi .env.example).
-  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "",
+  // Recapiti pubblici: i valori in .env.local (vedi .env.example) sostituiscono quelli predefiniti.
+  // Email aziendale fornita dal titolare il 2/10/2026.
+  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "solaceaffittibrevi@gmail.com",
   // Numero fornito dal titolare il 2/10/2026 (telefono e WhatsApp).
   phone: process.env.NEXT_PUBLIC_CONTACT_PHONE || "+39 351 402 1923",
   whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "393514021923",

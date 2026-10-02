@@ -726,6 +726,7 @@ p {
 .benefits__media {
   position: relative;
   aspect-ratio: 4 / 5;
+  isolation: isolate;
 }
 
 .benefits__media::after {
@@ -1942,32 +1943,95 @@ p {
 
 .person__grid {
   display: grid;
-  grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
-  gap: clamp(2rem, 7vw, 7rem);
-  align-items: center;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2.5rem, 7vw, 7rem);
+  align-items: start;
 }
 
-.person__card {
-  display: grid;
-  place-items: center;
+.person__aside {
+  position: sticky;
+  top: calc(var(--header-h) + 2.5rem);
+}
+
+.person__photo {
+  position: relative;
   aspect-ratio: 4 / 5;
+  max-width: 460px;
+  isolation: isolate;
+}
+
+.person__photo::after {
+  content: "";
+  position: absolute;
+  inset: 16px -16px -16px 16px;
+  z-index: -1;
   border: 1px solid var(--line);
-  background: radial-gradient(circle at 50% 40%, rgba(201, 164, 92, 0.14), transparent 65%);
 }
 
-.person__card img {
-  width: 42%;
+.person__photo img {
+  object-position: 50% 20%;
 }
 
-.person__text .lead {
-  margin-top: 1rem;
-  color: var(--text);
+.person__caption {
+  display: grid;
+  gap: 0.15rem;
+  margin-top: 2rem;
 }
 
-.person__text p:not(.eyebrow):not(.lead) {
-  margin: 1rem 0 2rem;
+.person__caption strong {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.person__caption span {
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.person__bio {
+  display: grid;
+  gap: 1.2rem;
+  margin-top: 1.6rem;
+  max-width: 62ch;
+}
+
+.person__bio p {
   color: var(--muted);
-  max-width: 58ch;
+}
+
+.person__bio .lead {
+  color: var(--text);
+  max-width: none;
+}
+
+.person__quote {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+  border-left: 1px solid var(--gold);
+}
+
+.person__quote p {
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+  font-style: italic;
+  line-height: 1.25;
+  color: var(--gold-soft) !important;
+}
+
+.person__bio .person__closing {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.person__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 1rem;
 }
 
 .method__list {
@@ -2547,12 +2611,9 @@ p {
     aspect-ratio: 16 / 10;
   }
 
-  .person__card {
-    aspect-ratio: 16 / 9;
-  }
-
-  .person__card img {
-    width: 22%;
+  .person__aside {
+    position: static;
+    max-width: 420px;
   }
 
   .about__media {
