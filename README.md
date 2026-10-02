@@ -23,6 +23,7 @@ Poi apri http://localhost:3000.
 | `npm run build` | build di produzione |
 | `npm run lint` | controllo ESLint |
 | `npm run typecheck` | controllo TypeScript |
+| `npm run test:api` | test del modulo contatti con servizi simulati (dopo `npm run build`; nessuna email reale) |
 
 ## Configurazione (`.env.local`)
 
@@ -32,6 +33,12 @@ Vedi `.env.example`. Prima della pubblicazione servono almeno:
   `RESEND_API_KEY` + `LEAD_EMAIL_TO` (email tramite Resend). Senza almeno un canale il modulo mostra
   un errore e non conferma mai un invio. Con la richiesta arrivano anche pagina d'ingresso, sito di
   provenienza e parametri UTM.
+- Limite alle richieste e doppi invii: `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` (oppure
+  `KV_REST_API_URL` + `KV_REST_API_TOKEN` creati dall'integrazione Upstash di Vercel). Obbligatori sul sito
+  pubblicato: senza, il modulo non accetta richieste. Limiti: 5 invii ogni 10 minuti e 20 al giorno per
+  connessione, 60 l'ora per tutto il sito.
+- Sicurezza: intestazioni e Content Security Policy sono in `next.config.ts`. Se si aggiungono servizi esterni
+  (Tag Manager, Analytics, widget incorporati) vanno aggiunti i loro domini alla policy.
 - Misurazione: gli eventi (`cta_click`, `form_start`, `form_error`, `lead_submit_success`,
   `whatsapp_click`, `phone_click`, `email_click`, `calendly_click`) vengono scritti in `window.dataLayer`
   solo quando Tag Manager / GA4 saranno installati, nel rispetto dei consensi. Nessun dato personale.

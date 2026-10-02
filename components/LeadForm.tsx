@@ -21,6 +21,14 @@ const errorLabels: Record<keyof LeadErrors, string> = {
   message: "Messaggio",
 };
 
+// Messaggi per i codici d'errore restituiti da /api/richiesta.
+const failureText: Record<string, string> = {
+  unavailable: "In questo momento non riusciamo a ricevere richieste dal sito. I dati che hai scritto sono ancora qui.",
+  rate_limited:
+    "Sono arrivate troppe richieste da questa connessione in poco tempo. I dati che hai scritto sono ancora qui: riprova tra qualche minuto.",
+  in_progress: "La richiesta precedente è ancora in elaborazione. Attendi qualche secondo e riprova.",
+};
+
 const newRequestId = () =>
   typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`;
 
@@ -290,9 +298,8 @@ export default function LeadForm({ location = "valutazione" }: { location?: stri
             <div>
               <p>
                 <strong>La richiesta non è stata inviata.</strong>{" "}
-                {failure === "not_configured"
-                  ? "In questo momento non riusciamo a ricevere richieste dal sito. I dati che hai scritto sono ancora qui."
-                  : "Si è verificato un problema di connessione. I dati che hai scritto sono ancora qui: puoi riprovare."}
+                {failureText[failure] ??
+                  "Si è verificato un problema di connessione. I dati che hai scritto sono ancora qui: puoi riprovare."}
               </p>
               <p>
                 Puoi anche{" "}

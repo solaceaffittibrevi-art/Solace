@@ -1,78 +1,187 @@
+import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
 import { contactKind, validateLead, type LeadInput } from "@/lib/lead";
 import type { LeadSource } from "@/lib/source";
+import { getStore, type Store } from "@/lib/kv";
 
 // Riceve la richiesta di valutazione e la consegna a uno o entrambi i canali configurati:
 //  - LEAD_WEBHOOK_URL: webhook (Make, Zapier, n8n, CRM)
-//  - RESEND_API_KEY + LEAD_EMAIL_TO (+ LEAD_EMAIL_FROM): email tramite Resend
-// La richiesta è "ricevuta" solo se almeno un canale conferma la consegna. Senza canali
-// configurati risponde con un errore: il sito non mostra mai una conferma non vera.
+//  - RESEND_API_KEY + LEAD_EMAIL_TO (+ LEAD_EMAIL_FROM): email di solo testo tramite Resend
+// La richiesta è "ricevuta" solo se almeno un canale conferma la consegna: il sito non mostra mai
+// una conferma non vera. Le risposte pubbliche usano codici generici; i log non contengono dati
+// del contatto, indirizzi IP o credenziali.
 
-// Protezione dai doppi invii (doppio clic, rete lenta): stesso requestId entro 10 minuti.
-const recent = new Map<string, number>();
-const DEDUPE_MS = 10 * 60 * 1000;
+const MAX_BODY_BYTES = 16 * 1024;
 
-function seen(id: string) {
-  const now = Date.now();
-  for (const [key, at] of recent) if (now - at > DEDUPE_MS) recent.delete(key);
-  if (recent.has(id)) return true;
-  recent.set(id, now);
-  return false;
+// Limiti per indirizzo IP (salvato solo come impronta SHA-256) e per tutto il sito, che
+// protegge anche la quota del servizio email da invii distribuiti.
+const LIMITS = [
+  { name: "ip10m", window: 10 * 60, max: 5, perIp: true },
+  { name: "ip1d", window: 24 * 60 * 60, max: 20, perIp: true },
+  { name: "all1h", window: 60 * 60, max: 60, perIp: false },
+];
+
+// Doppi invii: lo stesso requestId viene prenotato durante la consegna e segnato come
+// consegnato solo dopo il successo. Se la consegna fallisce la prenotazione viene liberata,
+// così il visitatore può riprovare subito.
+const PENDING_TTL = 60;
+const DONE_TTL = 60 * 60;
+
+const json = (body: object, status = 200, headers: Record<string, string> = {}) =>
+  NextResponse.json(body, { status, headers: { "Cache-Control": "no-store", ...headers } });
+
+const fail = (error: string, status: number, headers?: Record<string, string>) => json({ ok: false, error }, status, headers);
+
+// Testo su una riga (niente a capo o caratteri di controllo, utile anche per l'oggetto email).
+const line = (v: unknown, max = 300) =>
+  (typeof v === "string" ? v : "").replace(/[\u0000-\u001F\u007F]+/g, " ").slice(0, max);
+// Testo su più righe: conserva solo gli a capo.
+const text = (v: unknown, max = 2000) =>
+  (typeof v === "string" ? v : "")
+    .replace(/\r\n?/g, "\n")
+    .replace(/[\u0000-\u0009\u000B-\u001F\u007F]+/g, " ")
+    .slice(0, max);
+
+function sameOrigin(request: Request) {
+  const fetchSite = request.headers.get("sec-fetch-site");
+  if (fetchSite && fetchSite !== "same-origin") return false;
+  const origin = request.headers.get("origin");
+  if (!origin) return false;
+  let originHost: string;
+  try {
+    originHost = new URL(origin).host;
+  } catch {
+    return false;
+  }
+  const allowed = new Set<string>();
+  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
+  if (host) allowed.add(host);
+  try {
+    allowed.add(new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "").host);
+  } catch {}
+  return allowed.has(originHost);
 }
 
-const clean = (v: unknown, max = 300) => String(v ?? "").slice(0, max);
+// Legge il corpo fermandosi appena supera il limite, anche senza Content-Length.
+async function readBody(request: Request): Promise<string | null> {
+  const declared = Number(request.headers.get("content-length") ?? 0);
+  if (declared > MAX_BODY_BYTES) return null;
+  if (!request.body) return "";
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    size += value.byteLength;
+    if (size > MAX_BODY_BYTES) {
+      await reader.cancel().catch(() => {});
+      return null;
+    }
+    chunks.push(value);
+  }
+  return new TextDecoder().decode(Buffer.concat(chunks));
+}
+
+function clientKey(request: Request) {
+  const ip =
+    request.headers.get("x-real-ip") ?? request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  return createHash("sha256").update(`solace:${ip}`).digest("hex").slice(0, 32);
+}
+
+async function rateLimited(store: Store, request: Request) {
+  const now = Math.floor(Date.now() / 1000);
+  const ip = clientKey(request);
+  const entries = LIMITS.map((l) => ({
+    key: `rl:${l.name}:${l.perIp ? `${ip}:` : ""}${Math.floor(now / l.window)}`,
+    ttl: l.window,
+  }));
+  const counts = await store.incr(entries);
+  const hit = LIMITS.findIndex((l, i) => counts[i] > l.max);
+  if (hit === -1) return null;
+  const { name, window } = LIMITS[hit];
+  return { name, retryAfter: window - (now % window) };
+}
+
+// Motivo dell'errore senza URL, chiavi o contenuti della richiesta.
+const reason = (err: unknown) =>
+  err instanceof Error && /^(webhook|resend)_\d{3}$/.test(err.message) ? err.message : err instanceof Error ? err.name : "errore";
 
 export async function POST(request: Request) {
-  let body: LeadInput & { source?: LeadSource };
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ ok: false, error: "invalid" }, { status: 400 });
+  if (!(request.headers.get("content-type") ?? "").toLowerCase().startsWith("application/json")) {
+    return fail("unsupported", 415);
   }
+  // La provenienza blocca gli invii da altri siti; non sostituisce il limite alle richieste.
+  if (!sameOrigin(request)) return fail("forbidden", 403);
+
+  const raw = await readBody(request);
+  if (raw === null) return fail("too_large", 413);
+
+  let body: Partial<Record<keyof LeadInput, unknown>> & { source?: Partial<Record<keyof LeadSource, unknown>> };
+  try {
+    body = JSON.parse(raw);
+  } catch {
+    return fail("invalid", 400);
+  }
+  if (!body || typeof body !== "object" || Array.isArray(body)) return fail("invalid", 400);
 
   const input: LeadInput = {
-    name: clean(body.name, 120),
-    contact: clean(body.contact, 120),
-    zone: clean(body.zone, 120),
-    type: clean(body.type, 60),
-    count: clean(body.count, 20),
-    status: clean(body.status, 60),
-    message: clean(body.message, 2000),
-    website: clean(body.website, 200),
-    requestId: clean(body.requestId, 80),
+    name: line(body.name, 120),
+    contact: line(body.contact, 120),
+    zone: line(body.zone, 120),
+    type: line(body.type, 60),
+    count: line(body.count, 20),
+    status: line(body.status, 60),
+    message: text(body.message, 2000),
+    website: line(body.website, 200),
+    requestId: /^[A-Za-z0-9.-]{8,80}$/.test(String(body.requestId ?? "")) ? String(body.requestId) : "",
   };
 
   // Bot: risposta neutra, nessun inoltro.
-  if (input.website) return NextResponse.json({ ok: true });
+  if (input.website) return json({ ok: true });
 
   const errors = validateLead(input);
-  if (Object.keys(errors).length) {
-    return NextResponse.json({ ok: false, error: "validation", errors }, { status: 422 });
+  if (Object.keys(errors).length) return json({ ok: false, error: "validation", errors }, 422);
+
+  const store = getStore();
+  if (!store) {
+    console.error("[richiesta] Archivio condiviso (Upstash) non configurato: richiesta non accettata.");
+    return fail("unavailable", 503);
   }
 
-  if (input.requestId && seen(input.requestId)) {
-    return NextResponse.json({ ok: true, duplicate: true });
+  const limited = await rateLimited(store, request);
+  if (limited) {
+    console.warn(`[richiesta] Limite superato (${limited.name}).`);
+    return fail("rate_limited", 429, { "Retry-After": String(limited.retryAfter) });
   }
 
-  const s = body.source ?? {};
+  const dedupeKey = input.requestId ? `lead:${input.requestId}` : "";
+  if (dedupeKey) {
+    const previous = await store.claim(dedupeKey, "pending", PENDING_TTL);
+    // Già consegnata: è vero che è stata ricevuta, quindi si conferma senza inoltrarla di nuovo.
+    if (previous === "done") return json({ ok: true });
+    if (previous !== null) return fail("in_progress", 409);
+  }
+
+  const s = body.source && typeof body.source === "object" ? body.source : {};
   const kind = contactKind(input.contact);
   const lead = {
-    name: input.name,
+    name: input.name.trim(),
     email: kind === "email" ? input.contact.trim() : "",
     phone: kind === "phone" ? input.contact.trim() : "",
-    zone: input.zone,
+    zone: input.zone.trim(),
     type: input.type,
     count: input.count,
     status: input.status,
     message: input.message,
     source: {
-      landingPage: clean(s.landingPage),
-      referrer: clean(s.referrer),
-      utmSource: clean(s.utmSource, 100),
-      utmMedium: clean(s.utmMedium, 100),
-      utmCampaign: clean(s.utmCampaign, 100),
-      utmContent: clean(s.utmContent, 100),
-      utmTerm: clean(s.utmTerm, 100),
+      landingPage: line(s.landingPage),
+      referrer: line(s.referrer),
+      utmSource: line(s.utmSource, 100),
+      utmMedium: line(s.utmMedium, 100),
+      utmCampaign: line(s.utmCampaign, 100),
+      utmContent: line(s.utmContent, 100),
+      utmTerm: line(s.utmTerm, 100),
     },
     receivedAt: new Date().toISOString(),
   };
@@ -81,18 +190,22 @@ export async function POST(request: Request) {
   const resendKey = process.env.RESEND_API_KEY;
   const emailTo = process.env.LEAD_EMAIL_TO;
   const emailFrom = process.env.LEAD_EMAIL_FROM || "Sito Solace <onboarding@resend.dev>";
+  // Indirizzo dell'API Resend: si cambia solo per i test con un servizio simulato.
+  const resendUrl = process.env.RESEND_API_URL || "https://api.resend.com/emails";
 
   const deliveries: Promise<void>[] = [];
 
   if (webhook) {
+    // I campi sono testo semplice: chi li riceve (CRM, Make, n8n) deve mostrarli come testo, non come HTML.
     deliveries.push(
       fetch(webhook, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...lead, origin: "sito-solace" }),
+        body: JSON.stringify({ ...lead, origin: "sito-solace", format: "text/plain" }),
+        cache: "no-store",
         signal: AbortSignal.timeout(10_000),
       }).then((res) => {
-        if (!res.ok) throw new Error(`webhook ${res.status}`);
+        if (!res.ok) throw new Error(`webhook_${res.status}`);
       }),
     );
   }
@@ -112,36 +225,38 @@ export async function POST(request: Request) {
       ["Campagna (utm)", [lead.source.utmSource, lead.source.utmMedium, lead.source.utmCampaign].filter(Boolean).join(" / ")],
     ].filter(([, v]) => v);
     deliveries.push(
-      fetch("https://api.resend.com/emails", {
+      fetch(resendUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${resendKey}` },
+        // Solo testo: nessun campo "html", quindi nulla di quanto scritto nel modulo viene interpretato.
         body: JSON.stringify({
           from: emailFrom,
           to: emailTo.split(",").map((x) => x.trim()),
           reply_to: lead.email || undefined,
-          subject: `Nuova richiesta di valutazione: ${lead.zone}`,
+          subject: `Nuova richiesta di valutazione: ${lead.zone}`.slice(0, 150),
           text: rows.map(([k, v]) => `${k}: ${v}`).join("\n"),
         }),
+        cache: "no-store",
         signal: AbortSignal.timeout(10_000),
       }).then((res) => {
-        if (!res.ok) throw new Error(`resend ${res.status}`);
+        if (!res.ok) throw new Error(`resend_${res.status}`);
       }),
     );
   }
 
   if (!deliveries.length) {
     console.error("[richiesta] Nessun canale di consegna configurato: richiesta non inoltrata.");
-    if (input.requestId) recent.delete(input.requestId);
-    return NextResponse.json({ ok: false, error: "not_configured" }, { status: 503 });
+    if (dedupeKey) await store.del(dedupeKey);
+    return fail("unavailable", 503);
   }
 
   const results = await Promise.allSettled(deliveries);
-  const delivered = results.some((r) => r.status === "fulfilled");
-  for (const r of results) if (r.status === "rejected") console.error("[richiesta] Consegna non riuscita:", r.reason);
+  for (const r of results) if (r.status === "rejected") console.error(`[richiesta] Consegna non riuscita (${reason(r.reason)}).`);
 
-  if (!delivered) {
-    if (input.requestId) recent.delete(input.requestId);
-    return NextResponse.json({ ok: false, error: "delivery_failed" }, { status: 502 });
+  if (!results.some((r) => r.status === "fulfilled")) {
+    if (dedupeKey) await store.del(dedupeKey);
+    return fail("unavailable", 503);
   }
-  return NextResponse.json({ ok: true });
+  if (dedupeKey) await store.set(dedupeKey, "done", DONE_TTL);
+  return json({ ok: true });
 }
