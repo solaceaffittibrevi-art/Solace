@@ -48,3 +48,13 @@ temp/
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# impostazioni locali di Claude Code (hook Impeccable)
+.claude/settings.local.json
+
+# archivio revisioni Impeccable (locale)
+.impeccable/
+
+
+# File locali con codici reali (es. script Google già compilato)
+/.solace-local/

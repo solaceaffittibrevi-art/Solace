@@ -1,0 +1,32 @@
+import { Reveal } from "./motion/Reveal";
+import TrackedLink from "./TrackedLink";
+import { site } from "@/lib/site";
+
+export default function CtaBand({
+  title = "Raccontaci la tua casa.",
+  text = "La valutazione è gratuita e senza impegno: ti diciamo con franchezza se e come può funzionare in affitto breve.",
+}: {
+  title?: string;
+  text?: string;
+}) {
+  return (
+    <section className="cta-band" aria-labelledby="cta-band-title">
+      <div className="container cta-band__inner">
+        <Reveal>
+          <h2 id="cta-band-title" className="cta-band__title">
+            {title}
+          </h2>
+          <p className="cta-band__text">{text}</p>
+        </Reveal>
+        <Reveal className="cta-band__actions" delay={0.1}>
+          <TrackedLink href="/valutazione-gratuita" event="cta_click" location="cta-band" className="btn">
+            Richiedi una valutazione gratuita
+          </TrackedLink>
+          <TrackedLink href={site.calendly} event="calendly_click" location="cta-band" className="btn btn--ghost" external>
+            Prenota una chiamata
+          </TrackedLink>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
