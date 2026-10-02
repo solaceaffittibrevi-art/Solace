@@ -689,7 +689,7 @@ p {
   background:
     linear-gradient(180deg, rgba(7, 11, 22, 0.55) 0%, rgba(7, 11, 22, 0) 28%),
     linear-gradient(90deg, rgba(7, 11, 22, 0.92) 0%, rgba(7, 11, 22, 0.72) 42%, rgba(7, 11, 22, 0.15) 75%),
-    linear-gradient(0deg, rgba(7, 11, 22, 0.85) 0%, rgba(7, 11, 22, 0) 45%);
+    linear-gradient(0deg, var(--navy-950) 0%, rgba(7, 11, 22, 0) 50%);
 }
 
 .hero__text {
@@ -1566,6 +1566,36 @@ p {
   background: var(--navy-950);
 }
 
+.page-hero--bg {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.page-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.page-hero__bg img {
+  object-fit: cover;
+}
+
+.page-hero__bg-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(7, 11, 22, 0.9) 0%, rgba(7, 11, 22, 0.72) 50%, rgba(7, 11, 22, 0.5) 100%),
+    linear-gradient(0deg, var(--navy-950) 0%, rgba(7, 11, 22, 0) 50%);
+}
+
+@media (max-width: 700px) {
+  .page-hero__bg-shade {
+    background: linear-gradient(180deg, rgba(7, 11, 22, 0.7) 0%, rgba(7, 11, 22, 0.8) 55%, rgba(7, 11, 22, 0.95) 100%);
+  }
+}
+
 .page-hero__inner {
   display: grid;
   gap: clamp(2rem, 6vw, 5rem);
@@ -1682,35 +1712,6 @@ p {
   display: grid;
 }
 
-/* Foto sotto "Prima dell'avvio": coppia leggermente asimmetrica su desktop, in colonna su mobile. */
-.service-photos {
-  display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  gap: clamp(1rem, 2.5vw, 2rem);
-  align-items: start;
-  margin-top: clamp(2.5rem, 5vw, 4rem);
-}
-
-.service-photos__item {
-  position: relative;
-  margin: 0;
-  overflow: hidden;
-  background: var(--navy-800);
-}
-
-.service-photos__item:first-child {
-  aspect-ratio: 3 / 2;
-}
-
-.service-photos__item:last-child {
-  aspect-ratio: 6 / 5;
-  margin-top: clamp(2rem, 6vw, 5rem);
-}
-
-.service-photos__item img {
-  object-fit: cover;
-}
-
 /* Esempio di rendicontazione: immagine intera, mai ritagliata. */
 .report-example {
   margin: 0;
@@ -1741,17 +1742,6 @@ p {
   letter-spacing: 0.06em;
 }
 
-@media (max-width: 700px) {
-  .service-photos {
-    grid-template-columns: 1fr;
-  }
-
-  .service-photos__item:first-child,
-  .service-photos__item:last-child {
-    aspect-ratio: 3 / 2;
-    margin-top: 0;
-  }
-}
 
 .service {
   display: grid;

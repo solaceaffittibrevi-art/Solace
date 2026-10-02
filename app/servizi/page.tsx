@@ -19,7 +19,10 @@ export const metadata: Metadata = pageMetadata({
 });
 
 const groupImages: Record<string, { src: string; alt: string }> = {
-  prima: { src: "/images/immobili/trilocale-wagner/01.jpg", alt: "Soggiorno luminoso del Trilocale Wagner pronto per gli ospiti" },
+  prima: {
+    src: "/images/servizi/tavola-apparecchiata-e-cucina.jpg",
+    alt: "Tavolo rotondo apparecchiato per quattro accanto alla cucina in legno con tulipani sul piano",
+  },
   durante: { src: "/images/dettagli/biancheria.jpg", alt: "Asciugamani bianchi piegati sul letto" },
 };
 
@@ -102,28 +105,6 @@ export default function ServiziPage() {
               ))}
             </Stagger>
           </div>
-          {g.id === "prima" && (
-            <div className="container">
-              <Stagger className="service-photos" gap={0.12}>
-                <RevealItem as="figure" className="service-photos__item">
-                  <Image
-                    src="/images/servizi/monolocale-allestito-per-gli-ospiti.jpg"
-                    alt="Monolocale allestito per gli ospiti, con divano letto grigio, mobile TV e tavolo con sedie"
-                    fill
-                    sizes="(max-width: 700px) 100vw, 55vw"
-                  />
-                </RevealItem>
-                <RevealItem as="figure" className="service-photos__item">
-                  <Image
-                    src="/images/servizi/tavola-apparecchiata-e-cucina.jpg"
-                    alt="Tavolo rotondo apparecchiato per quattro accanto alla cucina in legno con tulipani sul piano"
-                    fill
-                    sizes="(max-width: 700px) 100vw, 40vw"
-                  />
-                </RevealItem>
-              </Stagger>
-            </div>
-          )}
         </section>
         {g.id === "durante" && (
           <section className="cta-inline" aria-label="Richiedi una valutazione">

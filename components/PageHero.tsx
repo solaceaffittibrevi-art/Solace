@@ -10,6 +10,7 @@ export default function PageHero({
   image,
   imageAlt = "",
   imagePosition,
+  background,
   children,
 }: {
   title: React.ReactNode;
@@ -18,10 +19,25 @@ export default function PageHero({
   imageAlt?: string;
   // Inquadratura: object-position su desktop e (facoltativa) su mobile.
   imagePosition?: { desktop: string; mobile?: string };
+  // Foto di sfondo a tutta larghezza, oscurata per mantenere leggibili i testi.
+  background?: { src: string; alt: string; position?: string };
   children?: React.ReactNode;
 }) {
   return (
-    <section className={`page-hero${image ? " page-hero--image" : ""}`}>
+    <section className={`page-hero${image ? " page-hero--image" : ""}${background ? " page-hero--bg" : ""}`}>
+      {background && (
+        <div className="page-hero__bg">
+          <Image
+            src={background.src}
+            alt={background.alt}
+            fill
+            priority
+            sizes="100vw"
+            style={{ objectPosition: background.position ?? "50% 50%" }}
+          />
+          <div className="page-hero__bg-shade" aria-hidden="true" />
+        </div>
+      )}
       <div className="container page-hero__inner">
         <div className="page-hero__text">
           <h1 className="page-hero__title enter" style={{ "--i": 0 } as React.CSSProperties}>

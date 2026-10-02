@@ -23,6 +23,11 @@ export default function ImmobiliPage() {
             Gli appartamenti <em>che gestiamo.</em>
           </>
         }
+        background={{
+          src: "/images/milano-duomo.webp",
+          alt: "Piazza del Duomo a Milano di sera, con il Duomo e la Galleria Vittorio Emanuele II illuminati",
+          position: "65% 55%",
+        }}
         lead="Una selezione di case in affitto breve gestite da Solace a Milano e dintorni: zone, stili e ospiti diversi, con lo stesso metodo di gestione. Ogni scheda rimanda all'annuncio reale su Airbnb."
       />
 
