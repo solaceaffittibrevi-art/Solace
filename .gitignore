@@ -48,3 +48,6 @@ temp/
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# impostazioni locali di Claude Code (hook Impeccable)
+.claude/settings.local.json
