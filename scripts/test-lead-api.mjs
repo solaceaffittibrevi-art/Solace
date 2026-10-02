@@ -14,7 +14,7 @@ const FAKE_KEY = "fake-test-key-not-real"; // valore finto, non è una credenzia
 // ---- Servizi simulati -------------------------------------------------------------------
 const emails = [];
 const hooks = [];
-const mode = { fail: false, delay: 0 };
+const mode = { fail: false, delay: 0, resendDown: false, hook: "ok" };
 const kv = new Map();
 const kvGet = (k) => {
   const e = kv.get(k);
@@ -61,6 +61,12 @@ const mock = http.createServer((req, res) => {
     }
     if (mode.delay) await new Promise((r) => setTimeout(r, mode.delay));
     if (mode.fail) return send(500, { error: "simulated" });
+    if (req.url === "/resend/emails" && mode.resendDown) return send(500, { error: "simulated" });
+    if (req.url === "/webhook" && mode.hook === "false") return send(200, { ok: false });
+    if (req.url === "/webhook" && mode.hook === "html") {
+      res.writeHead(200, { "Content-Type": "text/html" });
+      return res.end("<html><body>Errore dello script</body></html>");
+    }
     if (req.url === "/resend/emails") {
       emails.push({ auth: req.headers.authorization, body: JSON.parse(data) });
       return send(200, { id: "simulated" });
@@ -98,6 +104,7 @@ const shared = {
   RESEND_API_URL: `http://127.0.0.1:${MOCK}/resend/emails`,
   LEAD_EMAIL_TO: "test@example.invalid",
   LEAD_WEBHOOK_URL: `http://127.0.0.1:${MOCK}/webhook`,
+  LEAD_WEBHOOK_SECRET: "codice-condiviso-di-test",
 };
 start(PORT_A, shared);
 start(PORT_B, shared);
@@ -211,6 +218,7 @@ check("HTML del messaggio conservato come testo letterale", mail?.text.includes(
 check("Oggetto email richiesto", mail?.subject === "Solace — Nuova richiesta di analisi immobile", mail?.subject);
 check("Reply-To impostato sull'email del visitatore", mail?.reply_to === PII.email, mail?.reply_to);
 check("Email con tutti i campi compilati", ["Nome: " + PII.name, "Email: " + PII.email, "Comune o zona: Milano, Navigli", "Messaggio: ", "Pagina d'ingresso: /", "Ricevuta il: "].every((t) => mail?.text.includes(t)));
+check("Webhook con oggetto, testo, Reply-To e codice condiviso", hook?.subject === "Solace — Nuova richiesta di analisi immobile" && hook?.text.includes("Nome: " + PII.name) && hook?.replyTo === PII.email && hook?.secret === "codice-condiviso-di-test");
 check("Webhook ricevuto con format text/plain", hook?.format === "text/plain" && hook?.message.includes("<img src=x"));
 r = await post(PORT_A, lead({ zone: "Milano\r\nBcc: altro@example.invalid", requestId: crypto.randomUUID() }));
 check("A capo rimossi dai campi su una riga", r.status === 200 && emails.at(-1).body.text.includes("Comune o zona: Milano Bcc: altro@example.invalid"), emails.at(-1)?.body.text.split("\n")[1]);
@@ -234,6 +242,18 @@ check("Consegna fallita: nessuna falsa conferma (503 generico)", r.status === 50
 mode.fail = false;
 r = await post(PORT_B, retry);
 check("Nuovo tentativo dopo l'errore accettato e consegnato", r.status === 200 && r.data.ok === true, r.text);
+
+// Solo il webhook disponibile: una risposta ok:false o una pagina HTML non sono una consegna
+mode.resendDown = true;
+for (const kind of ["false", "html"]) {
+  mode.hook = kind;
+  r = await post(PORT_A, lead());
+  check(`Webhook che risponde ${kind === "false" ? "ok:false" : "con una pagina HTML"}: nessuna conferma (503)`, r.status === 503 && r.data.error === "unavailable", r.text);
+}
+mode.hook = "ok";
+r = await post(PORT_B, lead());
+check("Solo webhook funzionante: richiesta confermata", r.status === 200 && r.data.ok === true, r.text);
+mode.resendDown = false;
 
 // Invio contemporaneo dello stesso requestId su due istanze: uno solo viene inoltrato
 mode.delay = 1500;
@@ -275,7 +295,7 @@ check("GET sull'API non consentito (405)", get.status === 405, get.status);
 // Log: nessun dato del contatto, IP o credenziale
 await new Promise((r) => setTimeout(r, 300));
 const allLogs = logs.join("");
-const leaks = [PII.name, PII.email, "203.0.113.7", "198.51.100.", FAKE_KEY, "127.0.0.1:" + MOCK].filter((s) => allLogs.includes(s));
+const leaks = [PII.name, PII.email, "203.0.113.7", "198.51.100.", FAKE_KEY, "codice-condiviso-di-test", "127.0.0.1:" + MOCK].filter((s) => allLogs.includes(s));
 check("Log senza nome, email, IP, chiavi o indirizzi dei servizi", leaks.length === 0, leaks.join(", "));
 check("Nessun messaggio d'errore pubblico che riveli la configurazione", !JSON.stringify([r.data, api.data]).includes("configured"));
 

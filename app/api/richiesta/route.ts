@@ -105,7 +105,7 @@ async function rateLimited(store: Store, request: Request) {
 
 // Motivo dell'errore senza URL, chiavi o contenuti della richiesta.
 const reason = (err: unknown) =>
-  err instanceof Error && /^(webhook|resend)_\d{3}$/.test(err.message) ? err.message : err instanceof Error ? err.name : "errore";
+  err instanceof Error && /^(webhook|resend)_[a-z0-9]+$/.test(err.message) ? err.message : err instanceof Error ? err.name : "errore";
 
 export async function POST(request: Request) {
   if (!(request.headers.get("content-type") ?? "").toLowerCase().startsWith("application/json")) {
@@ -196,43 +196,67 @@ export async function POST(request: Request) {
   // Indirizzo dell'API Resend: si cambia solo per i test con un servizio simulato.
   const resendUrl = process.env.RESEND_API_URL || "https://api.resend.com/emails";
 
+  // Testo dell'email, uguale per Resend e per il webhook (es. Google Apps Script che invia da Gmail).
+  const src = lead.source;
+  const rows = [
+    ["Nome", lead.name],
+    ["Telefono", lead.phone],
+    ["Email", lead.email],
+    ["Comune o zona", lead.zone],
+    ["Tipologia", lead.type],
+    ["Numero di immobili", lead.count],
+    ["Situazione attuale", lead.status],
+    ["Messaggio", lead.message],
+    ["Pagina d'ingresso", src.landingPage],
+    ["Provenienza", src.referrer],
+    ["utm_source", src.utmSource],
+    ["utm_medium", src.utmMedium],
+    ["utm_campaign", src.utmCampaign],
+    ["utm_content", src.utmContent],
+    ["utm_term", src.utmTerm],
+    ["Ricevuta il", new Date(lead.receivedAt).toLocaleString("it-IT", { timeZone: "Europe/Rome" })],
+  ].filter(([, v]) => v);
+  const email = {
+    to: emailTo,
+    subject: "Solace — Nuova richiesta di analisi immobile",
+    text: rows.map(([k, v]) => `${k}: ${v}`).join("\n"),
+    // Rispondendo all'email si scrive direttamente al visitatore, se ha lasciato un'email valida.
+    replyTo: lead.email || "",
+  };
+
   const deliveries: Promise<void>[] = [];
 
   if (webhook) {
-    // I campi sono testo semplice: chi li riceve (CRM, Make, n8n) deve mostrarli come testo, non come HTML.
+    // I campi sono testo semplice: chi li riceve deve mostrarli come testo, non come HTML.
+    // LEAD_WEBHOOK_SECRET (facoltativo) permette al ricevente di scartare le chiamate non del sito.
     deliveries.push(
       fetch(webhook, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...lead, origin: "sito-solace", format: "text/plain" }),
+        body: JSON.stringify({
+          ...lead,
+          ...email,
+          origin: "sito-solace",
+          format: "text/plain",
+          secret: process.env.LEAD_WEBHOOK_SECRET || undefined,
+        }),
         cache: "no-store",
-        signal: AbortSignal.timeout(10_000),
-      }).then((res) => {
+        redirect: "follow",
+        signal: AbortSignal.timeout(15_000),
+      }).then(async (res) => {
         if (!res.ok) throw new Error(`webhook_${res.status}`);
+        // Una pagina HTML (errore, login) o una risposta JSON con ok:false non è una consegna riuscita.
+        const type = res.headers.get("content-type") ?? "";
+        if (type.includes("text/html")) throw new Error("webhook_html");
+        if (type.includes("application/json")) {
+          const data = (await res.json().catch(() => null)) as { ok?: boolean } | null;
+          if (!data || data.ok === false) throw new Error("webhook_rifiutato");
+        }
       }),
     );
   }
 
   if (resendKey) {
-    const s = lead.source;
-    const rows = [
-      ["Nome", lead.name],
-      ["Telefono", lead.phone],
-      ["Email", lead.email],
-      ["Comune o zona", lead.zone],
-      ["Tipologia", lead.type],
-      ["Numero di immobili", lead.count],
-      ["Situazione attuale", lead.status],
-      ["Messaggio", lead.message],
-      ["Pagina d'ingresso", s.landingPage],
-      ["Provenienza", s.referrer],
-      ["utm_source", s.utmSource],
-      ["utm_medium", s.utmMedium],
-      ["utm_campaign", s.utmCampaign],
-      ["utm_content", s.utmContent],
-      ["utm_term", s.utmTerm],
-      ["Ricevuta il", new Date(lead.receivedAt).toLocaleString("it-IT", { timeZone: "Europe/Rome" })],
-    ].filter(([, v]) => v);
     deliveries.push(
       fetch(resendUrl, {
         method: "POST",
@@ -241,10 +265,9 @@ export async function POST(request: Request) {
         body: JSON.stringify({
           from: emailFrom,
           to: emailTo.split(",").map((x) => x.trim()),
-          // Rispondendo all'email si scrive direttamente al visitatore, se ha lasciato un'email valida.
-          reply_to: lead.email || undefined,
-          subject: "Solace — Nuova richiesta di analisi immobile",
-          text: rows.map(([k, v]) => `${k}: ${v}`).join("\n"),
+          reply_to: email.replyTo || undefined,
+          subject: email.subject,
+          text: email.text,
         }),
         cache: "no-store",
         signal: AbortSignal.timeout(10_000),

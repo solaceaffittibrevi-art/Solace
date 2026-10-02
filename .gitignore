@@ -57,3 +57,6 @@ temp/
 
 # Video della home: escluso finché non è confermata la licenza del filmato (vedi README)
 /public/video/
+
+# File locali con codici reali (es. script Google già compilato)
+/.solace-local/

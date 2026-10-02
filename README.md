@@ -51,13 +51,21 @@ Vedi `.env.example`. Prima della pubblicazione servono almeno:
 
 ## Configurazione del modulo contatti
 
-1. Account Resend creato con solace.gestione@gmail.com → API Keys → chiave con permesso "Sending access".
-2. In locale: `bash scripts/imposta-chiave-resend.sh` (la chiave viene chiesta senza mostrarla e salvata in
-   `.env.local`, escluso da Git), poi `npm run check:env` per verificare senza vedere i valori.
-3. Online (Vercel → Settings → Environment Variables): `RESEND_API_KEY` (Sensitive), `LEAD_EMAIL_TO`,
-   `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SITE_ENV=production` (solo Production).
-4. Online serve anche Upstash Redis (Vercel → Storage → Upstash for Redis, collegato al progetto): crea
-   `KV_REST_API_URL` e `KV_REST_API_TOKEN`. Senza, sul sito pubblicato il modulo non accetta richieste.
+Canale in uso: **Google Apps Script** nell'account solace.gestione@gmail.com (nessuna chiave API).
+
+1. `.env.local` contiene `LEAD_EMAIL_TO` e `LEAD_WEBHOOK_SECRET` (codice casuale generato in locale).
+2. Su script.google.com (account solace.gestione@gmail.com) nuovo progetto: incollare
+   `.solace-local/Codice-da-incollare.gs` (copia locale con il codice condiviso, esclusa da Git; il modello
+   senza codice è in `scripts/google-apps-script/Codice.gs`). Eseguire una volta `provaInvio` per autorizzare
+   l'invio, poi Distribuisci → Nuova distribuzione → App web, "Esegui come: me", "Chi ha accesso: chiunque".
+3. `bash scripts/imposta-webhook.sh` salva l'URL dell'app web (…/exec) in `.env.local` senza mostrarlo;
+   `npm run check:env` verifica la configurazione senza stampare i valori.
+4. Online (Vercel → Settings → Environment Variables): `LEAD_WEBHOOK_URL` e `LEAD_WEBHOOK_SECRET` (Sensitive),
+   `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SITE_ENV=production` (solo Production), più Upstash Redis
+   (Vercel → Storage → Upstash for Redis: crea `KV_REST_API_URL` e `KV_REST_API_TOKEN`). Senza Upstash, sul sito
+   pubblicato il modulo non accetta richieste.
+
+In alternativa resta supportato Resend (`RESEND_API_KEY`, script `scripts/imposta-chiave-resend.sh`).
 
 ## Immobili e sostituzioni
 
