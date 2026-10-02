@@ -21,7 +21,6 @@ export const metadata: Metadata = pageMetadata({
 const groupImages: Record<string, { src: string; alt: string }> = {
   prima: { src: "/images/immobili/trilocale-wagner/01.jpg", alt: "Soggiorno luminoso del Trilocale Wagner pronto per gli ospiti" },
   durante: { src: "/images/dettagli/biancheria.jpg", alt: "Asciugamani bianchi piegati sul letto" },
-  dopo: { src: "/images/immobili/suite-royale/02.jpg", alt: "Zona pranzo della Suite Royale" },
 };
 
 export default function ServiziPage() {
@@ -65,11 +64,28 @@ export default function ServiziPage() {
                 <p className="section-head__sub">{g.title}</p>
                 <p className="section-head__text">{g.intro}</p>
               </Reveal>
-              <Reveal className="service-group__media" delay={0.1}>
-                <Parallax strength={6}>
-                  <Image src={groupImages[g.id].src} alt={groupImages[g.id].alt} fill sizes="(max-width: 900px) 100vw, 40vw" />
-                </Parallax>
-              </Reveal>
+              {g.id === "dopo" ? (
+                <Reveal as="figure" className="report-example" delay={0.1}>
+                  <div className="report-example__frame">
+                    <Image
+                      src="/images/servizi/rendicontazione-mensile-esempio-dimostrativo.webp"
+                      alt="Esempio dimostrativo della rendicontazione mensile Solace"
+                      width={1536}
+                      height={1024}
+                      sizes="(max-width: 900px) 100vw, 40vw"
+                    />
+                  </div>
+                  <figcaption>
+                    <strong>Esempio dimostrativo.</strong> Un esempio di come presentiamo le informazioni della gestione.
+                  </figcaption>
+                </Reveal>
+              ) : (
+                <Reveal className="service-group__media" delay={0.1}>
+                  <Parallax strength={6}>
+                    <Image src={groupImages[g.id].src} alt={groupImages[g.id].alt} fill sizes="(max-width: 900px) 100vw, 40vw" />
+                  </Parallax>
+                </Reveal>
+              )}
             </div>
             <Stagger as="ul" className="service-list" gap={0.08}>
               {g.items.map((it) => (
@@ -106,24 +122,6 @@ export default function ServiziPage() {
                   />
                 </RevealItem>
               </Stagger>
-            </div>
-          )}
-          {g.id === "dopo" && (
-            <div className="container">
-              <Reveal as="figure" className="report-example">
-                <div className="report-example__frame">
-                  <Image
-                    src="/images/servizi/rendicontazione-mensile-esempio-dimostrativo.webp"
-                    alt="Esempio dimostrativo della rendicontazione mensile Solace"
-                    width={1536}
-                    height={1024}
-                    sizes="(max-width: 1020px) 100vw, 980px"
-                  />
-                </div>
-                <figcaption>
-                  <strong>Esempio dimostrativo.</strong> Un esempio di come presentiamo le informazioni della gestione.
-                </figcaption>
-              </Reveal>
             </div>
           )}
         </section>

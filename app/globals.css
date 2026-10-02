@@ -629,6 +629,8 @@ p {
   height: 100%;
   object-fit: cover;
   object-position: 50% 45%;
+  /* Leggermente oscurato: testi e pulsanti restano leggibili sulle riprese più chiare. */
+  filter: brightness(0.78);
   opacity: 0;
   transition: opacity 900ms var(--ease-out);
 }
@@ -1711,8 +1713,7 @@ p {
 
 /* Esempio di rendicontazione: immagine intera, mai ritagliata. */
 .report-example {
-  margin: clamp(2.5rem, 5vw, 4rem) auto 0;
-  max-width: 980px;
+  margin: 0;
   width: 100%;
 }
 
