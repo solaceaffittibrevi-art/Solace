@@ -2,6 +2,7 @@ import Link from "next/link";
 import Logo from "./Logo";
 import Icon from "./Icon";
 import Skyline from "./Skyline";
+import TrackedLink from "./TrackedLink";
 import { nav, site } from "@/lib/site";
 
 export default function Footer() {
@@ -44,6 +45,13 @@ export default function Footer() {
             {site.phone && (
               <li>
                 <a href={`tel:${site.phone.replace(/\s/g, "")}`}>{site.phone}</a>
+              </li>
+            )}
+            {site.whatsapp && (
+              <li>
+                <TrackedLink href={`https://wa.me/${site.whatsapp}`} event="whatsapp_click" location="footer" external>
+                  Scrivici su WhatsApp
+                </TrackedLink>
               </li>
             )}
           </ul>

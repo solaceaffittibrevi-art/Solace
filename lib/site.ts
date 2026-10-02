@@ -12,8 +12,9 @@ export const site = {
   airbnbProfile: "https://www.airbnb.it/users/profile/1467841528592735054",
   // Recapiti: si mostrano solo se configurati in .env.local (vedi .env.example).
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "",
-  phone: process.env.NEXT_PUBLIC_CONTACT_PHONE ?? "",
-  whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "",
+  // Numero fornito dal titolare il 2/10/2026 (telefono e WhatsApp).
+  phone: process.env.NEXT_PUBLIC_CONTACT_PHONE || "+39 351 402 1923",
+  whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "393514021923",
   privacyUrl: process.env.NEXT_PUBLIC_PRIVACY_URL ?? "",
 };
 
