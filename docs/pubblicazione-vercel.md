@@ -98,3 +98,14 @@ aggiungere il file `scripts/google-apps-script/Pulizia.gs` (nessun segreto), poi
 3. `installaPuliziaMensile`: attiva l'esecuzione del giorno 1 di ogni mese (rifiuta se manca la simulazione).
 Elimina solo i singoli messaggi del modulo (mai le conversazioni, le risposte o le prove), spostandoli nel
 Cestino di Gmail, che li cancella definitivamente dopo 30 giorni. `disattivaPuliziaMensile` la ferma.
+
+## Stato (2/10/2026)
+- Progetto Vercel `solace` creato (account solaceaffittibrevi-art, piano Hobby) con le 4 variabili riservate
+  (Sensitive, Production e Preview). Nessun dominio personalizzato, nessuna modifica DNS.
+- Anteprima del ramo `claude/trusting-thompson-uzpyam`: Vercel Authentication attiva, verificata dal titolare
+  (in una finestra privata compare l'accesso a Vercel, non il sito).
+- Prova reale "TEST SOLACE 4" dall'anteprima: conferma a schermo, email ricevuta su solace.gestione@gmail.com,
+  chiavi `rl:*` e `lead:*` create su Upstash.
+- Il ramo `main` contiene ancora lo scheletro iniziale (deployment di produzione protetto). Prima della
+  pubblicazione definitiva: unire il ramo di lavoro in `main`, scegliere e collegare il dominio, poi impostare
+  `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SITE_ENV=production` e, se si attiva GA4, `NEXT_PUBLIC_GA4_ID` (punti 2 e 4).
