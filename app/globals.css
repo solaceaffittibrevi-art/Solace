@@ -490,7 +490,7 @@ p {
 
 .hero__img img {
   object-fit: cover;
-  object-position: 60% 45%;
+  object-position: 70% 50%;
 }
 
 .hero__shade {
@@ -2648,7 +2648,7 @@ p {
   }
 
   .hero__img img {
-    object-position: 70% 30%;
+    object-position: 78% 40%;
   }
 
   .btn {

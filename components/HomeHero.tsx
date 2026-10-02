@@ -30,8 +30,8 @@ export default function HomeHero() {
           transition={{ duration: 2.2, ease: ease.out }}
         >
           <Image
-            src="/images/immobili/suite-prestige/01.jpg"
-            alt="Terrazzo della Suite Prestige, gestita da Solace, con vista sui tetti di Milano al tramonto"
+            src="/images/milano-duomo.webp"
+            alt="Piazza del Duomo a Milano di sera, con il Duomo illuminato e la Galleria Vittorio Emanuele II"
             fill
             priority
             sizes="100vw"
