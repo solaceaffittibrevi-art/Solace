@@ -373,6 +373,8 @@ export const selection = [
   "1769734195329082844",
   "1607516107933185822",
   "1391229790402951206",
+  // Aggiunto il 2/10/2026: annuncio di Milano del profilo Solace con il punteggio più alto in graduatoria.
+  "1455791981124568403",
 ];
 
 // Registro delle rimozioni definitive. Aggiungere una riga solo dopo una conferma attendibile

@@ -36,9 +36,9 @@ export default function ComeFunzionaPage() {
           </>
         }
         lead="Nessun salto nel buio nella gestione del tuo affitto breve: prima l'analisi gratuita dell'immobile per capirne il potenziale, poi decidi tu se e come partire."
-        image="/images/come-funziona/soggiorno-cucina-pronto-per-gli-ospiti.jpg"
-        imageAlt="Soggiorno luminoso pronto per gli ospiti, con divano, tavolo apparecchiato e cucina in legno"
-        imagePosition={{ desktop: "52% 60%", mobile: "50% 60%" }}
+        image="/images/come-funziona/monolocale-allestito-per-gli-ospiti.jpg"
+        imageAlt="Monolocale allestito per gli ospiti, con divano grigio, mobile TV, specchio tondo e tavolo con sedie"
+        imagePosition={{ desktop: "52% 60%", mobile: "45% 60%" }}
       />
 
       <section className="section process" aria-labelledby="steps-title">

@@ -23,7 +23,7 @@ const L = (id: string, value: number | null, count: number | null, extra: Partia
 });
 
 // Configurazione reale
-check("Vetrina iniziale: 5 annunci nell'ordine richiesto", properties.map((p) => p.listingId).join() === selection.join());
+check(`Vetrina iniziale: ${selection.length} annunci nell'ordine richiesto`, properties.map((p) => p.listingId).join() === selection.join());
 check("Nessun duplicato nella vetrina", new Set(properties.map((p) => p.listingId)).size === properties.length);
 check("Collegamenti Airbnb con l'identificativo corretto", properties.every((p) => p.airbnb.endsWith(`/rooms/${p.listingId}`)));
 check("Ogni annuncio ha 6 foto con testo alternativo", portfolio.every((p) => p.photos.length === 6 && p.photos.every((f) => f.alt.length > 10)));

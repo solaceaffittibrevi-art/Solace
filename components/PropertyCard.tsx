@@ -19,8 +19,10 @@ export default function PropertyCard({ property, size = "default", priority = fa
         <div className="pcard__body">
           <p className="pcard__zone">
             <Icon name="pin" size={15} />
-            {property.zone}
-            {property.city !== "Milano" && <span>, {property.city}</span>}
+            <span>
+              {property.zone}
+              {property.city !== "Milano" && `, ${property.city}`}
+            </span>
           </p>
           <h3 className="pcard__name">{property.name}</h3>
           <p className="pcard__meta">
